@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-desktop-clock" width="21" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#95a5a6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M13.5 16h-9.5a1 1 0 0 1 -1 -1v-10a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v7.5" />
+  <path d="M7 20h5" />
+  <path d="M9 16v4" />
+  <!-- Circle for the clock -->
+  <circle cx="19" cy="18" r="3" />
+  <!-- Clock hand inside the circle -->
+  <path d="M19 17v1l1 1" />
+</svg>

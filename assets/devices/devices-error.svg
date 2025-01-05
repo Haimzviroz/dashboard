@@ -1,0 +1,15 @@
+<svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="tets-error device" clip-path="url(#clip0_1550_2801)">
+<path id="Vector" d="M14.7666 10.8333H16.4333C16.8753 10.8333 17.2993 11.0089 17.6118 11.3215C17.9244 11.634 18.1 12.058 18.1 12.5V14.1667M17.61 17.0142C17.3083 17.3142 16.8925 17.5 16.4333 17.5H4.76664C4.32461 17.5 3.90069 17.3244 3.58813 17.0118C3.27557 16.6993 3.09998 16.2754 3.09998 15.8333V12.5C3.09998 12.058 3.27557 11.634 3.58813 11.3215C3.90069 11.0089 4.32461 10.8333 4.76664 10.8333H11.4333" stroke="#F34747" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M14.7666 14.1667V14.175" stroke="#F34747" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M11.4333 14.1667V14.175" stroke="#F34747" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_4" d="M10.7883 6.83334C11.1328 6.50174 11.5446 6.24814 11.9958 6.08974C12.4469 5.93135 12.9269 5.87187 13.4031 5.91534C13.8792 5.95882 14.3405 6.10423 14.7555 6.34171C15.1705 6.57919 15.5296 6.90317 15.8083 7.29167" stroke="#F34747" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_5" d="M8.47083 4.50584C9.15948 3.84132 9.98313 3.33285 10.8858 3.01499C11.7885 2.69713 12.749 2.57734 13.7021 2.66376C14.6551 2.75017 15.5784 3.04076 16.4092 3.51579C17.24 3.99081 17.9588 4.63913 18.5167 5.41667" stroke="#F34747" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_6" d="M3.09998 2.5L18.1 17.5" stroke="#F34747" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_1550_2801">
+<rect width="20" height="20" fill="white" transform="translate(0.599976)"/>
+</clipPath>
+</defs>
+</svg>

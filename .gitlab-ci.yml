@@ -1,0 +1,122 @@
+stages:
+   - tag
+   - build
+   - deploy
+include:
+  - project: devops/modules/regular-modules/build
+    file: simple_microservice_build.yaml
+    ref: master
+  - project: devops/modules/regular-modules/trigger
+    file: trigger_devops_repo_from_microservice_develop_branch.yaml 
+    ref: master
+  - project: devops/modules/regular-modules/release-control
+    file: calculate_new_tag.yaml 
+    ref: master
+variables:
+  NEW_TAG: ""
+
+## calculate the new tag & tag the current commit #
+Calculate_new_tag:
+  stage: tag
+  variables:
+    OTHER_PROJECT_ID: ${CI_PROJECT_ID} # it's 20, in this repo
+  extends:
+    - .calculate_new_tag_develop
+
+
+Build and push docker image to harbor:
+  stage: build
+  before_script:
+    - export IMAGE_TAG=$(cat NEW_TAG.txt) 
+    - echo $IMAGE_TAG
+  # for now the test run's in the docker build.
+  # This can be changed to run the test after the build has finished.
+  # after_script:
+  #   - docker run -e CI=true ${CI_REGISTRY}/${CI_REGISTRY_MICROSERVICE_IMAGE}:${IMAGE_TAG} --entry-point="npm run test"
+  dependencies:
+    - Calculate_new_tag
+  only:
+    - develop
+  except:
+    - tags
+  tags:
+    - shell
+  extends:
+    - .build_single_microservice
+
+
+###########################################################
+#
+# ! the deployment is done manually in a diffefent repo:
+# https://gitlab.getapp.sh/getapp/getapp-version-control 
+#
+###########################################################
+
+# Trigger deploy:
+#   stage: deploy
+#   variables:
+#     DEVOPS_REPO_ID: 46 # $DEVOPS_REPO_ID   ### Here should be the nuber for DevOps repo for the project
+#     CI_JOB_TOKEN: $CI_JOB_TOKEN       ### Here should be generated token to push DevOps repo
+#     DEVOPS_BRANCH: master         ### Need remove after test
+#   extends:
+#     - .trigger_devops_repo_to_deploy_develop_branch
+#   only:
+#     - develop
+#   except:
+#     - tags
+
+
+# Deploy to EC2 (develop branch):
+#   stage: deploy
+#   tags:
+#     - shell 
+#   variables:
+#     IMAGE_TAG: $NEW_TAG #####1.0.12 #### other options"latest" $CI_COMMIT_SHORT_SHA
+
+#   before_script:
+#    # the new tag
+#     - export NEW_TAG=$(cat NEW_TAG.txt) 
+#     - echo $NEW_TAG
+#     - export IMAGE_TAG=${NEW_TAG}
+#     - echo $IMAGE_TAG
+#     - echo ${NEW_TAG}
+
+#     # ssh connection to CE2
+
+#     # gets the long hash of the builed docker image.#
+#     # - export IMAGE_ID=$(docker inspect --format='{{.Id}}' $CI_REGISTRY/$CI_REGISTRY_MICROSERVICE_IMAGE)
+#     # - echo $IMAGE_ID
+#     - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+#     - eval $(ssh-agent -s)
+#     - chmod 400 "$EC2_PRIVATE_KEY"
+#     - mkdir -p ~/.ssh
+#     - chmod 700 ~/.ssh
+#     - ssh-add "$EC2_PRIVATE_KEY"
+#     - ssh -o StrictHostKeyChecking=no $EC2_URL uptime
+#   script:
+#     - ssh $EC2_URL 'ls -la' ##
+#     - echo "IMAGE_TAG=${IMAGE_TAG}" > .env
+#     - cat .env
+#     - scp .env $EC2_URL:~/dashboard/
+#     - scp .env.production $EC2_URL:~/dashboard/
+#     - scp docker-compose-aws-2.yaml $EC2_URL:~/dashboard/
+#     - scp cicd-2.sh $EC2_URL:~/dashboard/
+#     - echo "ssh $EC2_URL './dashboard/cicd-2.sh'"
+#     - ssh  $EC2_URL 'chmod +x dashboard/cicd-2.sh'
+#     - ssh  $EC2_URL './dashboard/cicd-2.sh'
+#   dependencies:
+#     - Calculate_new _tag
+#   only:
+#     - develop
+#   except:
+#     - tags
+  
+# Trigger deploy to kubernetes(develop branch):
+#   stage: deploy
+#   variables:
+#     DEVOPS_REPO_ID: 28 # $DEVOPS_REPO_ID   ### Here should be the nuber for DevOps repo for the project
+#     CI_JOB_TOKEN: $CI_JOB_TOKEN       ### Here should be generated token to push DevOps repo
+#     DEVOPS_BRANCH: master         ### Need remove after test
+#   extends:
+#     - .trigger_devops_repo_to_deploy_develop_branch
+

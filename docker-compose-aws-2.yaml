@@ -1,0 +1,16 @@
+version: '3.6'
+services:
+  node-app-api:
+    image: harbor.getapp.sh/getapp-dev/dashboard:${IMAGE_TAG}
+    restart: always
+    env_file:
+      - .env.production
+    networks:
+      - getapp
+    ports:
+      - 3001:3001
+    command: sh -c "npm run build && npm run start"
+
+networks:
+  getapp:
+    external: true

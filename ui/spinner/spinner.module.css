@@ -1,0 +1,24 @@
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.loading-spinner {
+  position: var(--position);
+  margin: auto;
+  left: calc(50% - 25px);
+  top: calc(50%);
+  width: var(--width);
+  height: var(--height);
+  border: var(--border) solid #caddf2;
+  /*Lightgrey*/border-top: var(--border-top) solid #d0741e;
+  /*Black*/border-radius: 50%;
+  animation: spinner var(--s) linear infinite;
+  -webkit-animation: spinner var(--s) linear infinite;
+}
+.spinner-container{
+  
+}

@@ -1,0 +1,114 @@
+
+.section-wrap {
+  margin: 40px 0 0;
+}
+
+.section-header {
+  font-weight: 700;
+  font-size: 25px;
+  margin: 10px 0 0;
+  background-color: #1e74d0;
+  padding: 10px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.plus-icon{
+  cursor: pointer;
+}
+
+.item-wrap {
+  padding: 10px;
+  border: #1e74d0 1px solid;
+  border-top: none;
+
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+
+}
+
+.item-wrap:hover {
+  background-color: #f4d2b2;
+}
+
+.button {
+  border-radius: 5px;
+  min-width: 100px;
+  height: 30px;
+  font-size: 18px;
+  margin: 0 5px;
+  padding: 0 15px;
+  cursor: pointer;
+}
+
+.edit-button {
+  background-color: #80b5ed;
+}
+
+.delete-button {
+  background-color: rgb(243, 110, 110);
+}
+
+.submit-button{
+  background-color: #f4d2b2;
+  height: 25px;
+}
+
+.role-select {
+  border-radius: 0;
+  height: 22px;
+  border: .1px solid;
+  margin: 0;
+  font-size: 13px;
+  width: 176px;
+}
+
+.form {
+  display: flex;
+  background-color: #c9e0f8;
+  padding: 20px;
+  /* margin: 10px 0 0 0; */
+  border: #80b5ed 1px solid;
+}
+
+.form-section{
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+.form-button{
+  justify-content: end;
+  align-items: end;
+}
+
+.token {
+  padding: 5px;
+  /* margin: 10px; */
+  width: 750px;
+  height: 30px;
+  overflow: hidden;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.token-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border: #1e74d0 1px solid;
+  border-top: none;
+}
+
+div.token:hover {
+  cursor: pointer;
+}
+
+.copied {
+  font-family: cursive;
+  font-size: 15px;
+  margin-left: 10px;
+}
