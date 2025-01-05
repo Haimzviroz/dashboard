@@ -8,6 +8,8 @@ export const REFRESH = "refresh/"
 const PROJECT_MANAGEMENT = "projectManagement/"
 export const PROJECT = PROJECT_MANAGEMENT + "project/";
 export const MEMBER = "member/";
+export const CONFIRM = MEMBER + "confirm/";
+
 export const CREATE_TOKEN = "createToken/"
 
 export const PROJECT_RELEASES = "/projectReleases"
@@ -27,7 +29,7 @@ export const GROUP = "group"
 // Offering
 export const OFFERING = "offering"
 export const OFFERING_PUSH = OFFERING + "/push"
-export const OFFERED_SOFTWARE = (catalogId:string) => OFFERING + "/component/" + catalogId
+export const OFFERED_SOFTWARE = (catalogId: string) => OFFERING + "/component/" + catalogId
 
 // Get map routes
 export const MAPS = "map/maps"

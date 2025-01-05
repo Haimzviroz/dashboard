@@ -20,10 +20,11 @@ import { Box } from '@mui/material';
 
 interface ManagementProjectsPageProps {
   allProjects: Projects[],
-  currentProject: Projects
+  currentProject: Projects,
+  invitedProjects: Projects[]
 }
 
-const ManagementProjectsPage: NextPageWithLayout<ManagementProjectsPageProps> = ({ allProjects, currentProject }) => {
+const ManagementProjectsPage: NextPageWithLayout<ManagementProjectsPageProps> = ({ allProjects, currentProject, invitedProjects }) => {
 
   const { router } = useGetApp()
   const { setProjects, setSelectedProject, updateProject, setActivated } = useGlobal()
@@ -55,7 +56,7 @@ const ManagementProjectsPage: NextPageWithLayout<ManagementProjectsPageProps> = 
   return (
     <Fragment>
       {getAllProjects()}
-      <ManagementActions setProject={updateProject} setActivated={setActivated} />
+      <ManagementActions setProject={updateProject} setActivated={setActivated} invitedProjects={invitedProjects} />
     </Fragment>
   )
 }
@@ -71,6 +72,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     const res: any = await httpClient.getAllProjects()
 
     const allProjects = res?.projects || []
+    const invitedProjects = res?.invitedProjects || []
     const currentProject = res?.projects?.find((p: Projects) => p.id.toString() === params)
     if (!allProjects.length || !currentProject) {
       return { notFound: true };
@@ -78,7 +80,8 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     return {
       props: {
         allProjects,
-        currentProject
+        currentProject, 
+        invitedProjects
       }
     }
   } catch (error: any) {

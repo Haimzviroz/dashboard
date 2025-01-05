@@ -112,3 +112,10 @@ div.token:hover {
   font-size: 15px;
   margin-left: 10px;
 }
+
+.invite-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  background-color: #cfe7eb;
+}

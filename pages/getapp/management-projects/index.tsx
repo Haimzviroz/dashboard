@@ -17,16 +17,16 @@ import { Box } from '@mui/material';
 
 interface ManagementProjectsPageProps {
 	allProjects: Projects[],
+	invitedProjects: Projects[]
 }
 
-const ManagementProjectsPage: NextPageWithLayout<ManagementProjectsPageProps> = ({ allProjects }) => {
+const ManagementProjectsPage: NextPageWithLayout<ManagementProjectsPageProps> = ({ allProjects, invitedProjects }) => {
 	const { updateProject, setActivated } = useGlobal()
 
 	return (
 		<Fragment>
 			{allProjects.length === 0 && <h1>{`There isn't any projects`}</h1>}
-			<ManagementActions setProject={updateProject} setActivated={setActivated} />
-
+			<ManagementActions setProject={updateProject} setActivated={setActivated} invitedProjects={invitedProjects} />
 		</Fragment>
 	)
 }
@@ -42,6 +42,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 	try {
 		const res: any = await httpClient.getAllProjects()
+		const invitedProjects = res?.invitedProjects || []
 
 		if (res?.projects?.length) {
 			const defaultProject = res.member.defaultProject || res.projects[0].id
@@ -56,6 +57,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 		return {
 			props: {
 				allProjects: res || [],
+				invitedProjects
 			}
 		}
 	} catch (error: any) {
