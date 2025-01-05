@@ -1,6 +1,7 @@
-import { FC, Fragment, useState } from "react"
+import { FC, Fragment, useEffect, useState } from "react"
 
 import s from '../../styles/management-project.module.css';
+import { getUsers } from "@/apis/client-side/project-management-actions.api";
 
 
 interface MemberFormProps {
@@ -10,9 +11,35 @@ interface MemberFormProps {
 
 const MemberForm: FC<MemberFormProps> = ({ submit, member }) => {
   const [memberInEdit, setMemberInEdit] = useState<any>(member ? member : null)
+  const [users, setUsers] = useState([])
+  const [isUsersOpen, setISUsersOpen] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<any>()
 
-  const onInputValue = (label: string, e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+
+  useEffect(()=>{
+    if(selectedUser){
+      setMemberInEdit(selectedUser)
+      setISUsersOpen(false)
+    }
+  },[selectedUser])
+
+  const getAllUsers = async (params: { [key: string]: string }) => {
+    try {
+      return await getUsers(params)
+    } catch (error) {
+      console.log(`Err getting all users: ${error}`);
+
+    }
+  }
+
+  const onInputValue = async (label: string, e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const updatedMember = { ...memberInEdit, [label]: e.target.value }
+    if(e.target.value.length > 1) {
+      const foundUser = await getAllUsers({ [label]: e.target.value })
+      setSelectedUser(undefined)
+      setISUsersOpen(true)
+      setUsers(foundUser)
+    }
     setMemberInEdit(updatedMember)
   }
 
@@ -43,8 +70,18 @@ const MemberForm: FC<MemberFormProps> = ({ submit, member }) => {
 
       </div>
       <div className={`${s["form-section"]} ${s["form-button"]} `}>
-        <button className={`${s.button} ${s["submit-button"]}` } onClick={(e) => { e.preventDefault(); submit(memberInEdit) }}>{member ? "update" : "create"}</button>
+        <button className={`${s.button} ${s["submit-button"]}`} onClick={(e) => { e.preventDefault(); submit(memberInEdit) }}>{member ? "update" : "create"}</button>
       </div>
+      <div style={{ position: "absolute" }}>
+
+        <div className={`${s["wrap-user-row"]}`}>
+          {isUsersOpen && users && users.map((u: any) => <div key={u.email} className={`${s["user-row"]}`} onClick={() => setSelectedUser(u)}>
+            <div style={{ fontWeight: "bold", paddingBottom: "4px" }}>{u.email}</div>
+            <div>{u.firstName} {u.lastName}</div>
+          </div>)}
+        </div>
+      </div>
+
     </form>
   )
 }

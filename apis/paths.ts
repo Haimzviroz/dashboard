@@ -6,9 +6,10 @@ export const REFRESH = "refresh/"
 
 
 const PROJECT_MANAGEMENT = "projectManagement/"
+export const USERS = PROJECT_MANAGEMENT + "users/";
 export const PROJECT = PROJECT_MANAGEMENT + "project/";
 export const MEMBER = "member/";
-export const CONFIRM = MEMBER + "confirm/";
+export const CONFIRM = "confirm/";
 
 export const CREATE_TOKEN = "createToken/"
 
