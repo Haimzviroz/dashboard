@@ -5,9 +5,9 @@ export const LOGIN = "login/"
 export const REFRESH = "refresh/"
 
 
-const PROJECT_MANAGEMENT = "projectManagement/"
-export const USERS = PROJECT_MANAGEMENT + "users/";
-export const PROJECT = PROJECT_MANAGEMENT + "project/";
+const PROJECT_MANAGEMENT = "project/"
+export const USERS = "users/";
+export const PROJECT = PROJECT_MANAGEMENT;
 export const MEMBER = "member/";
 export const CONFIRM = "confirm/";
 
