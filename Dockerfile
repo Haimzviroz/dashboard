@@ -4,12 +4,29 @@ FROM node:19.5.0-alpine
 USER root
 
 WORKDIR /getapp-dashboard
-COPY package.json package.json
+
+# ===   create a uid and a gid to fit CTS project uid === #
+ARG uid=1004370000
+ARG username=getapp
+# Add the user to /etc/passwd
+RUN echo "${username}:x:${uid}:${uid}:${username}:/home/${username}:/sbin/nologin" >> /etc/passwd
+# Add the user to /etc/group
+RUN echo "${username}:x:${uid}:" 
+
+RUN chown -R ${uid}:${uid} /getapp-dashboard
+
+# ===   install ca sofeware === #
+# Install the ca-certificates package to manage certificates
+RUN apk --no-cache add ca-certificates bash curl
+# Create the CA certificates directory
+RUN mkdir -p /usr/local/share/ca-certificates/
+
+
+COPY --chown=${uid}:${uid} package.json package.json
 RUN npm i
 
-COPY . .
+COPY --chown=${uid}:${uid} . .
 
 # RUN npm run test
 
 # CMD [ "npm" , "run", "start"]
-
