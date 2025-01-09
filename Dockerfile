@@ -17,7 +17,7 @@ RUN chown -R ${uid}:${uid} /getapp-dashboard
 
 # ===   install ca sofeware === #
 # Install the ca-certificates package to manage certificates
-RUN apk --no-cache add ca-certificates bash curl
+RUN apk update && apk --no-cache add ca-certificates bash curl
 # Create the CA certificates directory
 RUN mkdir -p /usr/local/share/ca-certificates/
 
