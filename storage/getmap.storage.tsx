@@ -1,8 +1,8 @@
 import { createContext, FC, useEffect, useState, useRef } from "react"
-import { SideBarOption } from "@/types/enum";
-import { Activate, GetAppProviderProps, Map, productMap } from "@/types/interfaces";
+import { NavBarOption, SideBarOption } from "@/types/enum";
+import { Activate, GetAppProviderProps } from "@/types/interfaces";
 import { useRouter } from "next/router";
-import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS } from "@/apis/routes";
+import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS, R_GET_APP } from "@/apis/routes";
 import { Group } from "@/types/interfaces/devices";
 import { useGroups } from "@/hooks/group.query.hook";
 import { RouterHelpers } from "@/utils/helpers/router.helper";
@@ -20,27 +20,21 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 		else return []
 	}
 
-	// const [groups, setGroups] = useState<Group[]>([])
 	const [selectedGroup, setSelectedGroup] = useState<number[]>(getSelectedGroups())
-	// const [selectedMap, setSelectedMap] = useState<Map | null>(null)
-	// const [productMap, setProductMap] = useState<{ [key: string]: productMap } | null>(null)
-	// const [currentProduct, setCurrentProduct] = useState<productMap | null | undefined>(null)
 	const [activated, setActivated] = useState<Activate | null>(null);
+	const [navBarActive, setNavBarActive] = useState<NavBarOption | null>(null);
 	const [sideBarCollapse, setSideBarCollapse] = useState<boolean>(true);
 
 	const isFirstLoad = useRef(true); // useRef to track first load without causing re-render
 
 	const { groups } = useGroups()
 
-
 	useEffect(() => {
-		const active = getActivated()
+		const active = getSideBarActivated()
 		active && active !== activated?.active && setActivated({ active, trigger: null })
+		const navActive = getNavBarActivated()
+		navActive && navActive !== navBarActive && setNavBarActive(navActive)
 	}, [router])
-
-	// useEffect(() => {
-	// 	selectedMap && productMap && setCurrentProduct(productMap[selectedMap?.productId] || null)
-	// }, [selectedMap])
 
 	useEffect(() => {
 		if (activated?.trigger) {
@@ -74,10 +68,20 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 		}
 	}
 
-	const getActivated = () => {
+	const getSideBarActivated = () => {
 		if (router.pathname.startsWith(R_MAPS)) return SideBarOption.MAP;
 		if (router.pathname.startsWith(R_APP_DEVICES) || router.pathname.startsWith(R_MAP_DEVICES)) return SideBarOption.DEVICES;
 		if (router.pathname.startsWith(R_PROJECTS)) return SideBarOption.APPS;
+	}
+
+	const getNavBarActivated = () => {
+		if (router.pathname.startsWith(R_GET_APP)) {
+			if (router.pathname.endsWith(NavBarOption.OVERVIEW)) return NavBarOption.OVERVIEW;
+			if (router.pathname.endsWith(NavBarOption.RELEASES)) return NavBarOption.RELEASES;
+			if (router.pathname.endsWith(NavBarOption.REGULATION)) return NavBarOption.REGULATION;
+			if (router.pathname.endsWith(NavBarOption.POLICY)) return NavBarOption.POLICY;
+			if (router.pathname.endsWith(NavBarOption.DOCS)) return NavBarOption.DOCS;
+		}
 	}
 
 	const checkIfParentSelected = (id: number): number => {
@@ -135,21 +139,15 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 	return (
 		<GetAppContext.Provider value={{
 			router,
-			// groups,
-			// setGroups,
 			selectedGroup,
 			setSelectedGroup,
 			setGroupInSelectedGroup,
-			// selectedMap,
-			// setSelectedMap,
-			// productMap,
-			// setProductMap,
-			// currentProduct,
-			// setCurrentProduct,
 			activated,
 			setActivated,
 			sideBarCollapse,
 			setSideBarCollapse,
+			navBarActive,
+			setNavBarActive,
 		}}>
 			{children}
 		</GetAppContext.Provider>

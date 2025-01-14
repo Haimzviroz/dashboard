@@ -1,71 +1,98 @@
-import { ChangeEvent, useContext, useState } from "react"
-import { useRouter } from 'next/router';
 
-import { GlobalContext } from './../../storage/global.storage';
 
-import { Project } from "@/types/interfaces";
 import { NavBarOption } from "@/types/enum";
 
-import s from '../../styles/header.module.css'
+import Overview from '../../assets/nav-bar/overview.svg'
+import OverviewAct from '../../assets/nav-bar/overview-active.svg'
+import Version from '../../assets/nav-bar/version.svg'
+import VersionAct from '../../assets/nav-bar/version-active.svg'
+import Regulations from '../../assets/nav-bar/regulation.svg'
+import RegulationsAct from '../../assets/nav-bar/regulation-active.svg'
+import Policy from '../../assets/nav-bar/policy.svg'
+import PolicyAct from '../../assets/nav-bar/policy-active.svg'
+import Docs from '../../assets/nav-bar/docs.svg'
+import DocsAct from '../../assets/nav-bar/docs-active.svg'
+import { Tab, Tabs } from "@mui/material";
+import { useGetApp } from "@/hooks";
+import { R_PROJECTS } from "@/apis/routes";
+
+interface NavBarItem {
+  key: NavBarOption,
+  name: string,
+  icon: any,
+  activeIcon: any,
+  isActive?: boolean,
+  disabled?: boolean,
+  route: string
+}
+
+const items: NavBarItem[] = [
+  {
+    key: NavBarOption.OVERVIEW,
+    name: "Overview",
+    icon: <Overview />,
+    activeIcon: <OverviewAct />,
+    route: NavBarOption.OVERVIEW
+  },
+  {
+    key: NavBarOption.RELEASES,
+    name: "Versions",
+    icon: <Version />,
+    activeIcon: <VersionAct />,
+    route: NavBarOption.RELEASES,
+  },
+  {
+    key: NavBarOption.REGULATION,
+    name: "Regulations",
+    icon: <Regulations />,
+    activeIcon: <RegulationsAct />,
+    isActive: true,
+    disabled: true,
+    route: NavBarOption.REGULATION,
+  },
+  {
+    key: NavBarOption.POLICY,
+    name: "Policy",
+    icon: <Policy />,
+    activeIcon: <PolicyAct />,
+    isActive: true,
+    disabled: true,
+    route: NavBarOption.POLICY,
+  },
+  {
+    key: NavBarOption.DOCS,
+    name: "Docs",
+    icon: <Docs />,
+    activeIcon: <DocsAct />,
+    disabled: true,
+    route: NavBarOption.DOCS
+  }
+]
+
 
 const NavBar = () => {
-  const { projects, selectedProject, setSelectedProject, activated, setActivated } = useContext(GlobalContext)
+  const { navBarActive, router } = useGetApp()
 
-  const router = useRouter()
-
-  const selectOptionHandler = (option: NavBarOption) => {
-    if (Object.keys(selectedProject).length) {
-      setActivated(option)
-    }
-
-    // const href = `/management-projects/${selectedProject.id}/${option}`;
-    // router.push(href)
+  const getNavItems = () => {
+    return items.map((item: NavBarItem) => {
+      item.isActive = item.key === navBarActive
+      return (
+        <Tab
+          key={item.key}
+          value={item.key}
+          label={item.name}
+          icon={item.isActive ? item.activeIcon : item.icon}
+          iconPosition="start"
+          role="navigation"
+          onClick={() => !item.disabled && router.push(`${R_PROJECTS}/${router.query.projectId}/${item.route}`)}
+          sx={{ textTransform: 'none', gap: 1, minHeight: 48, fontWeight: "bold" }} />
+      )
+    })
   }
-
-  const selectProject = (e: ChangeEvent<HTMLSelectElement>) => {
-    const selectedId = Number.parseInt(e.target.value)
-    const selectedProject = projects.find((p: Project) => p.id == selectedId)
-    if (selectedProject) {
-      setSelectedProject(selectedProject)
-    }
-  }
-
   return (
-    <div className={`${s["nav-bar"]}`}>
-      <ul className={`${s.nav}`}>
-        <li
-
-          className={`${activated === NavBarOption.ACTIVITY && s.active}`}
-          onClick={() => { selectOptionHandler(NavBarOption.ACTIVITY) }}
-        >
-          {NavBarOption.ACTIVITY}
-        </li>
-        <li
-          className={`${activated === NavBarOption.RELEASES && s.active}`}
-          onClick={() => { selectOptionHandler(NavBarOption.RELEASES) }}
-        >
-          {NavBarOption.RELEASES}
-        </li>
-        <li
-          className={`${activated === NavBarOption.POLICY && s.active}`}
-        // onClick={() => { selectOptionHandler(NavBarOption.POLICY) }}
-        >{NavBarOption.POLICY}</li>
-        <li
-          className={`${activated === NavBarOption.DOCS && s.active}`}
-        // onClick={() => { selectOptionHandler(NavBarOption.DOCS) }}
-        >{NavBarOption.DOCS}</li>
-      </ul>
-      {projects.length > 0 &&
-        <div className={s['select-project-wrapper']}>
-          {/* {!selectedProject && <label htmlFor="project-selector">choose a project</label>} */}
-          <select id='project-selector' onChange={(e) => { selectProject(e) }}>
-            <option hidden selected>select a project</option>
-            {projects?.map((project, i) => {
-              return <option key={i} value={project.id} selected={project.id === selectedProject?.id}> {project.name}</option>
-            })}
-          </select>
-        </div>}
-    </div>
+    <Tabs value={navBarActive} onChange={() => { }} role="navigation" variant="scrollable" >
+      {getNavItems()}
+    </Tabs>
   )
 }
 
