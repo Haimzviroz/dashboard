@@ -1,7 +1,7 @@
 import { FC, Fragment, useEffect, useState } from "react"
 
 import s from '../../styles/management-project.module.css';
-import { getProjectConfigOption } from "@/apis/client-side/project-management-actions.api";
+import { getProjectConfigOption } from "@/apis/client-side/projects-actions.api";
 import { ProjectConfig } from "@/types/interfaces";
 
 

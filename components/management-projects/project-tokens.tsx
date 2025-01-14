@@ -6,7 +6,7 @@ import { Project } from '@/types/interfaces';
 
 import s from '../../styles/management-project.module.css';
 
-import { addToken } from "@/apis/client-side/project-management-actions.api";
+import { addToken } from "@/apis/client-side/projects-actions.api";
 import Popup from "@/ui/popup";
 
 interface ProjectTokensProps {

@@ -3,7 +3,7 @@ import { Project } from '@/types/interfaces';
 import TeamMember from "./team-member";
 import s from '../../styles/management-project.module.css';
 import Popup from "@/ui/popup";
-import { addNewMember } from "@/apis/client-side/project-management-actions.api";
+import { addNewMember } from "@/apis/client-side/projects-actions.api";
 import MemberForm from "./member-from";
 
 

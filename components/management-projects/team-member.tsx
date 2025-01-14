@@ -1,6 +1,6 @@
 import { FC, Fragment, useState } from "react"
 
-import { deleteMember, updateMember } from "@/apis/client-side/project-management-actions.api"
+import { deleteMember, updateMember } from "@/apis/client-side/projects-actions.api"
 
 import MemberForm from "./member-from"
 

@@ -6,7 +6,7 @@ import { NavBarOption } from "@/types/enum";
 
 import s from '../../styles/management-project.module.css';
 
-import { confirmProjectInvitation } from "@/apis/client-side/project-management-actions.api";
+import { confirmProjectInvitation } from "@/apis/client-side/projects-actions.api";
 
 interface ProjectInvitationProps {
   setProject: (project: Project) => void,

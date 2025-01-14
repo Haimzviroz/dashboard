@@ -7,7 +7,7 @@ import { NavBarOption } from "@/types/enum";
 
 import s from '../../styles/management-project.module.css';
 
-import { addNewProject } from "@/apis/client-side/project-management-actions.api";
+import { addNewProject } from "@/apis/client-side/projects-actions.api";
 
 interface CreateProjectActionProps {
   setProject: (project: Project) => void,
