@@ -13,7 +13,7 @@ import PolicyAct from '../../assets/nav-bar/policy-active.svg'
 import Docs from '../../assets/nav-bar/docs.svg'
 import DocsAct from '../../assets/nav-bar/docs-active.svg'
 import { Tab, Tabs } from "@mui/material";
-import { useGetApp } from "@/hooks";
+import { useGetApp } from "@/providers/getapp.provider";
 import { R_PROJECTS } from "@/apis/routes";
 
 interface NavBarItem {

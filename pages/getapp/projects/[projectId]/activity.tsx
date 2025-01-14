@@ -11,7 +11,8 @@ import { Auth, Project as Projects } from '@/types/interfaces';
 import { NextPageWithLayout } from '@/types/types';
 import { NavBarOption } from '@/types/enum';
 
-import { useGetApp, useGlobal } from '@/hooks';
+import { useGlobal } from '@/hooks';
+import { useGetApp } from '@/providers/getapp.provider';
 
 import { SS_ProjectsClient } from '@/apis/server-side/ss_projects-client';
 import GA_layout from '@/components/layout/GA-layout';

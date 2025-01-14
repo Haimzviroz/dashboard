@@ -1,4 +1,4 @@
-import { createContext, FC, useEffect, useState, useRef } from "react"
+import { createContext, FC, useEffect, useState, useRef, useContext } from "react"
 import { NavBarOption, SideBarOption } from "@/types/enum";
 import { Activate, GetAppProviderProps } from "@/types/interfaces";
 import { useRouter } from "next/router";
@@ -6,6 +6,8 @@ import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS, R_GET_APP 
 import { Group } from "@/types/interfaces/devices";
 import { useGroups } from "@/hooks/group.query.hook";
 import { RouterHelpers } from "@/utils/helpers/router.helper";
+
+export const useGetApp = ()  => useContext(GetAppContext)
 
 export const GetAppContext = createContext({} as GetAppProviderProps)
 

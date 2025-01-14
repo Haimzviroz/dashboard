@@ -11,7 +11,7 @@ import Computer from "../../assets/side-bar/computer.svg";
 import ComputerActive from "../../assets/side-bar/computer-active.svg";
 
 import { AppScopeEnum, SideBarOption } from "@/types/enum";
-import { useGetApp } from "@/hooks";
+import { useGetApp } from "@/providers/getapp.provider";
 import Router from "next/router";
 import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS } from "@/apis/routes";
 

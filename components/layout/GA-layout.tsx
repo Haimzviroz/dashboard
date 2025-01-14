@@ -4,7 +4,7 @@ import SideBar from "../side-bar/side-bar";
 import { Box } from "@mui/material";
 import ErrorPage from "../../pages/error";
 import LoginPage from "../main/page";
-import GetAppProvider from "@/storage/getmap.storage";
+import GetAppProvider from "@/providers/getapp.provider";
 import TLS_MuiProvider from "@/providers/rtl-mui.provider";
 import TeamMuiProvider from "@/providers/team-mui.provider";
 import { AppScopeEnum } from "@/types/enum";
