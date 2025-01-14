@@ -4,7 +4,7 @@ import { ProjectProps } from './../types/interfaces/props.interface';
 import { useRouter } from 'next/router';
 import { NavBarOption } from "@/types/enum";
 import { R_PROJECTS } from "@/apis/routes";
-import { useGetApp } from "@/hooks";
+import { useGetApp } from "@/providers/getapp.provider";
 
 export const GlobalContext = createContext({} as ProjectProps)
 

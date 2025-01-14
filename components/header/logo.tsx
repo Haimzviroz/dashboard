@@ -19,11 +19,6 @@ interface GetAppLogoProps {
 const GetAppLogo: FC<GetAppLogoProps> = ({ withIcons = true, scope }) => {
   const router = useRouter()
 
-
-
-
-
-
   return (
     <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", py: 1, px: 8, height: 56 }}>
       <Stack direction='row' gap={2} alignItems={"center"}>
