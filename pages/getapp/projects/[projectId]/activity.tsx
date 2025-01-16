@@ -3,8 +3,8 @@ import { useEffect } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 
-import Project from '@/components/management-projects/project';
-import ManagementActions from '@/components/management-projects/management-actions';
+import Project from '@/components/projects/project';
+import ManagementActions from '@/components/projects/management-actions';
 import NavBar from '@/components/header/navigation';
 
 import { Auth, Project as Projects } from '@/types/interfaces';

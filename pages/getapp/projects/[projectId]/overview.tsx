@@ -11,7 +11,7 @@ import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { Q_PROJECT } from '@/apis/query-keys';
 import { useProject } from '@/hooks/project.query.hook';
 import { useGetApp } from '@/providers/getapp.provider';
-import ProjectMembers from '@/components/management-projects/project-members';
+import ProjectMembers from '@/components/projects/project-members';
 import LTR_MuiProvider from '@/providers/ltr-mui.provider';
 
 interface ManagementProjectsPageProps {

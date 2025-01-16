@@ -2,7 +2,7 @@ import { Fragment, ReactElement } from 'react';
 import { GetServerSidePropsContext } from 'next';
 
 import NavBar from '@/components/header/navigation';
-import ManagementActions from '@/components/management-projects/management-actions';
+import ManagementActions from '@/components/projects/management-actions';
 
 import { useGlobal } from '@/hooks';
 
