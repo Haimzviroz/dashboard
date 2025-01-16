@@ -4,11 +4,11 @@ import SearchBar from "../utils/bars/search.bar";
 import SortBar from "../utils/bars/sort.bar";
 import FilterBar from "../utils/bars/filter.bar";
 import DownloadFile from "../../assets/download-file.svg"
-import { useGetApp } from "@/hooks";
 import { pushOffer } from "@/apis/client-side/devices-actions.api";
 import { Device, ItemTypeEnum, PushOfferDto } from '@/types/interfaces/devices';
 import { AppScopeEnum } from "@/types/enum";
 import { useToast } from "@/providers/toast.provider";
+import { useGetApp } from "@/providers/getapp.provider";
 
 interface DeviceControlBarProps {
   selectedDevices: string[]

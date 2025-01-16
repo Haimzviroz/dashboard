@@ -18,10 +18,10 @@ import DeviceControlBar from "./device-contrall-bar";
 import MutNameCell from "./table-cells/nut-name.cell";
 import SoftwareTable from "./table-software";
 import { AppScopeEnum } from "@/types/enum";
-import { useGetApp } from "@/hooks";
 import SelectCell from "./table-cells/select.cell";
 import { Map } from "@/types/interfaces";
 import { Software } from "@/types/interfaces/getapp";
+import { useGetApp } from "@/providers/getapp.provider";
 
 enum DeviceTableCols {
   SELECT = "selected",

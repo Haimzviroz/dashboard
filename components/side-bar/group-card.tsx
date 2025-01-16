@@ -5,8 +5,8 @@ import GroupIcon from "../../assets/side-bar/group.svg";
 import ArrowDown from "../../assets/arrows/single-arrow-down.svg";
 import ArrowLeft from "../../assets/arrows/single-arrow-Left.svg";
 import O_IconButton from "@/ui/o-icon-button";
-import { useGetApp } from "@/hooks";
 import { Group } from "@/types/interfaces/devices";
+import { useGetApp } from "@/providers/getapp.provider";
 
 interface GroupCardProps {
   group: Group,

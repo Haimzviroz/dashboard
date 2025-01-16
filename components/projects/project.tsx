@@ -17,7 +17,7 @@ const Project: FC<ProjectProps> = ({ project, setProject }) => {
   return (
     <Fragment>
       <ProjectName project={project} />
-      <ProjectMembers project={project} setProject={setProject} />
+      <ProjectMembers project={project} />
       <ProjectTokens project={project} setProject={setProject} />
     </Fragment>
   )
