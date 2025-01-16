@@ -1,9 +1,5 @@
-import { Fragment, ReactElement, useState } from 'react';
+import { Fragment, ReactElement } from 'react';
 import { GetServerSidePropsContext } from 'next';
-
-// import NavBar from '@/components/header/navigation';
-
-import { Project as Projects } from '@/types/interfaces';
 import { NextPageWithLayout } from '@/types/types';
 
 
@@ -11,47 +7,48 @@ import { SS_ProjectsClient } from '@/apis/server-side/ss_projects-client';
 import GA_layout from '@/components/layout/GA-layout';
 import { Box } from '@mui/material';
 import NavBar from '@/components/header/navigation';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+import { Q_PROJECT } from '@/apis/query-keys';
+import { useProject } from '@/hooks/project.query.hook';
+import { useGetApp } from '@/providers/getapp.provider';
+import ProjectMembers from '@/components/management-projects/project-members';
+import LTR_MuiProvider from '@/providers/ltr-mui.provider';
 
 interface ManagementProjectsPageProps {
-  allProjects: Projects[],
-  currentProject: Projects,
-  invitedProjects: Projects[]
 }
 
-const ManagementProjectsPage: NextPageWithLayout<ManagementProjectsPageProps> = ({ allProjects, currentProject, invitedProjects }) => {
-  const [value, setValue] = useState(44);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
+const ProjectOverview: NextPageWithLayout<ManagementProjectsPageProps> = () => {
+  const { router } = useGetApp()
+  const { project } = useProject(router.query.projectId as string)
 
   return (
-    <Fragment>/dfdf</Fragment>
-    // <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
-    //   <Tabs value={value} onChange={handleChange} role="navigation" sx={{textTransform: 'none'}}>
-    //     <Tab label="Item One" value={44} sx={{textTransform: 'none'}}/>
-    //     <Tab label="Item Two" />
-    //     <Tab label="Item Three" />
-    //   </Tabs>
-    // </Box>
+    <Fragment>
+      <ProjectMembers project={project} />
+    </Fragment>
+
   );
 }
 
-export default ManagementProjectsPage
+export default ProjectOverview
 
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const params = ctx.params?.projectId
+  const queryClient = new QueryClient();
+
   const httpClient = new SS_ProjectsClient(ctx)
 
   try {
+    await Promise.allSettled([
+      await queryClient.prefetchQuery({
+        queryKey: [Q_PROJECT, params],
+        queryFn: () => httpClient.getProjectByName(params as string),
+      }),
+    ])
 
-    // const currentProject = res?.projects?.find((p: Projects) => p.id.toString() === params)
-    // if (!allProjects.length || !currentProject) {
-    //   return { notFound: true };
-    // }
     return {
       props: {
+        dehydratedState: dehydrate(queryClient),
       }
     }
   } catch (error: any) {
@@ -59,11 +56,13 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   }
 }
 
-ManagementProjectsPage.getLayout = (page: ReactElement) => {
+ProjectOverview.getLayout = (page: ReactElement) => {
   return <GA_layout page={page} >
-    <Box sx={{ direction: "rtl", padding: 2 }}>
-      <NavBar />
-      {page}
-    </Box>
+    <LTR_MuiProvider>
+      <Box sx={{ padding: 2 }}>
+        <NavBar />
+        {page}
+      </Box>
+    </LTR_MuiProvider>
   </GA_layout>
 }

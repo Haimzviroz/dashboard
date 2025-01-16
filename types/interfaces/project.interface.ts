@@ -3,25 +3,24 @@ export interface Member {
   firstName?: string;
   lastName?: string;
   email: string;
-  defaultProject?: number;
+  image?: string
   role: string;
+  status: string;
 }
+
+export type UpdateMember = Pick<Member, 'role'>;
+export type AddMember = Required<Pick<Member, 'role' | 'email'>>;
 
 export interface Project {
   id: number;
   name: string;
-  OS: string;
-  platformType: string;
-  formation: string;
-  category: string;
-  artifactType: string
   description: string;
   members: Member[];
-  tokens : string[];
-  addedTokens?: string[] 
+  tokens: string[];
+  addedTokens?: string[]
 }
 
-export interface ProjectConfig{
+export interface ProjectConfig {
   categories: string[]
   formations: string[]
   operationsSystem: string[]

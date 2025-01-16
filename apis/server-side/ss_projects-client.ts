@@ -11,9 +11,17 @@ export class SS_ProjectsClient extends SS_HttpClient {
 
   async getAllProjects() {
     this.logger.info("Get all projects");
-    
     try {
       return (await this.httpConfig.get(PROJECT, await this.getReqConfig())).data;
+    } catch (error) {
+      return this.errorHandler(error as AxiosError)
+    }
+  }
+
+  async getProjectByName(pName: string) {
+    this.logger.info(`Get project '${pName}'`);
+    try {
+      return (await this.httpConfig.get(PROJECT + pName, await this.getReqConfig())).data;
     } catch (error) {
       return this.errorHandler(error as AxiosError)
     }

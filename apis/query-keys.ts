@@ -9,5 +9,6 @@ export const Q_DEVICE_SOFTWARE = "device_software"
 export const Q_MAPS = "maps"
 export const Q_MAP = "map"
 export const Q_PRODUCTS = "products"
+export const Q_PROJECT = "project"
 
 
