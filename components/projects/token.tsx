@@ -1,52 +1,62 @@
-import Popup from "@/ui/popup";
-import { FC, Fragment, useState } from "react"
+import React from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Link,
+} from "@mui/material";
 
-import s from '../../styles/management-project.module.css';
-
-interface TokensProps {
-  token: string,
-}
-
-const Tokens: FC<TokensProps> = ({ token }) => {
-  const [isFocus, setIsFocus] = useState<boolean>(false)
-  const [copiedMes, setCopiedMes] = useState<boolean>(false)
-
-  const copyHandler = () => {
-    try {
-      navigator.clipboard.writeText(token)
-    } catch (error) {
-      console.error(error);  
-    }
-    
-    setCopiedMes(true)
-    setTimeout(() => {
-      setCopiedMes(false)
-    }, 1000)
-  }
-
-  const getToken = () => {
-    if (isFocus) {
-      return <textarea onBlur={() => { setIsFocus(false) }} autoFocus className={s.token}>{token}</textarea>
-    }
-    return (
-      <Fragment>
-        <div onClick={() => setIsFocus(true)} className={s.token}>{token}</div>
-        <div>
-          <button
-            className={`${s.button} ${s["edit-button"]}`}
-            onClick={() => { copyHandler() }}>copy</button>
-          {copiedMes && <Popup body="copied" style={{ bottom: "60px", left: "40px" }} ></Popup>}
-        </div>
-      </Fragment>
-    )
-  }
-
+const AccessTokens = () => {
   return (
-    <div className={`${s["token-wrap"]} ${s["item-wrap"]}`}>
-      {getToken()}
-    </div>
+    <Card sx={{margin: "16px", padding: 2 }}>
+      <CardContent>
+        <Typography variant="h6" gutterBottom>
+          <Box component="span" sx={{ display: "flex", alignItems: "center" }}>
+            <Box
+              component="span"
+              sx={{
+                marginRight: 1,
+                display: "inline-flex",
+                alignItems: "center",
+                fontSize: "1.5rem",
+              }}
+            >
+              🔑
+            </Box>
+            Access Tokens
+          </Box>
+        </Typography>
+        <Divider sx={{ marginY: 2 }} />
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          paddingY={1}
+        >
+          <Box>
+            <Typography variant="body1">Production API Key</Typography>
+            <Typography variant="body2" color="textSecondary">
+              Created on Mar 15, 2024
+            </Typography>
+          </Box>
+          <Button
+            variant="text"
+            color="error"
+            sx={{ textTransform: "none", fontWeight: "bold" }}
+          >
+            Revoke
+          </Button>
+        </Box>
+        <Divider sx={{ marginY: 2 }} />
+        <Link href="#" underline="hover" variant="body2" color="primary">
+          + Generate New Token
+        </Link>
+      </CardContent>
+    </Card>
+  );
+};
 
-  )
-}
-
-export default Tokens
+export default AccessTokens;

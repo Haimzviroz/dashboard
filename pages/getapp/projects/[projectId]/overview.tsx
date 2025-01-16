@@ -13,6 +13,7 @@ import { useProject } from '@/hooks/project.query.hook';
 import { useGetApp } from '@/providers/getapp.provider';
 import ProjectMembers from '@/components/projects/members/project-members';
 import LTR_MuiProvider from '@/providers/ltr-mui.provider';
+import AccessTokens from '@/components/projects/token';
 
 interface ManagementProjectsPageProps {
 }
@@ -24,6 +25,7 @@ const ProjectOverview: NextPageWithLayout<ManagementProjectsPageProps> = () => {
   return (
     <Fragment>
       <ProjectMembers project={project} />
+      <AccessTokens></AccessTokens>
     </Fragment>
 
   );

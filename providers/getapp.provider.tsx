@@ -38,12 +38,12 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 		navActive && navActive !== navBarActive && setNavBarActive(navActive)
 	}, [router])
 
-	useEffect(() => {
-		if (activated?.trigger) {
-			const href = `${getRoute()}`;
-			router.push(href, undefined, { shallow: true })
-		}
-	}, [activated])
+	// useEffect(() => {
+	// 	if (activated?.trigger) {
+	// 		const href = `${getRoute()}`;
+	// 		router.push(href, undefined, { shallow: true })
+	// 	}
+	// }, [activated])
 
 
 	useEffect(() => {
