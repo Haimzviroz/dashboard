@@ -1,63 +1,52 @@
 import { Fragment, ReactElement } from 'react';
 import { GetServerSidePropsContext } from 'next';
 
-import NavBar from '@/components/header/navigation';
-import ManagementActions from '@/components/projects/management-actions';
 
-import { useGlobal } from '@/hooks';
 
-import { Project as Projects, Auth } from '@/types/interfaces';
 import { NextPageWithLayout } from '@/types/types';
 
 import { SS_ProjectsClient } from '@/apis/server-side/ss_projects-client';
 import GA_layout from '@/components/layout/GA-layout';
-import { R_PROJECTS } from '@/apis/routes';
 import GlobalProvider from '@/storage/global.storage';
 import { Box } from '@mui/material';
+import { Q_PROJECTS } from '@/apis/query-keys';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+import { useProjects } from '@/hooks/project.query.hook';
+import Dashboard from '@/components/projects/management-actions';
 
-interface ManagementProjectsPageProps {
-	allProjects: Projects[],
-	invitedProjects: Projects[]
+interface ProjectsPageProps {
+
 }
 
-const ManagementProjectsPage: NextPageWithLayout<ManagementProjectsPageProps> = ({ allProjects, invitedProjects }) => {
-	const { updateProject, setActivated } = useGlobal()
-
+const ProjectsPage: NextPageWithLayout<ProjectsPageProps> = () => {
+	const { projects } = useProjects()
 	return (
 		<Fragment>
-			{allProjects.length === 0 && <h1>{`There isn't any projects`}</h1>}
-			<ManagementActions setProject={updateProject} setActivated={setActivated} invitedProjects={invitedProjects} />
+			<Dashboard projects={projects} />
 		</Fragment>
 	)
 }
 
-export default ManagementProjectsPage
+export default ProjectsPage
 
 
 
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-
 	const httpClient = new SS_ProjectsClient(context)
+	const queryClient = new QueryClient();
 
 	try {
-		const res: any = await httpClient.getAllProjects()
-		const invitedProjects = res?.invitedProjects || []
+		await Promise.allSettled([
+			await queryClient.prefetchQuery({
+				queryKey: [Q_PROJECTS],
+				queryFn: () => httpClient.getAllProjects(),
+			}),
+		])
 
-		if (res?.projects?.length) {
-			const defaultProject = res.member.defaultProject || res.projects[0].id
-			return {
-				redirect: {
-					permanent: false,
-					destination: R_PROJECTS + `/${defaultProject}/activity`,
-					// destination: `/management-projects/${defaultProject}/activity`,
-				}
-			}
-		}
 		return {
 			props: {
-				allProjects: res || [],
-				invitedProjects
+				dehydratedState: dehydrate(queryClient),
 			}
 		}
 	} catch (error: any) {
@@ -65,12 +54,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 	}
 }
 
-ManagementProjectsPage.getLayout = (page: ReactElement) => {
+ProjectsPage.getLayout = (page: ReactElement) => {
 	return (
 		<GA_layout page={page} >
 			<GlobalProvider>
 				<Box sx={{ direction: "rtl", padding: 2 }}>
-					<NavBar />
+					{/* <NavBar /> */}
 					{page}
 				</Box>
 			</GlobalProvider>

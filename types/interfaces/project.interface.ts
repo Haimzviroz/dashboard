@@ -15,6 +15,8 @@ export interface Project {
   id: number;
   name: string;
   description: string;
+  owner?: string;
+  versions?: number
   members: Member[];
   tokens: string[];
   addedTokens?: string[]

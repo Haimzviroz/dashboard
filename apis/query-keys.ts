@@ -10,5 +10,6 @@ export const Q_MAPS = "maps"
 export const Q_MAP = "map"
 export const Q_PRODUCTS = "products"
 export const Q_PROJECT = "project"
+export const Q_PROJECTS = "projects"
 
 

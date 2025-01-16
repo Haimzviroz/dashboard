@@ -13,7 +13,7 @@ export class SS_HttpConfig {
 
   private constructor() {   
     this.httpConfig = axios.create({
-      baseURL: BASE_PATHS,
+      baseURL: BASE_PATHS + "/api/v1",
       // httpsAgent: new Agent({
       //   // ca: fs.readFileSync(process.env.CA_CERT_PATH ?? ""),
       //   rejectUnauthorized: false 

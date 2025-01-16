@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { PROJECT, PROJECT_RELEASES } from "../paths";
+import { BASE_PATHS, PROJECT, PROJECT_RELEASES } from "../paths";
 import { GetServerSidePropsContext } from "next";
 import { SS_HttpClient } from "./ss_http-client";
 
@@ -12,7 +12,7 @@ export class SS_ProjectsClient extends SS_HttpClient {
   async getAllProjects() {
     this.logger.info("Get all projects");
     try {
-      return (await this.httpConfig.get(PROJECT, await this.getReqConfig())).data;
+      return (await this.httpConfig.get(PROJECT, await this.getReqConfig({ basePath: BASE_PATHS + "/api/v2" }))).data.data;
     } catch (error) {
       return this.errorHandler(error as AxiosError)
     }

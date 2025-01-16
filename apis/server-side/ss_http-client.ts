@@ -9,6 +9,7 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 interface GetReqConfigOptions {
   withTokens?: boolean
+  basePath?: string
 }
 
 
@@ -117,7 +118,11 @@ export class SS_HttpClient {
         })
       }
     }
-    return { headers }
+
+    return {
+      headers,
+      baseURL: options?.basePath || undefined
+    }
   }
 
 

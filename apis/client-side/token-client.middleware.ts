@@ -1,4 +1,4 @@
-import axios, { Method, AxiosError } from 'axios';
+import axios, { Method, AxiosError, AxiosRequestConfig } from 'axios';
 import { clientGetRefreshToken } from './login.api';
 import { BASE_PATHS } from '../paths';
 import { getSession, signIn } from 'next-auth/react';
@@ -7,19 +7,20 @@ import Logger from '@/services/logger';
 
 const logger = Logger(__filename)
 
-const clientRequestWithAuth = async (url: string, method: Method, data?: any) => {
+const clientRequestWithAuth = async (url: string, method: Method, data?: any, options?:AxiosRequestConfig) => {
   logger.info(`Http req to path ${url}`)
   const token = await getValidAccessToken()
 
   try {
     const response = await axios({
-      method,
+      method, 
       url: `${BASE_PATHS}${url}`,
       data,
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token?.accessToken}`,
-      }
+      },
+      ...options
     });
     return response.data;
   } catch (error: any) {

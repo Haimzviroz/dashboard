@@ -1,7 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Q_PROJECT } from "../apis/query-keys";
-import { addNewMember, deleteMember, getProject, updateMember } from "@/apis/client-side/projects-actions.api";
+import { Q_PROJECT, Q_PROJECTS } from "../apis/query-keys";
+import { addNewMember, deleteMember, getProject, getProjects, updateMember } from "@/apis/client-side/projects-actions.api";
 import { AddMember, Member, Project, UpdateMember } from "@/types/interfaces";
+
+export const useProjects = () => {
+  const { data: projects, refetch } = useQuery<Project[]>({
+    queryKey: [Q_PROJECTS],
+    queryFn: () => getProjects(),
+  })
+  return { projects, refetch }
+}
 
 export const useProject = (name: string) => {
   const { data: project, refetch } = useQuery<any>({

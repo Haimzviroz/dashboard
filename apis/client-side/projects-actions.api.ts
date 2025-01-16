@@ -1,4 +1,4 @@
-import { MEMBER, PROJECT, CREATE_TOKEN, CONFIG_OPTION, DEVICES, CONFIRM, USERS } from '../paths';
+import { MEMBER, PROJECT, CREATE_TOKEN, CONFIG_OPTION, DEVICES, CONFIRM, USERS, BASE_PATHS } from '../paths';
 import { clientRequestWithAuth } from './token-client.middleware';
 
 export const getUsers = async (params: { [key: string]: string }) => {
@@ -6,7 +6,7 @@ export const getUsers = async (params: { [key: string]: string }) => {
 }
 
 export const getProjects = async () => {
-  return await clientRequestWithAuth(PROJECT, "get")
+  return await clientRequestWithAuth(PROJECT, "get", null, {baseURL: BASE_PATHS + "/api/v2",})
 }
 
 export const getProject = async (name: string) => {
