@@ -1,7 +1,7 @@
 import { FC, Fragment } from "react"
 
 import ProjectName from '@/components/header/project-name';
-import ProjectMembers from "./project-members";
+import ProjectMembers from "./members/project-members";
 import ProjectTokens from "./project-tokens";
 
 import { Project as Proj } from '@/types/interfaces';
