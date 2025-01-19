@@ -5,6 +5,7 @@ export enum NavBarOption {
   POLICY = "policy",
   DOCS = "docs",
   REGULATION = "regulations",
+  SETTINGS = "settings",
 }
 
 export enum SideBarOption {

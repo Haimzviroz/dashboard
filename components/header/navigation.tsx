@@ -12,6 +12,8 @@ import Policy from '../../assets/nav-bar/policy.svg'
 import PolicyAct from '../../assets/nav-bar/policy-active.svg'
 import Docs from '../../assets/nav-bar/docs.svg'
 import DocsAct from '../../assets/nav-bar/docs-active.svg'
+import Set from '../../assets/nav-bar/settings.svg'
+import SetAct from '../../assets/nav-bar/settings-active.svg'
 import { Tab, Tabs } from "@mui/material";
 import { useGetApp } from "@/providers/getapp.provider";
 import { R_PROJECTS } from "@/apis/routes";
@@ -66,6 +68,13 @@ const items: NavBarItem[] = [
     activeIcon: <DocsAct />,
     disabled: true,
     route: NavBarOption.DOCS
+  },
+  {
+    key: NavBarOption.SETTINGS,
+    name: "Settings",
+    icon: <Set />,
+    activeIcon: <SetAct />,
+    route: NavBarOption.SETTINGS
   }
 ]
 
@@ -85,7 +94,7 @@ const NavBar = () => {
           iconPosition="start"
           role="navigation"
           onClick={() => !item.disabled && router.push(`${R_PROJECTS}/${router.query.projectId}/${item.route}`)}
-          sx={{ textTransform: 'none', gap: 1, minHeight: 48, fontWeight: "bold" }} />
+          sx={{ textTransform: 'none', minHeight: 48, fontWeight: "bold" }} />
       )
     })
   }

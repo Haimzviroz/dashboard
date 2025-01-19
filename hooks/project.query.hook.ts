@@ -25,7 +25,7 @@ export const useSearchProjects = (name: string) => {
 
   return useMutation({
     mutationFn: (searchMes: { projectName: string }) =>
-      SearchProjects(searchMes.projectName),
+      SearchProjects(searchMes.projectName) as Promise<Project[]>,
 
     // Notice the second argument is the variables object that the `mutate` function receives
     onSuccess: async (data: Project[]) => {

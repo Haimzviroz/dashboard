@@ -83,6 +83,7 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 			if (router.pathname.endsWith(NavBarOption.REGULATION)) return NavBarOption.REGULATION;
 			if (router.pathname.endsWith(NavBarOption.POLICY)) return NavBarOption.POLICY;
 			if (router.pathname.endsWith(NavBarOption.DOCS)) return NavBarOption.DOCS;
+			if (router.pathname.endsWith(NavBarOption.SETTINGS)) return NavBarOption.SETTINGS;
 		}
 	}
 
