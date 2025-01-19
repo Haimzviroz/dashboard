@@ -9,7 +9,7 @@ import GlobalProvider from '@/storage/global.storage';
 import { Box } from '@mui/material';
 import { Q_PROJECTS } from '@/apis/query-keys';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import ProjectsDashboard from '@/components/projects/management-actions';
+import ProjectsDashboard from '@/components/projects/projects-page';
 
 interface ProjectsPageProps {
 
