@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Q_PROJECT, Q_PROJECTS } from "../apis/query-keys";
-import { addNewMember, deleteMember, getProject, getProjects, updateMember } from "@/apis/client-side/projects-actions.api";
+import { Q_P_SEARCH_RESULT, Q_PROJECT, Q_PROJECTS } from "../apis/query-keys";
+import { addNewMember, deleteMember, getProject, getProjects, SearchProjects, updateMember } from "@/apis/client-side/projects-actions.api";
 import { AddMember, Member, Project, UpdateMember } from "@/types/interfaces";
 
 export const useProjects = () => {
@@ -9,6 +9,38 @@ export const useProjects = () => {
     queryFn: () => getProjects(),
   })
   return { projects, refetch }
+}
+
+export const useSearchedProjects = () => {
+  const { data: pSearchResult, refetch } = useQuery<Project[]>({
+    queryKey: [Q_P_SEARCH_RESULT],
+    queryFn: () => getProjects(),
+    enabled: false
+  })
+  return { pSearchResult, refetch }
+}
+
+export const useSearchProjects = (name: string) => {
+  const client = useQueryClient()
+
+  return useMutation({
+    mutationFn: (searchMes: { projectName: string }) =>
+      SearchProjects(searchMes.projectName),
+
+    // Notice the second argument is the variables object that the `mutate` function receives
+    onSuccess: async (data: Project[]) => {
+
+      client.setQueryData([Q_P_SEARCH_RESULT], () => {
+        const pro: Project[] | undefined = client.getQueryData([Q_PROJECTS])
+        let filteredPro: Project[] | undefined
+        if (pro) {
+          filteredPro = pro.filter(p => data.some(d => d.name === p.name))
+        }
+        return filteredPro
+      })
+    },
+    onError: (error => alert(error))
+  })
 }
 
 export const useProject = (name: string) => {

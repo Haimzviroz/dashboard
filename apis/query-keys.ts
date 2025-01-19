@@ -11,5 +11,6 @@ export const Q_MAP = "map"
 export const Q_PRODUCTS = "products"
 export const Q_PROJECT = "project"
 export const Q_PROJECTS = "projects"
+export const Q_P_SEARCH_RESULT = "projects_search_result"
 
 

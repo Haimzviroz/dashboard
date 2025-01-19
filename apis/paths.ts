@@ -8,6 +8,7 @@ export const REFRESH = "refresh/"
 const PROJECT_MANAGEMENT = "project/"
 export const USERS = "users/";
 export const PROJECT = PROJECT_MANAGEMENT;
+export const SEARCH_PROJECT = PROJECT + "search";
 export const MEMBER = "member/";
 export const CONFIRM = "confirm/";
 

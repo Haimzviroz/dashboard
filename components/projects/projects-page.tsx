@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -6,14 +6,25 @@ import {
 import { useRouter } from "next/router";
 import ProjectList from "./projects/project-list";
 import HeadBar from "./projects/project-headbar";
-import { useProjects } from "@/hooks/project.query.hook";
+import { useProjects, useSearchedProjects, useSearchProjects } from "@/hooks/project.query.hook";
+import { Project } from "@/types/interfaces";
 
 interface ProjectsProps {
 }
 
 const ProjectsDashboard: FC<ProjectsProps> = () => {
 
+  const [searchTerm, setSearchTerm] = useState<string>(""); const [pSearchResult, setP_SearchResult] = useState<Project[]>()
   const { projects } = useProjects()
+  const searchedP = useSearchedProjects()
+  const searchP = useSearchProjects("")
+
+  useEffect(() => {
+    if (searchTerm && searchTerm.length > 1) {
+      searchP.mutate({ projectName: searchTerm })
+    }
+  }, [searchTerm])
+
 
   const router = useRouter()
 
@@ -23,8 +34,10 @@ const ProjectsDashboard: FC<ProjectsProps> = () => {
       <Typography variant="h4" fontWeight="bold" mb={3}>
         Dashboard
       </Typography>
-      <HeadBar router={router}></HeadBar>
-      {projects && <ProjectList title="All Projects" projects={projects} router={router} />}
+      <HeadBar router={router} onSearch={searchP.mutate} setSearchTerm={setSearchTerm}></HeadBar>
+      {searchTerm && searchTerm.length > 1 && searchedP.pSearchResult && searchedP.pSearchResult.length > 0 ?
+        <ProjectList title="Search results" projects={searchedP.pSearchResult} router={router} /> :
+        projects && <ProjectList title="All Projects" projects={projects} router={router} />}
     </Box>
   );
 };

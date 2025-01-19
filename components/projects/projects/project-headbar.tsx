@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { Dispatch, FC, SetStateAction } from "react";
 import {
   TextField,
   Button,
@@ -9,12 +9,25 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import { NextRouter } from "next/router";
 import { R_PROJECTS_NEW } from "@/apis/routes";
+import { UseMutateFunction } from "@tanstack/react-query";
+import { Project } from "@/types/interfaces";
 
 interface HeadBarProps {
-  router :NextRouter
+  router: NextRouter
+  onSearch: UseMutateFunction<Project[], Error, { projectName: string; }, unknown>
+  setSearchTerm: Dispatch<SetStateAction<string>>
 }
 
-const HeadBar:FC<HeadBarProps> = ({router}) => {
+const HeadBar: FC<HeadBarProps> = ({ router, onSearch, setSearchTerm }) => {
+
+  const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const value = e.target.value
+    if (value && value.length > 1) {
+      setSearchTerm(value)
+    } else {
+      setSearchTerm("")
+    }
+  }
 
   return <Stack
     direction={{ xs: 'column', sm: 'row' }} // Stack direction changes based on screen size
@@ -44,6 +57,8 @@ const HeadBar:FC<HeadBarProps> = ({router}) => {
         height: 40, // Ensure button height is consistent with the input field
         fontSize: { xs: '10px', sm: '10px', md: "14px" }, // Responsive font size
       }}
+      onClick={() => router.push(R_PROJECTS_NEW)}
+    >
       New Project
     </Button>
   </Stack>

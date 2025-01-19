@@ -14,7 +14,7 @@ const clientRequestWithAuth = async (url: string, method: Method, data?: any, op
   try {
     const response = await axios({
       method, 
-      url: `${BASE_PATHS}${url}`,
+      url: `${BASE_PATHS}/api/v1/${url}`,
       data,
       headers: {
         "Content-Type": "application/json",
