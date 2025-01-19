@@ -49,6 +49,7 @@ const HeadBar: FC<HeadBarProps> = ({ router, onSearch, setSearchTerm }) => {
           </InputAdornment>
         ),
       }}
+      onChange={handleSearchInput}
     />
     <Button
       variant="contained"

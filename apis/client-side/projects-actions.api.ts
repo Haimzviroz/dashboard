@@ -1,3 +1,4 @@
+import { SearchPro } from '@/types/interfaces';
 import { MEMBER, PROJECT, CREATE_TOKEN, CONFIG_OPTION, DEVICES, CONFIRM, USERS, BASE_PATHS, SEARCH_PROJECT } from '../paths';
 import { clientRequestWithAuth } from './token-client.middleware';
 
@@ -9,7 +10,7 @@ export const getProjects = async () => {
   return await clientRequestWithAuth(PROJECT, "get", null, {baseURL: BASE_PATHS + "/api/v2",})
 }
 
-export const SearchProjects = async (name:string) => {  
+export const SearchProjects = async (name:string) :Promise<SearchPro[]> => {  
   return (await clientRequestWithAuth(SEARCH_PROJECT + `?query=${name}`, "get", null)).data
 }
 

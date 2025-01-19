@@ -22,7 +22,7 @@ const ProjectList: FC<ProjectListProps> = ({ title, projects, router }) => {
       </Typography>
       <Grid container spacing={2}>
         {projects.map((project) => (
-          <ProjectItem project={project} router={router}/>
+          <ProjectItem project={project} router={router} key={project.id}/>
         ))}
       </Grid>
     </Fragment>

@@ -21,6 +21,7 @@ export interface Project {
   tokens: string[];
   addedTokens?: string[]
 }
+export type SearchPro = Required<Pick<Project, 'id' | 'name'>>;
 
 export interface ProjectConfig {
   categories: string[]
