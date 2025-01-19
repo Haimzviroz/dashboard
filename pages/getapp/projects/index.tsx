@@ -1,8 +1,6 @@
 import { Fragment, ReactElement } from 'react';
 import { GetServerSidePropsContext } from 'next';
 
-
-
 import { NextPageWithLayout } from '@/types/types';
 
 import { SS_ProjectsClient } from '@/apis/server-side/ss_projects-client';
@@ -11,18 +9,16 @@ import GlobalProvider from '@/storage/global.storage';
 import { Box } from '@mui/material';
 import { Q_PROJECTS } from '@/apis/query-keys';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { useProjects } from '@/hooks/project.query.hook';
-import Dashboard from '@/components/projects/management-actions';
+import ProjectsDashboard from '@/components/projects/management-actions';
 
 interface ProjectsPageProps {
 
 }
 
 const ProjectsPage: NextPageWithLayout<ProjectsPageProps> = () => {
-	const { projects } = useProjects()
 	return (
 		<Fragment>
-			<Dashboard projects={projects} />
+			<ProjectsDashboard/>
 		</Fragment>
 	)
 }
