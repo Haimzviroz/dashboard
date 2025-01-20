@@ -24,7 +24,7 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 
 	const [selectedGroup, setSelectedGroup] = useState<number[]>(getSelectedGroups())
 	const [activated, setActivated] = useState<Activate | null>(null);
-	const [navBarActive, setNavBarActive] = useState<NavBarOption | null>(null);
+	const [navBarActive, setNavBarActive] = useState<NavBarOption | null>(NavBarOption.OVERVIEW);
 	const [sideBarCollapse, setSideBarCollapse] = useState<boolean>(true);
 
 	const isFirstLoad = useRef(true); // useRef to track first load without causing re-render

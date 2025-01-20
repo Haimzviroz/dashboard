@@ -7,20 +7,20 @@ import Logger from '@/services/logger';
 
 const logger = Logger(__filename)
 
-const clientRequestWithAuth = async (url: string, method: Method, data?: any, options?:AxiosRequestConfig) => {
+const clientRequestWithAuth = async (url: string, method: Method, data?: any, options?: AxiosRequestConfig) => {
   logger.info(`Http req to path ${url}`)
   const token = await getValidAccessToken()
 
   try {
     const response = await axios({
-      method, 
-      url: `${BASE_PATHS}/api/v1/${url}`,
+      method,
+      url: `${url}`,
       data,
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token?.accessToken}`,
       },
-      ...options
+      baseURL: options?.baseURL ?? `${BASE_PATHS}/api/v1/`
     });
     return response.data;
   } catch (error: any) {

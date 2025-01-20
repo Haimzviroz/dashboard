@@ -7,7 +7,7 @@ export const getUsers = async (params: { [key: string]: string }) => {
 }
 
 export const getProjects = async () => {
-  return await clientRequestWithAuth(PROJECT, "get", null, {baseURL: BASE_PATHS + "/api/v2",})
+  return (await clientRequestWithAuth(PROJECT, "get", null, {baseURL: BASE_PATHS + "/api/v2",})).data
 }
 
 export const SearchProjects = async (name:string) :Promise<SearchPro[]> => {  
