@@ -24,7 +24,7 @@ const ProjectOverview: NextPageWithLayout<ManagementProjectsPageProps> = () => {
 
   return (
     <Fragment>
-      <ProjectMembers project={project} />
+      {project && <ProjectMembers project={project} />}
       <AccessTokens></AccessTokens>
     </Fragment>
 

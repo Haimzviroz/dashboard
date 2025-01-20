@@ -33,7 +33,7 @@ const ProjectItem: FC<ProjectItemProps> = ({ project, router }) => {
             <b>Versions:</b> {project.versions}
           </Typography>
           <Typography variant="body2">
-            <b>Teams:</b> {project.members.length} members
+            <b>Teams:</b> {project.numMembers} members
           </Typography>
           <Button
             size="small"

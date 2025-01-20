@@ -4,12 +4,10 @@ import ProjectName from '@/components/header/project-name';
 import ProjectMembers from "./members/project-members";
 import ProjectTokens from "./project-tokens";
 
-import { Project as Proj } from '@/types/interfaces';
-
-import s from '../../styles/management-project.module.css';
+import { DetailedProject } from "@/types/interfaces";
 
 interface ProjectProps {
-  project: Proj,
+  project: DetailedProject,
   setProject: (project: any) => void,
 }
 

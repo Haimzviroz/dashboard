@@ -14,10 +14,10 @@ interface ProjectsProps {
 
 const ProjectsDashboard: FC<ProjectsProps> = () => {
 
-  const [searchTerm, setSearchTerm] = useState<string>(""); const [pSearchResult, setP_SearchResult] = useState<Project[]>()
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const { projects } = useProjects()
   const searchedP = useSearchedProjects()
-  const searchP = useSearchProjects("")
+  const searchP = useSearchProjects()
 
   useEffect(() => {
     if (searchTerm && searchTerm.length > 1) {

@@ -2,21 +2,18 @@ import React, { FC, useState } from "react";
 import {
   Box,
   Typography,
-  Avatar,
-  IconButton,
   Stack,
   Button,
   Card,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { Delete as DeleteIcon, Group as GroupIcon, Edit as EditIcon } from "@mui/icons-material";
+import { Group as GroupIcon } from "@mui/icons-material";
 import AddIcon from '@mui/icons-material/Add';
-import { Member, Project } from "@/types/interfaces";
+import { DetailedProject, Member } from "@/types/interfaces";
 import MemberForm from "./member-from";
 import { useDeleteMember } from "@/hooks/project.query.hook";
 import TeamMemberItem from "../team-member";
@@ -54,7 +51,7 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
 );
 
 interface TeamMembersProps {
-  project: Project;
+  project: DetailedProject;
 }
 
 const TeamMembers: FC<TeamMembersProps> = ({ project }) => {
@@ -87,7 +84,7 @@ const TeamMembers: FC<TeamMembersProps> = ({ project }) => {
 
       {/* Members List */}
       <Stack spacing={2}>
-        {project.members.map((member) => (
+        {project.members?.map((member) => (
           <TeamMemberItem
             key={member.id}
             member={member}
@@ -129,7 +126,7 @@ const TeamMembers: FC<TeamMembersProps> = ({ project }) => {
       <DeleteConfirmationDialog
         open={confirmDeleteToggle}
         memberName={
-          `${project.members.find((m) => m.id === selectedMember?.id)?.firstName || ""} ${project.members.find((m) => m.id === selectedMember?.id)?.lastName || ""}`
+          `${project.members?.find((m) => m.id === selectedMember?.id)?.firstName || ""} ${project.members?.find((m) => m.id === selectedMember?.id)?.lastName || ""}`
         }
         onClose={() => {
           setConfirmDeleteToggle(false)

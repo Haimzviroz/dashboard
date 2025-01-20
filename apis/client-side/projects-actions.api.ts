@@ -1,5 +1,5 @@
-import { SearchPro } from '@/types/interfaces';
-import { MEMBER, PROJECT, CREATE_TOKEN, CONFIG_OPTION, DEVICES, CONFIRM, USERS, BASE_PATHS, SEARCH_PROJECT } from '../paths';
+import { DetailedProject, SearchPro } from '@/types/interfaces';
+import { MEMBER, PROJECT, CREATE_TOKEN, CONFIG_OPTION, CONFIRM, USERS, BASE_PATHS, SEARCH_PROJECT } from '../paths';
 import { clientRequestWithAuth } from './token-client.middleware';
 
 export const getUsers = async (params: { [key: string]: string }) => {
@@ -14,7 +14,7 @@ export const SearchProjects = async (name:string) :Promise<SearchPro[]> => {
   return (await clientRequestWithAuth(SEARCH_PROJECT + `?query=${name}`, "get", null)).data
 }
 
-export const getProject = async (name: string) => {
+export const getProject = async (name: string) : Promise<DetailedProject> => {
   return await clientRequestWithAuth(PROJECT + name, "get")
 }
 
