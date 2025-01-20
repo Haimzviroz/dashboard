@@ -2,21 +2,20 @@ import { FC, Fragment } from "react"
 
 import ProjectName from '@/components/header/project-name';
 import ProjectMembers from "./members/project-members";
-import ProjectTokens from "./project-tokens";
 
 import { DetailedProject } from "@/types/interfaces";
+import ProjectTokens from "./tokens/token";
 
 interface ProjectProps {
   project: DetailedProject,
-  setProject: (project: any) => void,
 }
 
-const Project: FC<ProjectProps> = ({ project, setProject }) => {
+const Project: FC<ProjectProps> = ({ project }) => {
   return (
     <Fragment>
       <ProjectName project={project} />
       <ProjectMembers project={project} />
-      <ProjectTokens project={project} setProject={setProject} />
+      {project.tokens && <ProjectTokens tokens={project.tokens} />}
     </Fragment>
   )
 }
