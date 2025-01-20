@@ -16,7 +16,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { DetailedProject, Member } from "@/types/interfaces";
 import MemberForm from "./member-from";
 import { useDeleteMember } from "@/hooks/project.query.hook";
-import TeamMemberItem from "../team-member";
+import TeamMemberItem from "./team-member";
 
 
 interface DeleteConfirmationDialogProps {
