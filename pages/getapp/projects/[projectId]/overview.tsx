@@ -5,7 +5,7 @@ import { NextPageWithLayout } from '@/types/types';
 
 import { SS_ProjectsClient } from '@/apis/server-side/ss_projects-client';
 import GA_layout from '@/components/layout/GA-layout';
-import { Box } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import NavBar from '@/components/header/navigation';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { Q_PROJECT } from '@/apis/query-keys';
@@ -24,6 +24,19 @@ const ProjectOverview: NextPageWithLayout<ManagementProjectsPageProps> = () => {
 
   return (
     <Fragment>
+      <Box sx={{ m: 2 }}>
+        <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+          {project?.name}
+        </Typography>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ mt: 1, mb: 2 }}
+        >
+          {project?.description}
+        </Typography>
+        <Divider />
+      </Box>
       {project && <ProjectMembers project={project} />}
       <AccessTokens></AccessTokens>
     </Fragment>

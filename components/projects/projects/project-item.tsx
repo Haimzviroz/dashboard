@@ -1,31 +1,43 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import {
   Typography,
   Button,
   Card,
   CardContent,
   Grid,
+  IconButton,
 } from "@mui/material";
+import { Star, StarBorder } from "@mui/icons-material";
 import { Project } from "@/types/interfaces";
 import { NextRouter } from "next/router";
 import { R_PROJECTS } from "@/apis/routes";
 import { NavBarOption } from "@/types/enum";
 
 interface ProjectItemProps {
-  project: Project
-  router: NextRouter
-
+  project: Project;
+  router: NextRouter;
 }
 
 const ProjectItem: FC<ProjectItemProps> = ({ project, router }) => {
+  const [isPined, setIsPined] = useState(false);
+
+  const toggleImportant = () => {
+    setIsPined(!isPined);
+    // Optionally, handle any API call or state update for marking as important
+  };
 
   return (
     <Grid item xs={12} md={6} lg={4} key={project.id}>
       <Card variant="outlined">
         <CardContent>
-          <Typography variant="h6" fontWeight="bold">
-            {project.name}
-          </Typography>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Typography variant="h6" fontWeight="bold">
+              {project.name}
+            </Typography>
+            <IconButton onClick={toggleImportant} aria-label="mark as important">
+              {isPined ? <Star color="warning" /> : <StarBorder color="warning" />}
+            </IconButton>
+          </div>
           <Typography variant="body2" mt={1}>
             <b>Owner:</b> {project.owner}
           </Typography>
