@@ -21,11 +21,14 @@ RUN apk update && apk --no-cache add ca-certificates bash curl
 # Create the CA certificates directory
 RUN mkdir -p /usr/local/share/ca-certificates/
 
-
 COPY --chown=${uid}:${uid} package.json package.json
 RUN npm i
 
 COPY --chown=${uid}:${uid} . .
+ARG dashboard_version_tag
+ENV dashboard_version_tag=$dashboard_version_tag
+RUN echo "$dashboard_version_tag" > dashboard_version_tag.txt
+RUN cat dashboard_version_tag.txt
 
 # RUN npm run test
 
