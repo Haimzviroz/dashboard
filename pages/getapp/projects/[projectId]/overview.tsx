@@ -8,12 +8,13 @@ import GA_layout from '@/components/layout/GA-layout';
 import { Box, Divider, Typography } from '@mui/material';
 import NavBar from '@/components/header/navigation';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { Q_PROJECT } from '@/apis/query-keys';
+import { Q_PROJECT, Q_TOKENS } from '@/apis/query-keys';
 import { useProject } from '@/hooks/project.query.hook';
 import { useGetApp } from '@/providers/getapp.provider';
 import ProjectMembers from '@/components/projects/members/project-members';
 import LTR_MuiProvider from '@/providers/ltr-mui.provider';
-import ProjectTokens from '@/components/projects/tokens/token';
+import ProjectTokens from '@/components/projects/tokens/token-list';
+import { useTokens } from '@/hooks/token.query.hook';
 
 interface ManagementProjectsPageProps {
 }
@@ -21,6 +22,7 @@ interface ManagementProjectsPageProps {
 const ProjectOverview: NextPageWithLayout<ManagementProjectsPageProps> = () => {
   const { router } = useGetApp()
   const { project } = useProject(router.query.projectId as string)
+  const { tokens } = useTokens(router.query.projectId as string)
 
   return (
     <Fragment>
@@ -38,7 +40,7 @@ const ProjectOverview: NextPageWithLayout<ManagementProjectsPageProps> = () => {
         <Divider />
       </Box>
       {project && <ProjectMembers project={project} />}
-      {project && <ProjectTokens tokens={project.tokens}></ProjectTokens> }
+      {tokens && project && <ProjectTokens project={project} tokens={tokens}></ProjectTokens> }
     </Fragment>
 
   );
@@ -58,6 +60,10 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
       await queryClient.prefetchQuery({
         queryKey: [Q_PROJECT, params],
         queryFn: () => httpClient.getProjectByName(params as string),
+      }),
+      await queryClient.prefetchQuery({
+        queryKey: [Q_TOKENS, params],
+        queryFn: () => httpClient.getProjectTokens(params as string),
       }),
     ])
 

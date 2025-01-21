@@ -4,6 +4,7 @@ import { BASE_PATHS } from '../paths';
 import { getSession, signIn } from 'next-auth/react';
 import { jwtDecode } from 'jwt-decode';
 import Logger from '@/services/logger';
+import { Configuration } from '@/api/src';
 
 const logger = Logger(__filename)
 
@@ -100,9 +101,12 @@ const getValidAccessToken = async () => {
   return { accessToken }
 }
 
+const conf = async () => new Configuration({ basePath: BASE_PATHS, accessToken: (await getValidAccessToken()).accessToken })
+
 
 export {
   clientRequestWithAuth,
   setCookie,
-  getCookie
+  getCookie,
+  conf
 };

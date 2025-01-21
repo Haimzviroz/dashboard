@@ -2,6 +2,7 @@ import { AxiosError } from "axios";
 import { BASE_PATHS, PROJECT, PROJECT_RELEASES } from "../paths";
 import { GetServerSidePropsContext } from "next";
 import { SS_HttpClient } from "./ss_http-client";
+import { ProjectApiFp } from "@/api/src";
 
 export class SS_ProjectsClient extends SS_HttpClient {
 
@@ -22,6 +23,15 @@ export class SS_ProjectsClient extends SS_HttpClient {
     this.logger.info(`Get project '${pName}'`);
     try {
       return (await this.httpConfig.get(PROJECT + pName, await this.getReqConfig())).data;
+    } catch (error) {
+      return this.errorHandler(error as AxiosError)
+    }
+  }
+
+  async getProjectTokens(projectId: string) {
+    try {
+      const tokenFun = await ProjectApiFp(await this.getOpenApiConf()).projectManagementControllerGetProjectTokens(projectId)
+      return (await tokenFun()).data
     } catch (error) {
       return this.errorHandler(error as AxiosError)
     }
