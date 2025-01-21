@@ -2713,7 +2713,10 @@ components:
           type: number
           default: -1
       required:
+        - id
+        - email
         - role
+        - status
     MemberProjectsResDto:
       type: object
       properties:

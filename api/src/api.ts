@@ -2683,7 +2683,7 @@ export interface MemberResDto {
      * @type {number}
      * @memberof MemberResDto
      */
-    'id'?: number;
+    'id': number;
     /**
      * 
      * @type {string}
@@ -2701,7 +2701,7 @@ export interface MemberResDto {
      * @type {string}
      * @memberof MemberResDto
      */
-    'email'?: string;
+    'email': string;
     /**
      * 
      * @type {string}
@@ -2713,7 +2713,7 @@ export interface MemberResDto {
      * @type {string}
      * @memberof MemberResDto
      */
-    'status'?: MemberResDtoStatusEnum;
+    'status': MemberResDtoStatusEnum;
     /**
      * 
      * @type {number}
