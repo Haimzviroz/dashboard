@@ -2875,15 +2875,77 @@ export interface OfferingResponseDto {
 /**
  * 
  * @export
+ * @interface PaginatedBaseProjectDto
+ */
+export interface PaginatedBaseProjectDto {
+    /**
+     * 
+     * @type {Array<BaseProjectDto>}
+     * @memberof PaginatedBaseProjectDto
+     */
+    'data': Array<BaseProjectDto>;
+    /**
+     * The total number of items available
+     * @type {number}
+     * @memberof PaginatedBaseProjectDto
+     */
+    'total': number;
+    /**
+     * The current page number
+     * @type {number}
+     * @memberof PaginatedBaseProjectDto
+     */
+    'page': number;
+    /**
+     * The number of items per page
+     * @type {number}
+     * @memberof PaginatedBaseProjectDto
+     */
+    'perPage': number;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedProjectDto
+ */
+export interface PaginatedProjectDto {
+    /**
+     * 
+     * @type {Array<ProjectDto>}
+     * @memberof PaginatedProjectDto
+     */
+    'data': Array<ProjectDto>;
+    /**
+     * The total number of items available
+     * @type {number}
+     * @memberof PaginatedProjectDto
+     */
+    'total': number;
+    /**
+     * The current page number
+     * @type {number}
+     * @memberof PaginatedProjectDto
+     */
+    'page': number;
+    /**
+     * The number of items per page
+     * @type {number}
+     * @memberof PaginatedProjectDto
+     */
+    'perPage': number;
+}
+/**
+ * 
+ * @export
  * @interface PaginatedResultDto
  */
-export interface PaginatedResultDto<T> {
+export interface PaginatedResultDto {
     /**
      * The data items for the current page
-     * @type {Array<T>}
+     * @type {Array<{ [key: string]: any; }>}
      * @memberof PaginatedResultDto
      */
-    'data': Array<T>;
+    'data': Array<{ [key: string]: any; }>;
     /**
      * The total number of items available
      * @type {number}
@@ -3185,68 +3247,6 @@ export interface ProjectDto {
      * @memberof ProjectDto
      */
     'memberContext'?: ProjectMemberContextDto;
-}
-/**
- * 
- * @export
- * @interface ProjectManagementControllerGetProjects200Response
- */
-export interface ProjectManagementControllerGetProjects200Response {
-    /**
-     * 
-     * @type {Array<ProjectDto>}
-     * @memberof ProjectManagementControllerGetProjects200Response
-     */
-    'data': Array<ProjectDto>;
-    /**
-     * The total number of items available
-     * @type {number}
-     * @memberof ProjectManagementControllerGetProjects200Response
-     */
-    'total': number;
-    /**
-     * The current page number
-     * @type {number}
-     * @memberof ProjectManagementControllerGetProjects200Response
-     */
-    'page': number;
-    /**
-     * The number of items per page
-     * @type {number}
-     * @memberof ProjectManagementControllerGetProjects200Response
-     */
-    'perPage': number;
-}
-/**
- * 
- * @export
- * @interface ProjectManagementControllerSearchProjects200Response
- */
-export interface ProjectManagementControllerSearchProjects200Response {
-    /**
-     * 
-     * @type {Array<BaseProjectDto>}
-     * @memberof ProjectManagementControllerSearchProjects200Response
-     */
-    'data': Array<BaseProjectDto>;
-    /**
-     * The total number of items available
-     * @type {number}
-     * @memberof ProjectManagementControllerSearchProjects200Response
-     */
-    'total': number;
-    /**
-     * The current page number
-     * @type {number}
-     * @memberof ProjectManagementControllerSearchProjects200Response
-     */
-    'page': number;
-    /**
-     * The number of items per page
-     * @type {number}
-     * @memberof ProjectManagementControllerSearchProjects200Response
-     */
-    'perPage': number;
 }
 /**
  * 
@@ -9693,7 +9693,7 @@ export const ProjectApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectManagementControllerGetProjects(pinned?: boolean, includePinned?: boolean, page?: number, perPage?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectManagementControllerGetProjects200Response>> {
+        async projectManagementControllerGetProjects(pinned?: boolean, includePinned?: boolean, page?: number, perPage?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedProjectDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerGetProjects(pinned, includePinned, page, perPage, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerGetProjects']?.[localVarOperationServerIndex]?.url;
@@ -9735,7 +9735,7 @@ export const ProjectApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectManagementControllerSearchProjects(query: string, status?: string, page?: number, perPage?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectManagementControllerSearchProjects200Response>> {
+        async projectManagementControllerSearchProjects(query: string, status?: string, page?: number, perPage?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedBaseProjectDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerSearchProjects(query, status, page, perPage, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerSearchProjects']?.[localVarOperationServerIndex]?.url;
@@ -10033,7 +10033,7 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectManagementControllerGetProjects(pinned?: boolean, includePinned?: boolean, page?: number, perPage?: number, options?: RawAxiosRequestConfig): AxiosPromise<ProjectManagementControllerGetProjects200Response> {
+        projectManagementControllerGetProjects(pinned?: boolean, includePinned?: boolean, page?: number, perPage?: number, options?: RawAxiosRequestConfig): AxiosPromise<PaginatedProjectDto> {
             return localVarFp.projectManagementControllerGetProjects(pinned, includePinned, page, perPage, options).then((request) => request(axios, basePath));
         },
         /**
@@ -10066,7 +10066,7 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectManagementControllerSearchProjects(query: string, status?: string, page?: number, perPage?: number, options?: RawAxiosRequestConfig): AxiosPromise<ProjectManagementControllerSearchProjects200Response> {
+        projectManagementControllerSearchProjects(query: string, status?: string, page?: number, perPage?: number, options?: RawAxiosRequestConfig): AxiosPromise<PaginatedBaseProjectDto> {
             return localVarFp.projectManagementControllerSearchProjects(query, status, page, perPage, options).then((request) => request(axios, basePath));
         },
         /**

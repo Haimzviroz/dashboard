@@ -680,6 +680,7 @@ paths:
           content:
             application/json:
               schema:
+                title: PaginatedProjectDto
                 allOf:
                   - $ref: '#/components/schemas/PaginatedResultDto'
                   - properties:
@@ -727,6 +728,7 @@ paths:
           content:
             application/json:
               schema:
+                title: PaginatedBaseProjectDto
                 allOf:
                   - $ref: '#/components/schemas/PaginatedResultDto'
                   - properties:
@@ -2737,7 +2739,8 @@ components:
           description: The data items for the current page
           type: array
           items:
-            type: T
+            type: object
+            additionalProperties: true
         total:
           type: number
           description: The total number of items available
