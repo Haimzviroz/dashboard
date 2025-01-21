@@ -11,9 +11,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { getUsers } from "@/apis/client-side/projects-actions.api";
-import { Member } from "@/types/interfaces";
 import { useAddMember, useUpdateMember } from "@/hooks/project-member.query.hook";
-import { DetailedProjectDto } from "@/api/src";
+import { DetailedProjectDto, MemberResDto } from "@/api/src";
 
 
 const roles = [{ id: "project-admin", name: "Admin" }, { id: "project-member", name: "Member" }];
@@ -21,14 +20,14 @@ const roles = [{ id: "project-admin", name: "Admin" }, { id: "project-member", n
 interface MemberFormProps {
   project: DetailedProjectDto
   setUserToggle: Dispatch<SetStateAction<boolean>>,
-  member?: Member
+  member?: MemberResDto
 }
 
 const MemberForm: FC<MemberFormProps> = ({ project, setUserToggle, member }) => {
   const [email, setEmail] = useState(member?.email || "");
   const [role, setRole] = useState(member?.role || "");
   const [loading, setLoading] = useState(false);
-  const [suggestedUsers, setSuggestedUsers] = useState<Member[]>([]);
+  const [suggestedUsers, setSuggestedUsers] = useState<MemberResDto[]>([]);
 
 
   const addMember = useAddMember()
@@ -50,7 +49,7 @@ const MemberForm: FC<MemberFormProps> = ({ project, setUserToggle, member }) => 
     setEmail(value);
     if (value.length >= 2) {
       const users = await fetchUsers(value);
-      setSuggestedUsers(users)
+      users && setSuggestedUsers(users)
     } else {
       setSuggestedUsers([]);
     }

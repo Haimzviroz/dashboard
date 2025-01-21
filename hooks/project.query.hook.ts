@@ -2,10 +2,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Q_P_SEARCH_RESULT, Q_PROJECT, Q_PROJECTS } from "../apis/query-keys";
 import { getProject, getProjects, SearchProjects, updateProject } from "@/apis/client-side/projects-actions.api";
 import { Project, SearchPro } from "@/types/interfaces";
-import { BaseProjectDto, DetailedProjectDto, EditProjectDto } from "@/api/src";
+import { BaseProjectDto, DetailedProjectDto, EditProjectDto, ProjectDto } from "@/api/src";
 
 export const useProjects = () => {
-  const { data: projects, refetch } = useQuery<Project[]>({
+  const { data: projects, refetch } = useQuery<ProjectDto[]>({
     queryKey: [Q_PROJECTS],
     queryFn: () => getProjects(),
   })
@@ -13,7 +13,7 @@ export const useProjects = () => {
 }
 
 export const useSearchedProjects = () => {
-  const { data: pSearchResult, refetch } = useQuery<Project[]>({
+  const { data: pSearchResult, refetch } = useQuery<ProjectDto[]>({
     queryKey: [Q_P_SEARCH_RESULT],
     queryFn: () => getProjects(),
     enabled: false

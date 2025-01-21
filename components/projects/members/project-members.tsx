@@ -14,13 +14,14 @@ import {
 import { Group as GroupIcon } from "@mui/icons-material";
 import AddIcon from '@mui/icons-material/Add';
 import MemberForm from "./member-from";
-import { useDeleteMember } from "@/hooks/project-member.query.hook";
+import { useRemoveMember } from "@/hooks/project-member.query.hook";
 import TeamMemberItem from "./team-member";
 import { DetailedProjectDto, MemberResDto } from "@/api/src";
 
 
 interface DeleteConfirmationDialogProps {
   open: boolean;
+  projectName: string;
   memberName: string;
   onClose: () => void;
   onConfirm: () => void;
@@ -28,6 +29,7 @@ interface DeleteConfirmationDialogProps {
 
 const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
   open,
+  projectName,
   memberName,
   onClose,
   onConfirm,
@@ -36,7 +38,7 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
     <DialogTitle>Confirm Delete</DialogTitle>
     <DialogContent>
       <DialogContentText>
-        Are you sure you want to delete <strong>{memberName}</strong>?
+        Are you sure you want to remove <strong>{memberName}</strong> from <strong>{projectName}</strong>?
       </DialogContentText>
     </DialogContent>
     <DialogActions>
@@ -44,7 +46,7 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
         Cancel
       </Button>
       <Button onClick={onConfirm} color="error">
-        Delete
+        Remove
       </Button>
     </DialogActions>
   </Dialog>
@@ -59,11 +61,11 @@ const TeamMembers: FC<TeamMembersProps> = ({ project }) => {
   const [confirmDeleteToggle, setConfirmDeleteToggle] = useState<boolean>(false);
   const [selectedMember, setSelectedMember] = useState<MemberResDto>();
 
-  const delMember = useDeleteMember();
+  const rmMember = useRemoveMember();
 
-  const handleDelete = () => {
+  const handleRemove = () => {
     if (selectedMember) {
-      delMember.mutate({
+      rmMember.mutate({
         projectName: project.name,
         memberId: selectedMember?.id,
       });
@@ -125,6 +127,7 @@ const TeamMembers: FC<TeamMembersProps> = ({ project }) => {
 
       <DeleteConfirmationDialog
         open={confirmDeleteToggle}
+        projectName={project.name}
         memberName={
           `${project.members?.find((m) => m.id === selectedMember?.id)?.firstName || ""} ${project.members?.find((m) => m.id === selectedMember?.id)?.lastName || ""}`
         }
@@ -132,7 +135,7 @@ const TeamMembers: FC<TeamMembersProps> = ({ project }) => {
           setConfirmDeleteToggle(false)
           setSelectedMember(undefined)
         }}
-        onConfirm={handleDelete}
+        onConfirm={handleRemove}
       />
     </Card>
   );
