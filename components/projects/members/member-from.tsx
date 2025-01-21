@@ -12,10 +12,8 @@ import {
 } from "@mui/material";
 import { getUsers } from "@/apis/client-side/projects-actions.api";
 import { useAddMember, useUpdateMember } from "@/hooks/project-member.query.hook";
-import { DetailedProjectDto, MemberResDto } from "@/api/src";
+import { AddMemberToProjectDtoRoleEnum, DetailedProjectDto, MemberResDto, MemberResDtoRoleEnum } from "@/api/src";
 
-
-const roles = [{ id: "project-admin", name: "Admin" }, { id: "project-member", name: "Member" }];
 
 interface MemberFormProps {
   project: DetailedProjectDto
@@ -25,7 +23,7 @@ interface MemberFormProps {
 
 const MemberForm: FC<MemberFormProps> = ({ project, setUserToggle, member }) => {
   const [email, setEmail] = useState(member?.email || "");
-  const [role, setRole] = useState(member?.role || "");
+  const [role, setRole] = useState<AddMemberToProjectDtoRoleEnum | MemberResDtoRoleEnum | undefined>(member?.role);
   const [loading, setLoading] = useState(false);
   const [suggestedUsers, setSuggestedUsers] = useState<MemberResDto[]>([]);
 
@@ -74,7 +72,7 @@ const MemberForm: FC<MemberFormProps> = ({ project, setUserToggle, member }) => 
     }
 
     setEmail("");
-    setRole("");
+    setRole(undefined);
     setSuggestedUsers([]);
     setUserToggle(false)
   };
@@ -165,13 +163,13 @@ const MemberForm: FC<MemberFormProps> = ({ project, setUserToggle, member }) => 
           label="Role"
           value={role}
           required
-          onChange={(e) => setRole(e.target.value)}
+          onChange={(e) => setRole(e.target.value as MemberResDtoRoleEnum)}
           fullWidth
           margin="normal"
         >
-          {roles.map((role) => (
-            <MenuItem key={role.id} value={role.id} sx={{ width: "100%" }} >
-              {role.name}
+          {Object.keys(MemberResDtoRoleEnum).map((role) => (
+            <MenuItem key={role} value={MemberResDtoRoleEnum[role as keyof typeof MemberResDtoRoleEnum]} sx={{ width: "100%" }} >
+              {role}
             </MenuItem>
           ))}
         </TextField>

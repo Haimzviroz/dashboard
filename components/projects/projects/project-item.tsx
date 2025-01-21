@@ -8,13 +8,13 @@ import {
   IconButton,
 } from "@mui/material";
 import { Star, StarBorder } from "@mui/icons-material";
-import { Project } from "@/types/interfaces";
 import { NextRouter } from "next/router";
 import { R_PROJECTS } from "@/apis/routes";
 import { NavBarOption } from "@/types/enum";
+import { ProjectDto } from "@/api/src";
 
 interface ProjectItemProps {
-  project: Project;
+  project: ProjectDto;
   router: NextRouter;
 }
 

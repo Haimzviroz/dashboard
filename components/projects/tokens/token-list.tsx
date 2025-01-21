@@ -54,7 +54,7 @@ const ProjectTokens: FC<TokenListProps> = ({ tokens, project }) => {
           Project Tokens
         </Typography>
       </Box>
-      {tokens && tokens.map(token => <Token token={token} project={project} />)}
+      {tokens && tokens.map(token => <Token key={token.id} token={token} project={project} />)}
       <Box marginTop={2}>
         <Button
           variant="text"

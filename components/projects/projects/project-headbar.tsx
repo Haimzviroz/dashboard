@@ -9,16 +9,13 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import { NextRouter } from "next/router";
 import { R_PROJECTS_NEW } from "@/apis/routes";
-import { UseMutateFunction } from "@tanstack/react-query";
-import { Project } from "@/types/interfaces";
 
 interface HeadBarProps {
   router: NextRouter
-  onSearch: UseMutateFunction<Project[], Error, { projectName: string; }, unknown>
   setSearchTerm: Dispatch<SetStateAction<string>>
 }
 
-const HeadBar: FC<HeadBarProps> = ({ router, onSearch, setSearchTerm }) => {
+const HeadBar: FC<HeadBarProps> = ({ router, setSearchTerm }) => {
 
   const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const value = e.target.value

@@ -3,13 +3,13 @@ import {
   Typography,
   Grid,
 } from "@mui/material";
-import { Project } from "@/types/interfaces";
 import { NextRouter } from "next/router";
 import ProjectItem from "./project-item";
+import { ProjectDto } from "@/api/src";
 
 interface ProjectListProps {
   title: string
-  projects: Project[]
+  projects: ProjectDto[]
   router: NextRouter
 }
 

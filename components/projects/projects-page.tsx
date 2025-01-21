@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import ProjectList from "./projects/project-list";
 import HeadBar from "./projects/project-headbar";
 import { useProjects, useSearchedProjects, useSearchProjects } from "@/hooks/project.query.hook";
-import { Project } from "@/types/interfaces";
 
 interface ProjectsProps {
 }
@@ -34,7 +33,7 @@ const ProjectsDashboard: FC<ProjectsProps> = () => {
       <Typography variant="h4" fontWeight="bold" mb={3}>
         Dashboard
       </Typography>
-      <HeadBar router={router} onSearch={searchP.mutate} setSearchTerm={setSearchTerm}></HeadBar>
+      <HeadBar router={router} setSearchTerm={setSearchTerm}></HeadBar>
       {searchTerm && searchTerm.length > 1 && searchedP.pSearchResult && searchedP.pSearchResult.length > 0 ?
         <ProjectList title="Search results" projects={searchedP.pSearchResult} router={router} /> :
         projects && <ProjectList title="All Projects" projects={projects} router={router} />}

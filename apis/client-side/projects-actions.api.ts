@@ -1,7 +1,6 @@
-import { SearchPro } from '@/types/interfaces';
-import { MEMBER, PROJECT, CONFIG_OPTION, CONFIRM, SEARCH_PROJECT } from '../paths';
+import { PROJECT, CONFIG_OPTION, CONFIRM } from '../paths';
 import { clientRequestWithAuth, conf } from './token-client.middleware';
-import { BaseProjectDto, CreateProjectDto, CreateProjectTokenDto, DetailedProjectDto, EditProjectDto, MemberResDto, ProjectApiFp, ProjectDto, ProjectTokenDto, UpdateProjectTokenDto, UsersApiFactory, UserSearchDto } from '@/api/src';
+import { AddMemberToProjectDto, BaseProjectDto, CreateProjectDto, CreateProjectTokenDto, DetailedProjectDto, EditProjectDto, EditProjectMemberDto, MemberResDto, ProjectApiFp, ProjectDto, ProjectTokenDto, UpdateProjectTokenDto, UsersApiFactory, UserSearchDto } from '@/api/src';
 
 export const getUsers = async (params: UserSearchDto): Promise<MemberResDto[]> => {
   const res = await UsersApiFactory(await conf()).usersControllerGetAllUsers(params)
@@ -13,8 +12,9 @@ export const getProjects = async (): Promise<ProjectDto[]> => {
   return (await fun()).data.data
 }
 
-export const SearchProjects = async (name: string): Promise<SearchPro[]> => {
-  return (await clientRequestWithAuth(SEARCH_PROJECT + `?query=${name}`, "get", null)).data
+export const SearchProjects = async (name: string) => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerSearchProjects(name)
+  return (await fun()).data.data
 }
 
 export const getProject = async (name: string): Promise<DetailedProjectDto> => {
@@ -45,12 +45,14 @@ export const confirmProjectInvitation = async (projectId: number,) => {
   return await clientRequestWithAuth(PROJECT + projectId + "/" + CONFIRM, "post", {})
 }
 
-export const addNewMember = async (projectId: string | number, data: any) => {
-  return await clientRequestWithAuth(PROJECT + projectId + "/" + MEMBER, "post", data)
+export const addNewMember = async (projectId: string | number, data: AddMemberToProjectDto): Promise<MemberResDto> => {
+  const tokenFun = await ProjectApiFp(await conf()).projectManagementControllerAddMemberToProject(projectId.toString(), data)
+  return (await tokenFun()).data
 }
 
-export const updateMember = async (projectId: string | number, memberId: number, data: any) => {
-  return await clientRequestWithAuth(PROJECT + projectId + "/" + MEMBER + memberId, "put", data)
+export const updateMember = async (projectId: string | number, memberId: number, data: EditProjectMemberDto): Promise<MemberResDto> => {
+  const tokenFun = await ProjectApiFp(await conf()).projectManagementControllerEditMember(projectId.toString(), memberId, data)
+  return (await tokenFun()).data
 }
 
 export const deleteMember = async (projectId: string | number, memberId: number) => {

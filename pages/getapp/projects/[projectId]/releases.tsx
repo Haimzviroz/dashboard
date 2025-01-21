@@ -3,7 +3,6 @@ import { GetServerSidePropsContext } from "next/types";
 import { useRouter } from 'next/router';
 
 import PlatformRelease from "@/components/project-releases/platform-release";
-import ProjectName from "@/components/header/project-name";
 import NavBar from "@/components/header/navigation";
 
 import { Project, Formations, Platform, Platforms, Release } from "@/types/interfaces";
@@ -70,7 +69,7 @@ const ProjectReleases: NextPageWithLayout<ProductReleasesProps> = ({ releases, a
 
   return (
     <Fragment>
-      {selectedProject && <ProjectName project={selectedProject}></ProjectName>}
+      {/* {selectedProject && <ProjectName project={selectedProject}></ProjectName>} */}
       <table>
         <thead>
           <tr>
