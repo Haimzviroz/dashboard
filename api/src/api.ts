@@ -231,6 +231,12 @@ export interface BaseProjectDto {
      */
     'name': string;
     /**
+     * 
+     * @type {string}
+     * @memberof BaseProjectDto
+     */
+    'description'?: string;
+    /**
      * Status of the project (active, completed, on-hold)
      * @type {string}
      * @memberof BaseProjectDto
@@ -899,6 +905,12 @@ export interface DetailedProjectDto {
      */
     'name': string;
     /**
+     * 
+     * @type {string}
+     * @memberof DetailedProjectDto
+     */
+    'description'?: string;
+    /**
      * Status of the project (active, completed, on-hold)
      * @type {string}
      * @memberof DetailedProjectDto
@@ -910,12 +922,6 @@ export interface DetailedProjectDto {
      * @memberof DetailedProjectDto
      */
     'owner': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DetailedProjectDto
-     */
-    'description'?: string;
     /**
      * Number of members in the project
      * @type {number}
@@ -946,6 +952,12 @@ export interface DetailedProjectDto {
      * @memberof DetailedProjectDto
      */
     'upcomingReleaseStage'?: string;
+    /**
+     * Current member context
+     * @type {ProjectMemberContextDto}
+     * @memberof DetailedProjectDto
+     */
+    'memberContext'?: ProjectMemberContextDto;
     /**
      * 
      * @type {string}
@@ -1635,6 +1647,25 @@ export interface EditDevicesGroupDto {
      * 
      * @type {string}
      * @memberof EditDevicesGroupDto
+     */
+    'description'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface EditProjectDto
+ */
+export interface EditProjectDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof EditProjectDto
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EditProjectDto
      */
     'description'?: string;
 }
@@ -3101,6 +3132,12 @@ export interface ProjectDto {
      */
     'name': string;
     /**
+     * 
+     * @type {string}
+     * @memberof ProjectDto
+     */
+    'description'?: string;
+    /**
      * Status of the project (active, completed, on-hold)
      * @type {string}
      * @memberof ProjectDto
@@ -3112,12 +3149,6 @@ export interface ProjectDto {
      * @memberof ProjectDto
      */
     'owner': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectDto
-     */
-    'description'?: string;
     /**
      * Number of members in the project
      * @type {number}
@@ -3148,6 +3179,12 @@ export interface ProjectDto {
      * @memberof ProjectDto
      */
     'upcomingReleaseStage'?: string;
+    /**
+     * Current member context
+     * @type {ProjectMemberContextDto}
+     * @memberof ProjectDto
+     */
+    'memberContext'?: ProjectMemberContextDto;
 }
 /**
  * 
@@ -3210,6 +3247,47 @@ export interface ProjectManagementControllerSearchProjects200Response {
      * @memberof ProjectManagementControllerSearchProjects200Response
      */
     'perPage': number;
+}
+/**
+ * 
+ * @export
+ * @interface ProjectMemberContextDto
+ */
+export interface ProjectMemberContextDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectMemberContextDto
+     */
+    'role': ProjectMemberContextDtoRoleEnum;
+    /**
+     * 
+     * @type {ProjectMemberPreferencesDto}
+     * @memberof ProjectMemberContextDto
+     */
+    'preferences': ProjectMemberPreferencesDto;
+}
+
+export const ProjectMemberContextDtoRoleEnum = {
+    Owner: 'project-owner',
+    Admin: 'project-admin',
+    Member: 'project-member'
+} as const;
+
+export type ProjectMemberContextDtoRoleEnum = typeof ProjectMemberContextDtoRoleEnum[keyof typeof ProjectMemberContextDtoRoleEnum];
+
+/**
+ * 
+ * @export
+ * @interface ProjectMemberPreferencesDto
+ */
+export interface ProjectMemberPreferencesDto {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ProjectMemberPreferencesDto
+     */
+    'pinned'?: boolean;
 }
 /**
  * 
@@ -8315,6 +8393,44 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Delete Project
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerDeleteProject: async (projectIdentifier: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectIdentifier' is not null or undefined
+            assertParamExists('projectManagementControllerDeleteProject', 'projectIdentifier', projectIdentifier)
+            const localVarPath = `/api/v1/project/{projectIdentifier}`
+                .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Delete Regulation by ID
          * @param {string} projectIdentifier Project identifier (ID or name)
          * @param {number} regulationId ID of the regulation
@@ -8439,6 +8555,50 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(editProjectMemberDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Edit Project
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {EditProjectDto} editProjectDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerEditProject: async (projectIdentifier: string, editProjectDto: EditProjectDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectIdentifier' is not null or undefined
+            assertParamExists('projectManagementControllerEditProject', 'projectIdentifier', projectIdentifier)
+            // verify required parameter 'editProjectDto' is not null or undefined
+            assertParamExists('projectManagementControllerEditProject', 'editProjectDto', editProjectDto)
+            const localVarPath = `/api/v1/project/{projectIdentifier}`
+                .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(editProjectDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8615,6 +8775,44 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
             assertParamExists('projectManagementControllerGetDevicesByProject', 'projectId', projectId)
             const localVarPath = `/api/v1/project/devices/project/{projectId}`
                 .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get member project preferences
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerGetMemberProjectPreferences: async (projectIdentifier: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectIdentifier' is not null or undefined
+            assertParamExists('projectManagementControllerGetMemberProjectPreferences', 'projectIdentifier', projectIdentifier)
+            const localVarPath = `/api/v1/project/{projectIdentifier}/member/preferences`
+                .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -9073,6 +9271,50 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Update member project preferences
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {ProjectMemberPreferencesDto} projectMemberPreferencesDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerUpdateMemberProjectPreferences: async (projectIdentifier: string, projectMemberPreferencesDto: ProjectMemberPreferencesDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectIdentifier' is not null or undefined
+            assertParamExists('projectManagementControllerUpdateMemberProjectPreferences', 'projectIdentifier', projectIdentifier)
+            // verify required parameter 'projectMemberPreferencesDto' is not null or undefined
+            assertParamExists('projectManagementControllerUpdateMemberProjectPreferences', 'projectMemberPreferencesDto', projectMemberPreferencesDto)
+            const localVarPath = `/api/v1/project/{projectIdentifier}/member/preferences`
+                .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(projectMemberPreferencesDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Update a token
          * @param {string} projectIdentifier Project identifier (ID or name)
          * @param {number} tokenId 
@@ -9163,7 +9405,7 @@ export const ProjectApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectManagementControllerCreateProject(createProjectDto: CreateProjectDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectDto>> {
+        async projectManagementControllerCreateProject(createProjectDto: CreateProjectDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BaseProjectDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerCreateProject(createProjectDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerCreateProject']?.[localVarOperationServerIndex]?.url;
@@ -9212,6 +9454,19 @@ export const ProjectApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Delete Project
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projectManagementControllerDeleteProject(projectIdentifier: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerDeleteProject(projectIdentifier, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerDeleteProject']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Delete Regulation by ID
          * @param {string} projectIdentifier Project identifier (ID or name)
          * @param {number} regulationId ID of the regulation
@@ -9251,6 +9506,20 @@ export const ProjectApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerEditMember(projectIdentifier, memberId, editProjectMemberDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerEditMember']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Edit Project
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {EditProjectDto} editProjectDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projectManagementControllerEditProject(projectIdentifier: string, editProjectDto: EditProjectDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BaseProjectDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerEditProject(projectIdentifier, editProjectDto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerEditProject']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -9317,6 +9586,19 @@ export const ProjectApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerGetDevicesByProject(projectId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerGetDevicesByProject']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Get member project preferences
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projectManagementControllerGetMemberProjectPreferences(projectIdentifier: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectMemberPreferencesDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerGetMemberProjectPreferences(projectIdentifier, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerGetMemberProjectPreferences']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -9461,6 +9743,20 @@ export const ProjectApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Update member project preferences
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {ProjectMemberPreferencesDto} projectMemberPreferencesDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projectManagementControllerUpdateMemberProjectPreferences(projectIdentifier: string, projectMemberPreferencesDto: ProjectMemberPreferencesDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectMemberPreferencesDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerUpdateMemberProjectPreferences(projectIdentifier, projectMemberPreferencesDto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerUpdateMemberProjectPreferences']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Update a token
          * @param {string} projectIdentifier Project identifier (ID or name)
          * @param {number} tokenId 
@@ -9512,7 +9808,7 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectManagementControllerCreateProject(createProjectDto: CreateProjectDto, options?: RawAxiosRequestConfig): AxiosPromise<ProjectDto> {
+        projectManagementControllerCreateProject(createProjectDto: CreateProjectDto, options?: RawAxiosRequestConfig): AxiosPromise<BaseProjectDto> {
             return localVarFp.projectManagementControllerCreateProject(createProjectDto, options).then((request) => request(axios, basePath));
         },
         /**
@@ -9549,6 +9845,16 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary Delete Project
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerDeleteProject(projectIdentifier: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.projectManagementControllerDeleteProject(projectIdentifier, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Delete Regulation by ID
          * @param {string} projectIdentifier Project identifier (ID or name)
          * @param {number} regulationId ID of the regulation
@@ -9580,6 +9886,17 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          */
         projectManagementControllerEditMember(projectIdentifier: string, memberId: number, editProjectMemberDto: EditProjectMemberDto, options?: RawAxiosRequestConfig): AxiosPromise<MemberResDto> {
             return localVarFp.projectManagementControllerEditMember(projectIdentifier, memberId, editProjectMemberDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Edit Project
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {EditProjectDto} editProjectDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerEditProject(projectIdentifier: string, editProjectDto: EditProjectDto, options?: RawAxiosRequestConfig): AxiosPromise<BaseProjectDto> {
+            return localVarFp.projectManagementControllerEditProject(projectIdentifier, editProjectDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9631,6 +9948,16 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          */
         projectManagementControllerGetDevicesByProject(projectId: number, options?: RawAxiosRequestConfig): AxiosPromise<Array<DeviceResDto>> {
             return localVarFp.projectManagementControllerGetDevicesByProject(projectId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get member project preferences
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerGetMemberProjectPreferences(projectIdentifier: string, options?: RawAxiosRequestConfig): AxiosPromise<ProjectMemberPreferencesDto> {
+            return localVarFp.projectManagementControllerGetMemberProjectPreferences(projectIdentifier, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9744,6 +10071,17 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary Update member project preferences
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {ProjectMemberPreferencesDto} projectMemberPreferencesDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerUpdateMemberProjectPreferences(projectIdentifier: string, projectMemberPreferencesDto: ProjectMemberPreferencesDto, options?: RawAxiosRequestConfig): AxiosPromise<ProjectMemberPreferencesDto> {
+            return localVarFp.projectManagementControllerUpdateMemberProjectPreferences(projectIdentifier, projectMemberPreferencesDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Update a token
          * @param {string} projectIdentifier Project identifier (ID or name)
          * @param {number} tokenId 
@@ -9841,6 +10179,18 @@ export class ProjectApi extends BaseAPI {
 
     /**
      * 
+     * @summary Delete Project
+     * @param {string} projectIdentifier Project identifier (ID or name)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public projectManagementControllerDeleteProject(projectIdentifier: string, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerDeleteProject(projectIdentifier, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Delete Regulation by ID
      * @param {string} projectIdentifier Project identifier (ID or name)
      * @param {number} regulationId ID of the regulation
@@ -9877,6 +10227,19 @@ export class ProjectApi extends BaseAPI {
      */
     public projectManagementControllerEditMember(projectIdentifier: string, memberId: number, editProjectMemberDto: EditProjectMemberDto, options?: RawAxiosRequestConfig) {
         return ProjectApiFp(this.configuration).projectManagementControllerEditMember(projectIdentifier, memberId, editProjectMemberDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Edit Project
+     * @param {string} projectIdentifier Project identifier (ID or name)
+     * @param {EditProjectDto} editProjectDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public projectManagementControllerEditProject(projectIdentifier: string, editProjectDto: EditProjectDto, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerEditProject(projectIdentifier, editProjectDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -9938,6 +10301,18 @@ export class ProjectApi extends BaseAPI {
      */
     public projectManagementControllerGetDevicesByProject(projectId: number, options?: RawAxiosRequestConfig) {
         return ProjectApiFp(this.configuration).projectManagementControllerGetDevicesByProject(projectId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get member project preferences
+     * @param {string} projectIdentifier Project identifier (ID or name)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public projectManagementControllerGetMemberProjectPreferences(projectIdentifier: string, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerGetMemberProjectPreferences(projectIdentifier, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10068,6 +10443,19 @@ export class ProjectApi extends BaseAPI {
      */
     public projectManagementControllerSearchProjects(query: string, status?: string, page?: number, perPage?: number, options?: RawAxiosRequestConfig) {
         return ProjectApiFp(this.configuration).projectManagementControllerSearchProjects(query, status, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update member project preferences
+     * @param {string} projectIdentifier Project identifier (ID or name)
+     * @param {ProjectMemberPreferencesDto} projectMemberPreferencesDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public projectManagementControllerUpdateMemberProjectPreferences(projectIdentifier: string, projectMemberPreferencesDto: ProjectMemberPreferencesDto, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerUpdateMemberProjectPreferences(projectIdentifier, projectMemberPreferencesDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

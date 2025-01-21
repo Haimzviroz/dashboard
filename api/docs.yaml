@@ -623,7 +623,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProjectDto'
+                $ref: '#/components/schemas/BaseProjectDto'
       tags: &ref_9
         - Project
       security: &ref_10
@@ -756,6 +756,46 @@ paths:
                 $ref: '#/components/schemas/DetailedProjectDto'
       tags: *ref_9
       security: *ref_10
+    put:
+      operationId: ProjectManagementController_editProject
+      summary: Edit Project
+      parameters:
+        - name: projectIdentifier
+          required: true
+          in: path
+          description: Project identifier (ID or name)
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditProjectDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseProjectDto'
+      tags: *ref_9
+      security: *ref_10
+    delete:
+      operationId: ProjectManagementController_deleteProject
+      summary: Delete Project
+      parameters:
+        - name: projectIdentifier
+          required: true
+          in: path
+          description: Project identifier (ID or name)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_9
+      security: *ref_10
   /api/v1/project/{projectIdentifier}/createToken:
     post:
       operationId: ProjectManagementController_createToken
@@ -794,6 +834,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProjectDto'
+      tags: *ref_9
+      security: *ref_10
+  /api/v1/project/{projectIdentifier}/member/preferences:
+    get:
+      operationId: ProjectManagementController_getMemberProjectPreferences
+      summary: Get member project preferences
+      parameters:
+        - name: projectIdentifier
+          required: true
+          in: path
+          description: Project identifier (ID or name)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectMemberPreferencesDto'
+      tags: *ref_9
+      security: *ref_10
+    put:
+      operationId: ProjectManagementController_updateMemberProjectPreferences
+      summary: Update member project preferences
+      parameters:
+        - name: projectIdentifier
+          required: true
+          in: path
+          description: Project identifier (ID or name)
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectMemberPreferencesDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectMemberPreferencesDto'
       tags: *ref_9
       security: *ref_10
   /api/v1/project/{projectIdentifier}/member:
@@ -2584,7 +2669,7 @@ components:
           type: string
         description:
           type: string
-    ProjectDto:
+    BaseProjectDto:
       type: object
       properties:
         id:
@@ -2593,35 +2678,14 @@ components:
         name:
           type: string
           description: Name of the project
+        description:
+          type: string
         status:
           type: string
           description: Status of the project (active, completed, on-hold)
-        owner:
-          type: string
-          description: Owner of the project
-        description:
-          type: string
-        numMembers:
-          type: number
-          description: Number of members in the project
-        versions:
-          type: number
-          description: Number of versions available for the project
-          example: 5
-        latestRelease:
-          type: string
-          description: Latest release of the project
-        upcomingRelease:
-          type: string
-          description: Upcoming release
-        upcomingReleaseStage:
-          type: string
-          description: Upcoming release stage
       required:
         - id
         - name
-        - owner
-        - versions
     MemberResDto:
       type: object
       properties:
@@ -2670,7 +2734,7 @@ components:
           description: The data items for the current page
           type: array
           items:
-            type: array
+            type: T
         total:
           type: number
           description: The total number of items available
@@ -2688,7 +2752,26 @@ components:
         - total
         - page
         - perPage
-    BaseProjectDto:
+    ProjectMemberPreferencesDto:
+      type: object
+      properties:
+        pinned:
+          type: boolean
+    ProjectMemberContextDto:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+            - project-owner
+            - project-admin
+            - project-member
+        preferences:
+          $ref: '#/components/schemas/ProjectMemberPreferencesDto'
+      required:
+        - role
+        - preferences
+    ProjectDto:
       type: object
       properties:
         id:
@@ -2697,12 +2780,39 @@ components:
         name:
           type: string
           description: Name of the project
+        description:
+          type: string
         status:
           type: string
           description: Status of the project (active, completed, on-hold)
+        owner:
+          type: string
+          description: Owner of the project
+        numMembers:
+          type: number
+          description: Number of members in the project
+        versions:
+          type: number
+          description: Number of versions available for the project
+          example: 5
+        latestRelease:
+          type: string
+          description: Latest release of the project
+        upcomingRelease:
+          type: string
+          description: Upcoming release
+        upcomingReleaseStage:
+          type: string
+          description: Upcoming release stage
+        memberContext:
+          description: Current member context
+          allOf:
+            - $ref: '#/components/schemas/ProjectMemberContextDto'
       required:
         - id
         - name
+        - owner
+        - versions
     ProjectTokenDto:
       type: object
       properties:
@@ -2740,14 +2850,14 @@ components:
         name:
           type: string
           description: Name of the project
+        description:
+          type: string
         status:
           type: string
           description: Status of the project (active, completed, on-hold)
         owner:
           type: string
           description: Owner of the project
-        description:
-          type: string
         numMembers:
           type: number
           description: Number of members in the project
@@ -2764,6 +2874,10 @@ components:
         upcomingReleaseStage:
           type: string
           description: Upcoming release stage
+        memberContext:
+          description: Current member context
+          allOf:
+            - $ref: '#/components/schemas/ProjectMemberContextDto'
         createdAt:
           format: date-time
           type: string
@@ -2781,6 +2895,13 @@ components:
         - owner
         - versions
         - createdAt
+    EditProjectDto:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
     AddMemberToProjectDto:
       type: object
       properties:
