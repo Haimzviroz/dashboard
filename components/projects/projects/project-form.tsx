@@ -16,11 +16,12 @@ import {
 	DialogContentText,
 	DialogTitle
 } from "@mui/material";
-import { addNewProject, SearchProjects } from '@/apis/client-side/projects-actions.api';
+import { createProject, deleteProject, SearchProjects } from '@/apis/client-side/projects-actions.api';
 import { R_PROJECTS } from '@/apis/routes';
 import { NavBarOption } from '@/types/enum';
 import { useRouter } from 'next/router';
-import { Project } from '@/types/interfaces';
+import { DetailedProjectDto } from '@/api/src';
+import { useUpdateProject } from '@/hooks/project.query.hook';
 
 interface DeleteDialogProps {
 	openDialog: boolean;
@@ -62,17 +63,18 @@ const DeleteDialog: FC<DeleteDialogProps> = ({ openDialog, handleCloseDialog, is
 
 
 interface ProjectFormProps {
-	project?: Project
+	project?: DetailedProjectDto
 }
 
 const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
 	const router = useRouter()
-
-	const [isDeleting, setIsDeleting] = useState(false);
-	const [openDialog, setOpenDialog] = useState(false);
+	const updateProject = useUpdateProject()
 
 	const [name, setName] = useState(project?.name || "");
 	const [description, setDescription] = useState(project?.description || "");
+
+	const [isDeleting, setIsDeleting] = useState(false);
+	const [openDialog, setOpenDialog] = useState(false);
 	const [isNameValid, setIsNameValid] = useState(true);
 	const [isCheckingName, setIsCheckingName] = useState(false);
 	const [error, setError] = useState("");
@@ -86,7 +88,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
 		// Simulate an API call
 		const exitsPro = await SearchProjects(name)
 		// Replace this logic with real API check
-		const notAvailable = exitsPro && exitsPro.some(p => p.name === name)
+		const notAvailable = exitsPro && exitsPro.some(p => p.name === name) && (project && project.name != name)
 		setIsCheckingName(false);
 		return !notAvailable;
 	};
@@ -120,11 +122,15 @@ const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
 		}
 		// Submit form data (API call)
 		try {
-			if(!project){
-				const res = await addNewProject({ name, description })
-				router.push(R_PROJECTS + "/" + res.name + "/" + NavBarOption.OVERVIEW)
-			} else{
-
+			if (!project) {
+				const res = await createProject({ name, description })
+				router.push(R_PROJECTS + "/" + res.name + "/" + NavBarOption.OVERVIEW, undefined, { shallow: true })
+			} else {
+				updateProject.mutate({ projectName: project.name, data: { name, description } }, {
+					onSuccess(data) {
+						router.push(R_PROJECTS + "/" + data.name + "/" + NavBarOption.SETTINGS)
+					},
+				})
 			}
 		} catch (error) {
 			alert(error)
@@ -132,15 +138,14 @@ const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
 	};
 
 	const handleDelete = async () => {
-				setIsDeleting(true);
-				// Simulate API delete call
-				setTimeout(() => {
-					setIsDeleting(false);
-					setOpenDialog(false);
-					// alert("Project deleted!");
-					router.push(R_PROJECTS)
-				}, 2000);
-			};
+		if (project) {
+			setIsDeleting(true);
+			await deleteProject(project?.name)
+			setIsDeleting(false);
+			setOpenDialog(false);
+			router.push(R_PROJECTS)
+		}
+	};
 
 	return (
 
@@ -183,7 +188,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
 				type="submit"
 				variant="contained"
 				color="primary"
-				disabled={isCheckingName}
+				disabled={!isNameValid}
 			>
 				{isCheckingName ? <CircularProgress size={24} /> : project ? "Update Project" : "Create Project"}
 			</Button>
@@ -197,7 +202,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
 						<Button
 							variant="outlined"
 							color="error"
-						onClick={handleOpenDialog}
+							onClick={handleOpenDialog}
 						// disabled={isDeleting}
 						>
 							Delete Project
@@ -207,8 +212,8 @@ const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
 						openDialog={openDialog}
 						handleCloseDialog={handleCloseDialog}
 						isDeleting={isDeleting}
-						handleDelete={handleDelete} 
-						/>
+						handleDelete={handleDelete}
+					/>
 				</Fragment>}
 		</Box>
 	);

@@ -9,13 +9,12 @@ import {
   Chip,
   Stack,
 } from "@mui/material";
-import { ProjectTokenDto } from "@/api/src";
+import { DetailedProjectDto, ProjectTokenDto } from "@/api/src";
 import { useDeleteToken, useUpdateToken } from "@/hooks/token.query.hook";
-import { DetailedProject } from "@/types/interfaces";
 
 interface TokenProps {
   token: ProjectTokenDto;
-  project: DetailedProject;
+  project: DetailedProjectDto;
 
 }
 

@@ -1,10 +1,11 @@
 import { Member } from "@/types/interfaces";
 import { Box, Avatar, Stack, Typography, IconButton, Chip } from "@mui/material";
 import { Delete as DeleteIcon, Group as GroupIcon, Edit as EditIcon } from "@mui/icons-material";
+import { MemberResDto } from "@/api/src";
 
 
 interface TeamMemberItemProps {
-  member: Member;
+  member: MemberResDto;
   onEdit: () => void;
   onDelete: () => void;
 }
@@ -71,13 +72,14 @@ const TeamMemberItem: React.FC<TeamMemberItemProps> = ({
     >
       <Box display="flex" alignItems="center" gap={1}>
         <Avatar
-          src={`${member.image}`}
+          // src={`${member.image}`}
           alt={`${member.firstName} ${member.lastName}`}
           sx={{
             width: 48,
             height: 48,
             marginRight: 2,
-            bgcolor: !member.image
+            // bgcolor: !member.image
+            bgcolor: true
               ? stringToColor(`${member.firstName} ${member.lastName}`)
               : undefined,
           }}
@@ -87,7 +89,7 @@ const TeamMemberItem: React.FC<TeamMemberItemProps> = ({
             <Typography variant="body1" fontWeight="bold">
               {`${member.firstName} ${member.lastName}`}
             </Typography>
-            {StatusLabel(member.status)}
+            {member.status && StatusLabel(member.status)}
           </Stack>
           <Typography variant="body2" color="text.secondary">
             {member.role}

@@ -13,10 +13,10 @@ import {
 } from "@mui/material";
 import { Group as GroupIcon } from "@mui/icons-material";
 import AddIcon from '@mui/icons-material/Add';
-import { DetailedProject, Member } from "@/types/interfaces";
 import MemberForm from "./member-from";
-import { useDeleteMember } from "@/hooks/project.query.hook";
+import { useDeleteMember } from "@/hooks/project-member.query.hook";
 import TeamMemberItem from "./team-member";
+import { DetailedProjectDto, MemberResDto } from "@/api/src";
 
 
 interface DeleteConfirmationDialogProps {
@@ -51,13 +51,13 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
 );
 
 interface TeamMembersProps {
-  project: DetailedProject;
+  project: DetailedProjectDto;
 }
 
 const TeamMembers: FC<TeamMembersProps> = ({ project }) => {
   const [addUserToggle, setUserToggle] = useState<boolean>(false);
   const [confirmDeleteToggle, setConfirmDeleteToggle] = useState<boolean>(false);
-  const [selectedMember, setSelectedMember] = useState<Member>();
+  const [selectedMember, setSelectedMember] = useState<MemberResDto>();
 
   const delMember = useDeleteMember();
 

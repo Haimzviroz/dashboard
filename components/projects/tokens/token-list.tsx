@@ -15,13 +15,12 @@ import {
 import KeyIcon from '@mui/icons-material/Key';
 import AddIcon from '@mui/icons-material/Add';
 import Token from "./token-item";
-import { DetailedProject } from "@/types/interfaces";
-import { CreateProjectTokenDto, ProjectTokenDto } from "@/api/src";
+import { CreateProjectTokenDto, DetailedProjectDto, ProjectTokenDto } from "@/api/src";
 import { useCreateToken } from "@/hooks/token.query.hook";
 
 interface TokenListProps {
   tokens?: ProjectTokenDto[]
-  project: DetailedProject;
+  project: DetailedProjectDto;
 
 }
 

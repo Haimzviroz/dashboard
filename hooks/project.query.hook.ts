@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Q_P_SEARCH_RESULT, Q_PROJECT, Q_PROJECTS } from "../apis/query-keys";
-import { addNewMember, deleteMember, getProject, getProjects, SearchProjects, updateMember } from "@/apis/client-side/projects-actions.api";
-import { AddMember, DetailedProject, Member, Project, SearchPro, UpdateMember } from "@/types/interfaces";
+import { getProject, getProjects, SearchProjects, updateProject } from "@/apis/client-side/projects-actions.api";
+import { Project, SearchPro } from "@/types/interfaces";
+import { BaseProjectDto, DetailedProjectDto, EditProjectDto } from "@/api/src";
 
 export const useProjects = () => {
   const { data: projects, refetch } = useQuery<Project[]>({
@@ -44,83 +45,27 @@ export const useSearchProjects = () => {
 }
 
 export const useProject = (name: string) => {
-  const { data: project, refetch } = useQuery<DetailedProject>({
+  const { data: project, refetch } = useQuery<DetailedProjectDto>({
     queryKey: [Q_PROJECT, name],
     queryFn: () => getProject(name),
   })
   return { project, refetch }
 }
 
-export const useAddMember = () => {
+export const useUpdateProject = () => {
   const client = useQueryClient()
 
   return useMutation({
-    mutationFn: (addMes: { projectName: string, data: AddMember }) =>
-      addNewMember(addMes.projectName, addMes.data),
+    mutationFn: ({ projectName, data }: { projectName: string, data: EditProjectDto }) =>
+      updateProject(projectName, data),
 
-    // Notice the second argument is the variables object that the `mutate` function receives
-    onSuccess: async (data: Member, addMes: { projectName: string, data: AddMember }) => {
-
-      client.setQueryData([Q_PROJECT, addMes.projectName], (preData: DetailedProject) => {
-        const copyData = { ...preData }
-        if (copyData.members) {
-          let members = [...copyData.members]
-          members.push(data)
-          copyData.members = members
-        }
-        return copyData
-      })
+    onSuccess: (data: BaseProjectDto, { projectName }: { projectName: string, data: EditProjectDto }) => {
+      client.setQueryData([Q_PROJECT, projectName], (preData?: DetailedProjectDto) => {
+        if (!preData) return preData;
+        return { ...preData, ...data };
+      });
     },
-    onError: (error => alert(error))
-  })
+    onError: (error) => alert(error)
+  });
 }
 
-export const useUpdateMember = () => {
-  const client = useQueryClient()
-
-  return useMutation({
-    mutationFn: (updateMes: { projectName: string, memberId: number, data: UpdateMember }) =>
-      updateMember(updateMes.projectName, updateMes.memberId, updateMes.data),
-
-    // Notice the second argument is the variables object that the `mutate` function receives
-    onSuccess: async (data: Member, updateMes: { projectName: string, memberId: number, data: UpdateMember }) => {
-
-      client.setQueryData([Q_PROJECT, updateMes.projectName], (preData: DetailedProject) => {
-        const copyData = { ...preData }
-        if (copyData.members) {
-
-          let members = [...copyData.members]
-          const currentM = members.findIndex(m => m.id === updateMes.memberId)
-          if (currentM !== -1) {
-            members[currentM] = { ...members[currentM], ...data }
-          }
-          copyData.members = members
-        }
-        return copyData
-      })
-    },
-    onError: (error => alert(error))
-  })
-}
-
-export const useDeleteMember = () => {
-  const client = useQueryClient()
-
-  return useMutation({
-    mutationFn: (delMes: { projectName: string, memberId: number }) =>
-      deleteMember(delMes.projectName, delMes.memberId),
-
-    // Notice the second argument is the variables object that the `mutate` function receives
-    onSuccess: async (data: Member, delMes: { projectName: string, memberId: number }) => {
-
-      client.setQueryData([Q_PROJECT, delMes.projectName], (preData: DetailedProject) => {
-        const copyData = { ...preData }
-        if (copyData.members) {
-          copyData.members = [...copyData.members.filter(member => member.id !== delMes.memberId)];
-        }
-        return copyData
-      })
-    },
-    onError: (error => alert(error))
-  })
-}

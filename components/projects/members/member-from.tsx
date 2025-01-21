@@ -11,14 +11,15 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { getUsers } from "@/apis/client-side/projects-actions.api";
-import { Member, Project } from "@/types/interfaces";
-import { useAddMember, useUpdateMember } from "@/hooks/project.query.hook";
+import { Member } from "@/types/interfaces";
+import { useAddMember, useUpdateMember } from "@/hooks/project-member.query.hook";
+import { DetailedProjectDto } from "@/api/src";
 
 
 const roles = [{ id: "project-admin", name: "Admin" }, { id: "project-member", name: "Member" }];
 
 interface MemberFormProps {
-  project: Project
+  project: DetailedProjectDto
   setUserToggle: Dispatch<SetStateAction<boolean>>,
   member?: Member
 }
