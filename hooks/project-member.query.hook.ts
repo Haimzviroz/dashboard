@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Q_PROJECT } from "../apis/query-keys";
-import { addNewMember, deleteMember, updateMember } from "@/apis/client-side/projects-actions.api";
-import { AddMemberToProjectDto, DetailedProjectDto, EditProjectMemberDto, MemberResDto } from "@/api/src";
+import { Q_PROJECT, Q_PROJECTS } from "../apis/query-keys";
+import { addNewMember, deleteMember, pinProject, updateMember } from "@/apis/client-side/projects-actions.api";
+import { AddMemberToProjectDto, DetailedProjectDto, EditProjectMemberDto, MemberResDto, ProjectDto, ProjectMemberPreferencesDto } from "@/api/src";
 
 export const useAddMember = () => {
   const client = useQueryClient()
@@ -76,3 +76,34 @@ export const useRemoveMember = () => {
     onError: (error => alert(error))
   })
 }
+
+export const usePinProject = () => {
+  const client = useQueryClient();
+
+  return useMutation({
+    mutationFn: (updateMes: { projectName: string; data: ProjectMemberPreferencesDto }) =>
+      pinProject(updateMes.projectName, updateMes.data),
+
+    onSuccess: async (data: ProjectMemberPreferencesDto, updateMes: { projectName: string; data: ProjectMemberPreferencesDto }) => {
+      client.setQueryData([Q_PROJECTS], (preData: ProjectDto[] | undefined) => {
+        if (!preData) return [];        
+
+        const updatedData = preData.map((project) => {
+          if (project.name === updateMes.projectName) {
+            return {
+              ...project,
+              memberContext: {
+                ...project.memberContext,
+                preferences: data,
+              },
+            };
+          }
+          return project;
+        });
+
+        return updatedData;
+      });
+    },
+    onError: (error) => alert(error),
+  });
+};

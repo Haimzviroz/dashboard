@@ -1,6 +1,22 @@
 import { PROJECT, CONFIG_OPTION, CONFIRM } from '../paths';
 import { clientRequestWithAuth, conf } from './token-client.middleware';
-import { AddMemberToProjectDto, BaseProjectDto, CreateProjectDto, CreateProjectTokenDto, DetailedProjectDto, EditProjectDto, EditProjectMemberDto, MemberResDto, ProjectApiFp, ProjectDto, ProjectTokenDto, UpdateProjectTokenDto, UsersApiFactory, UserSearchDto } from '@/api/src';
+import {
+  AddMemberToProjectDto,
+  BaseProjectDto,
+  CreateProjectDto,
+  CreateProjectTokenDto,
+  DetailedProjectDto,
+  EditProjectDto,
+  EditProjectMemberDto,
+  MemberResDto,
+  ProjectApiFp,
+  ProjectDto,
+  ProjectMemberPreferencesDto,
+  ProjectTokenDto,
+  UpdateProjectTokenDto,
+  UsersApiFactory,
+  UserSearchDto
+} from '@/api/src';
 
 export const getUsers = async (params: UserSearchDto): Promise<MemberResDto[]> => {
   const res = await UsersApiFactory(await conf()).usersControllerGetAllUsers(params)
@@ -38,6 +54,11 @@ export const updateProject = async (projectId: string | number, data: EditProjec
 
 export const deleteProject = async (projectId: string | number,): Promise<void> => {
   const fun = await ProjectApiFp(await conf()).projectManagementControllerDeleteProject(projectId.toString())
+  return (await fun()).data
+}
+
+export const pinProject = async (projectId: string | number, data: ProjectMemberPreferencesDto): Promise<ProjectMemberPreferencesDto> => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerUpdateMemberProjectPreferences(projectId.toString(), data)
   return (await fun()).data
 }
 

@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   Typography,
   Button,
@@ -12,6 +12,7 @@ import { NextRouter } from "next/router";
 import { R_PROJECTS } from "@/apis/routes";
 import { NavBarOption } from "@/types/enum";
 import { ProjectDto } from "@/api/src";
+import { usePinProject } from "@/hooks/project-member.query.hook";
 
 interface ProjectItemProps {
   project: ProjectDto;
@@ -19,11 +20,13 @@ interface ProjectItemProps {
 }
 
 const ProjectItem: FC<ProjectItemProps> = ({ project, router }) => {
-  const [isPined, setIsPined] = useState(false);
+  
+  const [isPined, setIsPined] = useState(project.memberContext?.preferences.pinned);
+  const pinProject = usePinProject()
 
   const toggleImportant = () => {
-    setIsPined(!isPined);
-    // Optionally, handle any API call or state update for marking as important
+    setIsPined(!isPined)
+    pinProject.mutate({ projectName: project.name, data: { pinned: !isPined } })
   };
 
   return (

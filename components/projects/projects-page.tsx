@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, Fragment, useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -24,7 +24,6 @@ const ProjectsDashboard: FC<ProjectsProps> = () => {
     }
   }, [searchTerm])
 
-
   const router = useRouter()
 
   return (
@@ -36,7 +35,10 @@ const ProjectsDashboard: FC<ProjectsProps> = () => {
       <HeadBar router={router} setSearchTerm={setSearchTerm}></HeadBar>
       {searchTerm && searchTerm.length > 1 && searchedP.pSearchResult && searchedP.pSearchResult.length > 0 ?
         <ProjectList title="Search results" projects={searchedP.pSearchResult} router={router} /> :
-        projects && <ProjectList title="All Projects" projects={projects} router={router} />}
+        <Fragment>
+          {projects && <ProjectList title="Pined Projects" projects={projects.filter(p => p.memberContext?.preferences.pinned)} router={router} />}
+          {projects && <ProjectList title="All Projects" projects={projects} router={router} />}
+        </Fragment>}
     </Box>
   );
 };

@@ -1,7 +1,8 @@
-import React, { FC, Fragment } from "react";
+import React, { FC, Fragment, useEffect } from "react";
 import {
   Typography,
   Grid,
+  Box,
 } from "@mui/material";
 import { NextRouter } from "next/router";
 import ProjectItem from "./project-item";
@@ -16,16 +17,16 @@ interface ProjectListProps {
 const ProjectList: FC<ProjectListProps> = ({ title, projects, router }) => {
 
   return (
-    <Fragment>
-      <Typography variant="h6" fontWeight="bold" mb={2}>
+    <Box mt={2}>
+      {projects.length > 0 && <Typography variant="h6" fontWeight="bold" mb={2}>
         {title}
-      </Typography>
+      </Typography>}
       <Grid container spacing={2}>
         {projects.map((project) => (
-          <ProjectItem project={project} router={router} key={project.id}/>
+          <ProjectItem project={project} router={router} key={project.id.toString() + project.memberContext?.preferences.pinned} />
         ))}
       </Grid>
-    </Fragment>
+    </Box>
   );
 };
 
