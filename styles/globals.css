@@ -56,12 +56,12 @@ label {
   display: inline-block;
 }
 
-ul{
+ul {
   padding: 0;
   margin: 0;
 }
 
-li{
+li {
   list-style-type: none;
   width: 150px;
 }
@@ -80,4 +80,10 @@ li{
   background-color: rgb(200, 197, 197);
   min-width: 50px;
   text-align: center;
+}
+
+.release-card:first-child {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }

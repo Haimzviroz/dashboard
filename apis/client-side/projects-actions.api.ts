@@ -13,6 +13,8 @@ import {
   ProjectDto,
   ProjectMemberPreferencesDto,
   ProjectTokenDto,
+  ReleaseDto,
+  ReleasesApiFp,
   UpdateProjectTokenDto,
   UsersApiFactory,
   UserSearchDto
@@ -67,36 +69,41 @@ export const confirmProjectInvitation = async (projectId: number,) => {
 }
 
 export const addNewMember = async (projectId: string | number, data: AddMemberToProjectDto): Promise<MemberResDto> => {
-  const tokenFun = await ProjectApiFp(await conf()).projectManagementControllerAddMemberToProject(projectId.toString(), data)
-  return (await tokenFun()).data
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerAddMemberToProject(projectId.toString(), data)
+  return (await fun()).data
 }
 
 export const updateMember = async (projectId: string | number, memberId: number, data: EditProjectMemberDto): Promise<MemberResDto> => {
-  const tokenFun = await ProjectApiFp(await conf()).projectManagementControllerEditMember(projectId.toString(), memberId, data)
-  return (await tokenFun()).data
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerEditMember(projectId.toString(), memberId, data)
+  return (await fun()).data
 }
 
 export const deleteMember = async (projectId: string | number, memberId: number) => {
-  const tokenFun = await ProjectApiFp(await conf()).projectManagementControllerRemoveMemberFromProject(projectId.toString(), memberId)
-  return (await tokenFun()).data
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerRemoveMemberFromProject(projectId.toString(), memberId)
+  return (await fun()).data
 }
 
 export const addToken = async (projectId: string, data: CreateProjectTokenDto) => {
-  const tokenFun = await ProjectApiFp(await conf()).projectManagementControllerCreateProjectToken(projectId, data)
-  return (await tokenFun()).data
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerCreateProjectToken(projectId, data)
+  return (await fun()).data
 }
 
 export const getTokens = async (projectId: string): Promise<ProjectTokenDto[]> => {
-  const tokenFun = await ProjectApiFp(await conf()).projectManagementControllerGetProjectTokens(projectId)
-  return (await tokenFun()).data
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerGetProjectTokens(projectId)
+  return (await fun()).data
 }
 
 export const updateToken = async (projectId: string, tokenId: number, data: UpdateProjectTokenDto): Promise<ProjectTokenDto> => {
-  const tokenFun = await ProjectApiFp(await conf()).projectManagementControllerUpdateProjectToken(projectId, tokenId, data)
-  return (await tokenFun()).data
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerUpdateProjectToken(projectId, tokenId, data)
+  return (await fun()).data
 }
 
 export const deleteToken = async (projectId: string, tokenId: number,): Promise<void> => {
-  const tokenFun = await ProjectApiFp(await conf()).projectManagementControllerDeleteProjectToken(projectId, tokenId)
-  return (await tokenFun()).data
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerDeleteProjectToken(projectId, tokenId)
+  return (await fun()).data
+}
+
+export const getReleases = async (projectId: string): Promise<ReleaseDto[]> => {
+  const fun = await ReleasesApiFp(await conf()).releasesControllerGetReleases(projectId)
+  return (await fun()).data
 }

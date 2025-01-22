@@ -75,7 +75,7 @@ const TeamMembers: FC<TeamMembersProps> = ({ project }) => {
   };
 
   return (
-    <Card sx={{ margin: "16px", padding: 2 }}>
+    <Card sx={{padding: 2 }}>
       {/* Header */}
       <Box display="flex" alignItems="center" marginBottom={2} gap={1}>
         <GroupIcon />

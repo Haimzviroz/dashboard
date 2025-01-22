@@ -47,7 +47,7 @@ const ProjectTokens: FC<TokenListProps> = ({ tokens, project }) => {
     });
   };
   return (
-    <Card sx={{ margin: "16px", padding: 2 }}>
+    <Card sx={{ mt: 2, padding: 2 }}>
       <Box display="flex" alignItems="center" marginBottom={2} gap={1}>
         <KeyIcon sx={{ rotate: "-45deg" }} />
         <Typography variant="h6" fontWeight="bold">

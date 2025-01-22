@@ -73,6 +73,7 @@ const TeamMemberItem: React.FC<TeamMemberItemProps> = ({
       <Box display="flex" alignItems="center" gap={1}>
         <Avatar
           // src={`${member.image}`}
+          src={"http://images"}
           alt={`${member.firstName} ${member.lastName}`}
           sx={{
             width: 48,

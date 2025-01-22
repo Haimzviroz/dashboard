@@ -26,21 +26,19 @@ const ProjectOverview: NextPageWithLayout<ManagementProjectsPageProps> = () => {
 
   return (
     <Fragment>
-      <Box sx={{ m: 2 }}>
-        <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-          {project?.name}
-        </Typography>
-        <Typography
-          variant="body1"
-          color="text.secondary"
-          sx={{ mt: 1, mb: 2 }}
-        >
-          {project?.description}
-        </Typography>
-        <Divider />
-      </Box>
+      <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+        {project?.name}
+      </Typography>
+      <Typography
+        variant="body1"
+        color="text.secondary"
+        sx={{ mt: 1, mb: 2 }}
+      >
+        {project?.description}
+      </Typography>
+      <Divider />
       {project && <ProjectMembers project={project} />}
-      {tokens && project && <ProjectTokens project={project} tokens={tokens}></ProjectTokens> }
+      {tokens && project && <ProjectTokens project={project} tokens={tokens}></ProjectTokens>}
     </Fragment>
 
   );
@@ -82,7 +80,9 @@ ProjectOverview.getLayout = (page: ReactElement) => {
     <LTR_MuiProvider>
       <Box sx={{ padding: 2 }}>
         <NavBar />
-        {page}
+        <Box sx={{ m: 2 }}>
+          {page}
+        </Box>
       </Box>
     </LTR_MuiProvider>
   </GA_layout>
