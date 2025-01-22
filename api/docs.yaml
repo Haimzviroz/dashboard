@@ -1113,9 +1113,9 @@ paths:
                 $ref: '#/components/schemas/RegulationDto'
       tags: *ref_9
       security: *ref_10
-  /api/v1/project/{projectIdentifier}/regulation/{regulationId}:
+  /api/v1/project/{projectIdentifier}/regulation/{regulation}:
     get:
-      operationId: ProjectManagementController_getProjectRegulationById
+      operationId: ProjectManagementController_getProjectRegulationByName
       summary: Get Regulation by ID
       parameters:
         - name: projectIdentifier
@@ -1124,12 +1124,12 @@ paths:
           description: Project identifier (ID or name)
           schema:
             type: string
-        - name: regulationId
+        - name: regulation
           required: true
           in: path
-          description: ID of the regulation
+          description: Name of the regulation
           schema:
-            type: number
+            type: string
         - name: X-Project-Token
           in: header
           required: false
@@ -1154,12 +1154,12 @@ paths:
           description: Project identifier (ID or name)
           schema:
             type: string
-        - name: regulationId
+        - name: regulation
           required: true
           in: path
-          description: ID of the regulation
+          description: Name of the regulation
           schema:
-            type: number
+            type: string
       requestBody:
         required: true
         content:
@@ -1185,12 +1185,12 @@ paths:
           description: Project identifier (ID or name)
           schema:
             type: string
-        - name: regulationId
+        - name: regulation
           required: true
           in: path
-          description: ID of the regulation
+          description: Name of the regulation
           schema:
-            type: number
+            type: string
       responses:
         '200':
           description: ''
@@ -1962,6 +1962,7 @@ paths:
           content:
             application/json:
               schema:
+                title: ConfigDto
                 oneOf:
                   - $ref: '#/components/schemas/AndroidConfigDto'
                   - $ref: '#/components/schemas/WindowsConfigDto'
@@ -1978,6 +1979,7 @@ paths:
         content:
           application/json:
             schema:
+              title: ConfigDto
               oneOf:
                 - $ref: '#/components/schemas/AndroidConfigDto'
                 - $ref: '#/components/schemas/WindowsConfigDto'
@@ -1987,6 +1989,7 @@ paths:
           content:
             application/json:
               schema:
+                title: ConfigDto
                 oneOf:
                   - $ref: '#/components/schemas/AndroidConfigDto'
                   - $ref: '#/components/schemas/WindowsConfigDto'
@@ -2312,7 +2315,13 @@ components:
         metadata:
           type: object
         status:
-          type: object
+          type: string
+          enum:
+            - draft
+            - in_review
+            - approved
+            - released
+            - archived
         artifacts:
           type: array
           items:
@@ -2323,6 +2332,12 @@ components:
         updatedAt:
           format: date-time
           type: string
+        requiredRegulationsCount:
+          type: number
+          description: Total number of required regulations
+        compliantRegulationsCount:
+          type: number
+          description: Total number of compliant regulations
       required:
         - id
         - version
@@ -2332,6 +2347,8 @@ components:
         - status
         - createdAt
         - updatedAt
+        - requiredRegulationsCount
+        - compliantRegulationsCount
     SetReleaseArtifactDto:
       type: object
       properties:
@@ -2361,6 +2378,24 @@ components:
           description: Only present for FILE artifact type
       required:
         - artifactId
+    RegulationSnapshotDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the regulation
+        description:
+          type: string
+          description: Description of the regulation
+        config:
+          type: string
+          description: Configuration of the regulation
+        typeId:
+          type: number
+          description: Type Id of the regulation
+      required:
+        - name
+        - typeId
     RegulationStatusDto:
       type: object
       properties:
@@ -2390,6 +2425,10 @@ components:
           format: date-time
           type: string
           description: Update date of the regulation status
+        regulationSnapshot:
+          description: Regulation snapshot
+          allOf:
+            - $ref: '#/components/schemas/RegulationSnapshotDto'
       required:
         - projectIdentifier
         - version
@@ -2739,8 +2778,7 @@ components:
           description: The data items for the current page
           type: array
           items:
-            type: object
-            additionalProperties: true
+            type: string
         total:
           type: number
           description: The total number of items available
@@ -3009,9 +3047,6 @@ components:
     RegulationDto:
       type: object
       properties:
-        regulationId:
-          type: number
-          description: ID of the regulation
         name:
           type: string
           description: Name of the regulation
@@ -3035,7 +3070,6 @@ components:
           type: number
           description: Order of the regulation
       required:
-        - regulationId
         - name
         - displayName
         - description

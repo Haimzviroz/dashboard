@@ -454,6 +454,12 @@ export interface ComponentDto {
     'subComponents'?: Array<ComponentDto>;
 }
 /**
+ * @type ConfigDto
+ * @export
+ */
+export type ConfigDto = AndroidConfigDto | WindowsConfigDto;
+
+/**
  * 
  * @export
  * @interface CreateDevicesGroupDto
@@ -1015,12 +1021,6 @@ export interface DeviceContentResDto {
      */
     'components': Array<ComponentDto>;
 }
-/**
- * @type DeviceControllerGetDeviceConfig200Response
- * @export
- */
-export type DeviceControllerGetDeviceConfig200Response = AndroidConfigDto | WindowsConfigDto;
-
 /**
  * 
  * @export
@@ -2942,10 +2942,10 @@ export interface PaginatedProjectDto {
 export interface PaginatedResultDto {
     /**
      * The data items for the current page
-     * @type {Array<{ [key: string]: any; }>}
+     * @type {Array<string>}
      * @memberof PaginatedResultDto
      */
-    'data': Array<{ [key: string]: any; }>;
+    'data': Array<string>;
     /**
      * The total number of items available
      * @type {number}
@@ -3491,12 +3491,6 @@ export interface RefreshTokenDto {
  */
 export interface RegulationDto {
     /**
-     * ID of the regulation
-     * @type {number}
-     * @memberof RegulationDto
-     */
-    'regulationId': number;
-    /**
      * Name of the regulation
      * @type {string}
      * @memberof RegulationDto
@@ -3538,6 +3532,37 @@ export interface RegulationDto {
      * @memberof RegulationDto
      */
     'order': number;
+}
+/**
+ * 
+ * @export
+ * @interface RegulationSnapshotDto
+ */
+export interface RegulationSnapshotDto {
+    /**
+     * Name of the regulation
+     * @type {string}
+     * @memberof RegulationSnapshotDto
+     */
+    'name': string;
+    /**
+     * Description of the regulation
+     * @type {string}
+     * @memberof RegulationSnapshotDto
+     */
+    'description'?: string;
+    /**
+     * Configuration of the regulation
+     * @type {string}
+     * @memberof RegulationSnapshotDto
+     */
+    'config'?: string;
+    /**
+     * Type Id of the regulation
+     * @type {number}
+     * @memberof RegulationSnapshotDto
+     */
+    'typeId': number;
 }
 /**
  * 
@@ -3593,6 +3618,12 @@ export interface RegulationStatusDto {
      * @memberof RegulationStatusDto
      */
     'updatedAt': string;
+    /**
+     * Regulation snapshot
+     * @type {RegulationSnapshotDto}
+     * @memberof RegulationStatusDto
+     */
+    'regulationSnapshot'?: RegulationSnapshotDto;
 }
 /**
  * 
@@ -3712,10 +3743,10 @@ export interface ReleaseDto {
     'metadata': object;
     /**
      * 
-     * @type {object}
+     * @type {string}
      * @memberof ReleaseDto
      */
-    'status': object;
+    'status': ReleaseDtoStatusEnum;
     /**
      * 
      * @type {Array<ReleaseArtifactDto>}
@@ -3734,7 +3765,30 @@ export interface ReleaseDto {
      * @memberof ReleaseDto
      */
     'updatedAt': string;
+    /**
+     * Total number of required regulations
+     * @type {number}
+     * @memberof ReleaseDto
+     */
+    'requiredRegulationsCount': number;
+    /**
+     * Total number of compliant regulations
+     * @type {number}
+     * @memberof ReleaseDto
+     */
+    'compliantRegulationsCount': number;
 }
+
+export const ReleaseDtoStatusEnum = {
+    Draft: 'draft',
+    InReview: 'in_review',
+    Approved: 'approved',
+    Released: 'released',
+    Archived: 'archived'
+} as const;
+
+export type ReleaseDtoStatusEnum = typeof ReleaseDtoStatusEnum[keyof typeof ReleaseDtoStatusEnum];
+
 /**
  * 
  * @export
@@ -5341,13 +5395,13 @@ export const DeviceApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * This service message returns an object of device configurations.
          * @summary Set Device Configurations
-         * @param {DeviceControllerGetDeviceConfig200Response} deviceControllerGetDeviceConfig200Response 
+         * @param {ConfigDto} configDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deviceControllerSetDeviceConfig: async (deviceControllerGetDeviceConfig200Response: DeviceControllerGetDeviceConfig200Response, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'deviceControllerGetDeviceConfig200Response' is not null or undefined
-            assertParamExists('deviceControllerSetDeviceConfig', 'deviceControllerGetDeviceConfig200Response', deviceControllerGetDeviceConfig200Response)
+        deviceControllerSetDeviceConfig: async (configDto: ConfigDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'configDto' is not null or undefined
+            assertParamExists('deviceControllerSetDeviceConfig', 'configDto', configDto)
             const localVarPath = `/api/v1/device/config`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5371,7 +5425,7 @@ export const DeviceApiAxiosParamCreator = function (configuration?: Configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(deviceControllerGetDeviceConfig200Response, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(configDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5396,7 +5450,7 @@ export const DeviceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deviceControllerGetDeviceConfig(group: string, deviceId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeviceControllerGetDeviceConfig200Response>> {
+        async deviceControllerGetDeviceConfig(group: string, deviceId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConfigDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deviceControllerGetDeviceConfig(group, deviceId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DeviceApi.deviceControllerGetDeviceConfig']?.[localVarOperationServerIndex]?.url;
@@ -5512,12 +5566,12 @@ export const DeviceApiFp = function(configuration?: Configuration) {
         /**
          * This service message returns an object of device configurations.
          * @summary Set Device Configurations
-         * @param {DeviceControllerGetDeviceConfig200Response} deviceControllerGetDeviceConfig200Response 
+         * @param {ConfigDto} configDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deviceControllerSetDeviceConfig(deviceControllerGetDeviceConfig200Response: DeviceControllerGetDeviceConfig200Response, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeviceControllerGetDeviceConfig200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deviceControllerSetDeviceConfig(deviceControllerGetDeviceConfig200Response, options);
+        async deviceControllerSetDeviceConfig(configDto: ConfigDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConfigDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deviceControllerSetDeviceConfig(configDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DeviceApi.deviceControllerSetDeviceConfig']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -5540,7 +5594,7 @@ export const DeviceApiFactory = function (configuration?: Configuration, basePat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deviceControllerGetDeviceConfig(group: string, deviceId: string, options?: RawAxiosRequestConfig): AxiosPromise<DeviceControllerGetDeviceConfig200Response> {
+        deviceControllerGetDeviceConfig(group: string, deviceId: string, options?: RawAxiosRequestConfig): AxiosPromise<ConfigDto> {
             return localVarFp.deviceControllerGetDeviceConfig(group, deviceId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -5629,12 +5683,12 @@ export const DeviceApiFactory = function (configuration?: Configuration, basePat
         /**
          * This service message returns an object of device configurations.
          * @summary Set Device Configurations
-         * @param {DeviceControllerGetDeviceConfig200Response} deviceControllerGetDeviceConfig200Response 
+         * @param {ConfigDto} configDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deviceControllerSetDeviceConfig(deviceControllerGetDeviceConfig200Response: DeviceControllerGetDeviceConfig200Response, options?: RawAxiosRequestConfig): AxiosPromise<DeviceControllerGetDeviceConfig200Response> {
-            return localVarFp.deviceControllerSetDeviceConfig(deviceControllerGetDeviceConfig200Response, options).then((request) => request(axios, basePath));
+        deviceControllerSetDeviceConfig(configDto: ConfigDto, options?: RawAxiosRequestConfig): AxiosPromise<ConfigDto> {
+            return localVarFp.deviceControllerSetDeviceConfig(configDto, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -5761,13 +5815,13 @@ export class DeviceApi extends BaseAPI {
     /**
      * This service message returns an object of device configurations.
      * @summary Set Device Configurations
-     * @param {DeviceControllerGetDeviceConfig200Response} deviceControllerGetDeviceConfig200Response 
+     * @param {ConfigDto} configDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DeviceApi
      */
-    public deviceControllerSetDeviceConfig(deviceControllerGetDeviceConfig200Response: DeviceControllerGetDeviceConfig200Response, options?: RawAxiosRequestConfig) {
-        return DeviceApiFp(this.configuration).deviceControllerSetDeviceConfig(deviceControllerGetDeviceConfig200Response, options).then((request) => request(this.axios, this.basePath));
+    public deviceControllerSetDeviceConfig(configDto: ConfigDto, options?: RawAxiosRequestConfig) {
+        return DeviceApiFp(this.configuration).deviceControllerSetDeviceConfig(configDto, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -8433,18 +8487,18 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
          * 
          * @summary Delete Regulation by ID
          * @param {string} projectIdentifier Project identifier (ID or name)
-         * @param {number} regulationId ID of the regulation
+         * @param {string} regulation Name of the regulation
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectManagementControllerDeleteProjectRegulation: async (projectIdentifier: string, regulationId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projectManagementControllerDeleteProjectRegulation: async (projectIdentifier: string, regulation: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectIdentifier' is not null or undefined
             assertParamExists('projectManagementControllerDeleteProjectRegulation', 'projectIdentifier', projectIdentifier)
-            // verify required parameter 'regulationId' is not null or undefined
-            assertParamExists('projectManagementControllerDeleteProjectRegulation', 'regulationId', regulationId)
-            const localVarPath = `/api/v1/project/{projectIdentifier}/regulation/{regulationId}`
+            // verify required parameter 'regulation' is not null or undefined
+            assertParamExists('projectManagementControllerDeleteProjectRegulation', 'regulation', regulation)
+            const localVarPath = `/api/v1/project/{projectIdentifier}/regulation/{regulation}`
                 .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)))
-                .replace(`{${"regulationId"}}`, encodeURIComponent(String(regulationId)));
+                .replace(`{${"regulation"}}`, encodeURIComponent(String(regulation)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -8609,21 +8663,21 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
          * 
          * @summary Edit Regulation
          * @param {string} projectIdentifier Project identifier (ID or name)
-         * @param {number} regulationId ID of the regulation
+         * @param {string} regulation Name of the regulation
          * @param {UpdateRegulationDto} updateRegulationDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectManagementControllerEditProjectRegulation: async (projectIdentifier: string, regulationId: number, updateRegulationDto: UpdateRegulationDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projectManagementControllerEditProjectRegulation: async (projectIdentifier: string, regulation: string, updateRegulationDto: UpdateRegulationDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectIdentifier' is not null or undefined
             assertParamExists('projectManagementControllerEditProjectRegulation', 'projectIdentifier', projectIdentifier)
-            // verify required parameter 'regulationId' is not null or undefined
-            assertParamExists('projectManagementControllerEditProjectRegulation', 'regulationId', regulationId)
+            // verify required parameter 'regulation' is not null or undefined
+            assertParamExists('projectManagementControllerEditProjectRegulation', 'regulation', regulation)
             // verify required parameter 'updateRegulationDto' is not null or undefined
             assertParamExists('projectManagementControllerEditProjectRegulation', 'updateRegulationDto', updateRegulationDto)
-            const localVarPath = `/api/v1/project/{projectIdentifier}/regulation/{regulationId}`
+            const localVarPath = `/api/v1/project/{projectIdentifier}/regulation/{regulation}`
                 .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)))
-                .replace(`{${"regulationId"}}`, encodeURIComponent(String(regulationId)));
+                .replace(`{${"regulation"}}`, encodeURIComponent(String(regulation)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -8881,19 +8935,19 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
          * 
          * @summary Get Regulation by ID
          * @param {string} projectIdentifier Project identifier (ID or name)
-         * @param {number} regulationId ID of the regulation
+         * @param {string} regulation Name of the regulation
          * @param {string} [xProjectToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectManagementControllerGetProjectRegulationById: async (projectIdentifier: string, regulationId: number, xProjectToken?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projectManagementControllerGetProjectRegulationByName: async (projectIdentifier: string, regulation: string, xProjectToken?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectIdentifier' is not null or undefined
-            assertParamExists('projectManagementControllerGetProjectRegulationById', 'projectIdentifier', projectIdentifier)
-            // verify required parameter 'regulationId' is not null or undefined
-            assertParamExists('projectManagementControllerGetProjectRegulationById', 'regulationId', regulationId)
-            const localVarPath = `/api/v1/project/{projectIdentifier}/regulation/{regulationId}`
+            assertParamExists('projectManagementControllerGetProjectRegulationByName', 'projectIdentifier', projectIdentifier)
+            // verify required parameter 'regulation' is not null or undefined
+            assertParamExists('projectManagementControllerGetProjectRegulationByName', 'regulation', regulation)
+            const localVarPath = `/api/v1/project/{projectIdentifier}/regulation/{regulation}`
                 .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)))
-                .replace(`{${"regulationId"}}`, encodeURIComponent(String(regulationId)));
+                .replace(`{${"regulation"}}`, encodeURIComponent(String(regulation)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -9469,12 +9523,12 @@ export const ProjectApiFp = function(configuration?: Configuration) {
          * 
          * @summary Delete Regulation by ID
          * @param {string} projectIdentifier Project identifier (ID or name)
-         * @param {number} regulationId ID of the regulation
+         * @param {string} regulation Name of the regulation
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectManagementControllerDeleteProjectRegulation(projectIdentifier: string, regulationId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerDeleteProjectRegulation(projectIdentifier, regulationId, options);
+        async projectManagementControllerDeleteProjectRegulation(projectIdentifier: string, regulation: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerDeleteProjectRegulation(projectIdentifier, regulation, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerDeleteProjectRegulation']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -9526,13 +9580,13 @@ export const ProjectApiFp = function(configuration?: Configuration) {
          * 
          * @summary Edit Regulation
          * @param {string} projectIdentifier Project identifier (ID or name)
-         * @param {number} regulationId ID of the regulation
+         * @param {string} regulation Name of the regulation
          * @param {UpdateRegulationDto} updateRegulationDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectManagementControllerEditProjectRegulation(projectIdentifier: string, regulationId: number, updateRegulationDto: UpdateRegulationDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RegulationDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerEditProjectRegulation(projectIdentifier, regulationId, updateRegulationDto, options);
+        async projectManagementControllerEditProjectRegulation(projectIdentifier: string, regulation: string, updateRegulationDto: UpdateRegulationDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RegulationDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerEditProjectRegulation(projectIdentifier, regulation, updateRegulationDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerEditProjectRegulation']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -9618,15 +9672,15 @@ export const ProjectApiFp = function(configuration?: Configuration) {
          * 
          * @summary Get Regulation by ID
          * @param {string} projectIdentifier Project identifier (ID or name)
-         * @param {number} regulationId ID of the regulation
+         * @param {string} regulation Name of the regulation
          * @param {string} [xProjectToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectManagementControllerGetProjectRegulationById(projectIdentifier: string, regulationId: number, xProjectToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RegulationDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerGetProjectRegulationById(projectIdentifier, regulationId, xProjectToken, options);
+        async projectManagementControllerGetProjectRegulationByName(projectIdentifier: string, regulation: string, xProjectToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RegulationDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerGetProjectRegulationByName(projectIdentifier, regulation, xProjectToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerGetProjectRegulationById']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerGetProjectRegulationByName']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -9857,12 +9911,12 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          * 
          * @summary Delete Regulation by ID
          * @param {string} projectIdentifier Project identifier (ID or name)
-         * @param {number} regulationId ID of the regulation
+         * @param {string} regulation Name of the regulation
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectManagementControllerDeleteProjectRegulation(projectIdentifier: string, regulationId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.projectManagementControllerDeleteProjectRegulation(projectIdentifier, regulationId, options).then((request) => request(axios, basePath));
+        projectManagementControllerDeleteProjectRegulation(projectIdentifier: string, regulation: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.projectManagementControllerDeleteProjectRegulation(projectIdentifier, regulation, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9902,13 +9956,13 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          * 
          * @summary Edit Regulation
          * @param {string} projectIdentifier Project identifier (ID or name)
-         * @param {number} regulationId ID of the regulation
+         * @param {string} regulation Name of the regulation
          * @param {UpdateRegulationDto} updateRegulationDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectManagementControllerEditProjectRegulation(projectIdentifier: string, regulationId: number, updateRegulationDto: UpdateRegulationDto, options?: RawAxiosRequestConfig): AxiosPromise<RegulationDto> {
-            return localVarFp.projectManagementControllerEditProjectRegulation(projectIdentifier, regulationId, updateRegulationDto, options).then((request) => request(axios, basePath));
+        projectManagementControllerEditProjectRegulation(projectIdentifier: string, regulation: string, updateRegulationDto: UpdateRegulationDto, options?: RawAxiosRequestConfig): AxiosPromise<RegulationDto> {
+            return localVarFp.projectManagementControllerEditProjectRegulation(projectIdentifier, regulation, updateRegulationDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9973,13 +10027,13 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          * 
          * @summary Get Regulation by ID
          * @param {string} projectIdentifier Project identifier (ID or name)
-         * @param {number} regulationId ID of the regulation
+         * @param {string} regulation Name of the regulation
          * @param {string} [xProjectToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectManagementControllerGetProjectRegulationById(projectIdentifier: string, regulationId: number, xProjectToken?: string, options?: RawAxiosRequestConfig): AxiosPromise<RegulationDto> {
-            return localVarFp.projectManagementControllerGetProjectRegulationById(projectIdentifier, regulationId, xProjectToken, options).then((request) => request(axios, basePath));
+        projectManagementControllerGetProjectRegulationByName(projectIdentifier: string, regulation: string, xProjectToken?: string, options?: RawAxiosRequestConfig): AxiosPromise<RegulationDto> {
+            return localVarFp.projectManagementControllerGetProjectRegulationByName(projectIdentifier, regulation, xProjectToken, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -10193,13 +10247,13 @@ export class ProjectApi extends BaseAPI {
      * 
      * @summary Delete Regulation by ID
      * @param {string} projectIdentifier Project identifier (ID or name)
-     * @param {number} regulationId ID of the regulation
+     * @param {string} regulation Name of the regulation
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectApi
      */
-    public projectManagementControllerDeleteProjectRegulation(projectIdentifier: string, regulationId: number, options?: RawAxiosRequestConfig) {
-        return ProjectApiFp(this.configuration).projectManagementControllerDeleteProjectRegulation(projectIdentifier, regulationId, options).then((request) => request(this.axios, this.basePath));
+    public projectManagementControllerDeleteProjectRegulation(projectIdentifier: string, regulation: string, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerDeleteProjectRegulation(projectIdentifier, regulation, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10246,14 +10300,14 @@ export class ProjectApi extends BaseAPI {
      * 
      * @summary Edit Regulation
      * @param {string} projectIdentifier Project identifier (ID or name)
-     * @param {number} regulationId ID of the regulation
+     * @param {string} regulation Name of the regulation
      * @param {UpdateRegulationDto} updateRegulationDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectApi
      */
-    public projectManagementControllerEditProjectRegulation(projectIdentifier: string, regulationId: number, updateRegulationDto: UpdateRegulationDto, options?: RawAxiosRequestConfig) {
-        return ProjectApiFp(this.configuration).projectManagementControllerEditProjectRegulation(projectIdentifier, regulationId, updateRegulationDto, options).then((request) => request(this.axios, this.basePath));
+    public projectManagementControllerEditProjectRegulation(projectIdentifier: string, regulation: string, updateRegulationDto: UpdateRegulationDto, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerEditProjectRegulation(projectIdentifier, regulation, updateRegulationDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10331,14 +10385,14 @@ export class ProjectApi extends BaseAPI {
      * 
      * @summary Get Regulation by ID
      * @param {string} projectIdentifier Project identifier (ID or name)
-     * @param {number} regulationId ID of the regulation
+     * @param {string} regulation Name of the regulation
      * @param {string} [xProjectToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectApi
      */
-    public projectManagementControllerGetProjectRegulationById(projectIdentifier: string, regulationId: number, xProjectToken?: string, options?: RawAxiosRequestConfig) {
-        return ProjectApiFp(this.configuration).projectManagementControllerGetProjectRegulationById(projectIdentifier, regulationId, xProjectToken, options).then((request) => request(this.axios, this.basePath));
+    public projectManagementControllerGetProjectRegulationByName(projectIdentifier: string, regulation: string, xProjectToken?: string, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerGetProjectRegulationByName(projectIdentifier, regulation, xProjectToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
