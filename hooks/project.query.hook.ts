@@ -64,7 +64,9 @@ export const useUpdateProject = () => {
         return { ...preData, ...data };
       });
     },
-    onError: (error) => alert(error)
+    onError: (error) => {
+      console.error(error)
+    }
   });
 }
 

@@ -22,6 +22,7 @@ import { NavBarOption } from '@/types/enum';
 import { useRouter } from 'next/router';
 import { DetailedProjectDto } from '@/api/src';
 import { useUpdateProject } from '@/hooks/project.query.hook';
+import { AxiosError } from 'axios';
 
 interface DeleteDialogProps {
 	openDialog: boolean;
@@ -88,7 +89,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
 		// Simulate an API call
 		const exitsPro = await SearchProjects(name)
 		// Replace this logic with real API check
-		const notAvailable = exitsPro && exitsPro.some(p => p.name === name) && (project && project.name != name)
+		const notAvailable = exitsPro && exitsPro.some(p => p.name === name) && (project ? project.name != name : true)
 		setIsCheckingName(false);
 		return !notAvailable;
 	};
@@ -110,6 +111,18 @@ const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
 		}
 	};
 
+	const handleError = (error: any) => {
+		if (error instanceof AxiosError) {
+			if (error.response?.status === 409) {
+				setError("This project name is already taken or unavailable.");
+				setIsNameValid(false)
+			}
+			else {
+				alert(error)
+			}
+		}
+	}
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!name) {
@@ -130,10 +143,13 @@ const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
 					onSuccess(data) {
 						router.push(R_PROJECTS + "/" + data.name + "/" + NavBarOption.SETTINGS)
 					},
+					onError(error) {
+						handleError(error)
+					},
 				})
 			}
-		} catch (error) {
-			alert(error)
+		} catch (error: any) {
+			handleError(error)
 		}
 	};
 
