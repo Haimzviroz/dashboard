@@ -112,3 +112,8 @@ export const deleteRelease = async (projectId: string, version: string): Promise
   const fun = await ReleasesApiFp(await conf()).releasesControllerDeleteRelease(projectId, version)
   return (await fun()).data
 }
+
+export const getProjectRegulations = async (projectId: string) => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerGetProjectRegulations(projectId)
+  return (await fun()).data
+}

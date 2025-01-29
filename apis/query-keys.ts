@@ -22,5 +22,6 @@ export const Q_P_SEARCH_RESULT = "projects_search_result"
 export const Q_TOKENS = "token"
 export const Q_RELEASES = "releases"
 export const Q_RELEASE = "release"
+export const Q_REGULATIONS = "regulations"
 
 

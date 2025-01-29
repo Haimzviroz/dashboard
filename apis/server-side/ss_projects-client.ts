@@ -46,4 +46,13 @@ export class SS_ProjectsClient extends SS_HttpClient {
     }
   }
 
+  async getProjectRegulations(projectId: string) {
+    try {
+      const tokenFun = await ProjectApiFp(await this.getOpenApiConf()).projectManagementControllerGetProjectRegulations(projectId)
+      return (await tokenFun()).data
+    } catch (error) {
+      return this.errorHandler(error as AxiosError)
+    }
+  }
+
 }

@@ -50,7 +50,6 @@ const items: NavBarItem[] = [
     icon: <Regulations />,
     activeIcon: <RegulationsAct />,
     isActive: true,
-    disabled: true,
     route: NavBarOption.REGULATION,
   },
   {

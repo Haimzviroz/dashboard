@@ -28,11 +28,9 @@ const Releases: NextPageWithLayout<ProductReleasesProps> = () => {
   return (
     <Fragment>
       <Box>
-        <Stack direction={"row"} justifyContent={"space-between"}>
-          <Typography variant="h6" gutterBottom>
-            Version History
-          </Typography>
-          <Button variant="contained" color="primary" >
+        <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
+          <Typography variant="h6" fontWeight="bold">Version History</Typography>
+          <Button variant="contained" sx={{ backgroundColor: "#1976d2", color: "#fff", '&:hover': { backgroundColor: "#155a9e" } }}>
             + New Version
           </Button>
         </Stack>
