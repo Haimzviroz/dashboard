@@ -2815,6 +2815,35 @@ components:
       required:
         - role
         - preferences
+    MinimalReleaseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        version:
+          type: string
+        name:
+          type: string
+        requiredRegulationsCount:
+          type: number
+        compliantRegulationsCount:
+          type: number
+      required:
+        - id
+        - version
+        - requiredRegulationsCount
+        - compliantRegulationsCount
+    ProjectSummaryDto:
+      type: object
+      properties:
+        latestRelease:
+          description: Latest release of the project
+          allOf:
+            - $ref: '#/components/schemas/MinimalReleaseDto'
+        upcomingRelease:
+          description: Upcoming release of the project
+          allOf:
+            - $ref: '#/components/schemas/MinimalReleaseDto'
     ProjectDto:
       type: object
       properties:
@@ -2839,19 +2868,14 @@ components:
           type: number
           description: Number of versions available for the project
           example: 5
-        latestRelease:
-          type: string
-          description: Latest release of the project
-        upcomingRelease:
-          type: string
-          description: Upcoming release
-        upcomingReleaseStage:
-          type: string
-          description: Upcoming release stage
         memberContext:
           description: Current member context
           allOf:
             - $ref: '#/components/schemas/ProjectMemberContextDto'
+        summary:
+          description: Summary of the project
+          allOf:
+            - $ref: '#/components/schemas/ProjectSummaryDto'
       required:
         - id
         - name
@@ -2909,19 +2933,14 @@ components:
           type: number
           description: Number of versions available for the project
           example: 5
-        latestRelease:
-          type: string
-          description: Latest release of the project
-        upcomingRelease:
-          type: string
-          description: Upcoming release
-        upcomingReleaseStage:
-          type: string
-          description: Upcoming release stage
         memberContext:
           description: Current member context
           allOf:
             - $ref: '#/components/schemas/ProjectMemberContextDto'
+        summary:
+          description: Summary of the project
+          allOf:
+            - $ref: '#/components/schemas/ProjectSummaryDto'
         createdAt:
           format: date-time
           type: string
@@ -3978,6 +3997,32 @@ components:
           type: string
       required:
         - group
+    LayersConfigDto:
+      type: object
+      properties:
+        layerName:
+          type: string
+          description: The name of the layer
+        tileLayerSource:
+          type: string
+          description: The source of the tile layer
+          enum:
+            - XYZ
+            - WMTS
+        XYZtilesURL:
+          type: string
+          description: URL for XYZ tiles
+        capabilitiesUrl:
+          type: string
+          description: URL for capabilities
+        capabilitiesLayerName:
+          type: string
+          description: URL for capabilities
+        delete:
+          type: boolean
+          description: Flag to indicate if the layer should be deleted
+      required:
+        - layerName
     WindowsConfigDto:
       type: object
       properties:
@@ -4017,6 +4062,10 @@ components:
           type: string
         matomoSiteId:
           type: string
+        layers:
+          type: array
+          items:
+            $ref: '#/components/schemas/LayersConfigDto'
       required:
         - group
     DevicePutDto:

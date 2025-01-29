@@ -941,29 +941,17 @@ export interface DetailedProjectDto {
      */
     'versions': number;
     /**
-     * Latest release of the project
-     * @type {string}
-     * @memberof DetailedProjectDto
-     */
-    'latestRelease'?: string;
-    /**
-     * Upcoming release
-     * @type {string}
-     * @memberof DetailedProjectDto
-     */
-    'upcomingRelease'?: string;
-    /**
-     * Upcoming release stage
-     * @type {string}
-     * @memberof DetailedProjectDto
-     */
-    'upcomingReleaseStage'?: string;
-    /**
      * Current member context
      * @type {ProjectMemberContextDto}
      * @memberof DetailedProjectDto
      */
     'memberContext'?: ProjectMemberContextDto;
+    /**
+     * Summary of the project
+     * @type {ProjectSummaryDto}
+     * @memberof DetailedProjectDto
+     */
+    'summary'?: ProjectSummaryDto;
     /**
      * 
      * @type {string}
@@ -2048,6 +2036,57 @@ export interface InventoryUpdatesResDto {
 /**
  * 
  * @export
+ * @interface LayersConfigDto
+ */
+export interface LayersConfigDto {
+    /**
+     * The name of the layer
+     * @type {string}
+     * @memberof LayersConfigDto
+     */
+    'layerName': string;
+    /**
+     * The source of the tile layer
+     * @type {string}
+     * @memberof LayersConfigDto
+     */
+    'tileLayerSource'?: LayersConfigDtoTileLayerSourceEnum;
+    /**
+     * URL for XYZ tiles
+     * @type {string}
+     * @memberof LayersConfigDto
+     */
+    'XYZtilesURL'?: string;
+    /**
+     * URL for capabilities
+     * @type {string}
+     * @memberof LayersConfigDto
+     */
+    'capabilitiesUrl'?: string;
+    /**
+     * URL for capabilities
+     * @type {string}
+     * @memberof LayersConfigDto
+     */
+    'capabilitiesLayerName'?: string;
+    /**
+     * Flag to indicate if the layer should be deleted
+     * @type {boolean}
+     * @memberof LayersConfigDto
+     */
+    'delete'?: boolean;
+}
+
+export const LayersConfigDtoTileLayerSourceEnum = {
+    Xyz: 'XYZ',
+    Wmts: 'WMTS'
+} as const;
+
+export type LayersConfigDtoTileLayerSourceEnum = typeof LayersConfigDtoTileLayerSourceEnum[keyof typeof LayersConfigDtoTileLayerSourceEnum];
+
+/**
+ * 
+ * @export
  * @interface MTlsStatusDto
  */
 export interface MTlsStatusDto {
@@ -2740,6 +2779,43 @@ export type MemberResDtoStatusEnum = typeof MemberResDtoStatusEnum[keyof typeof 
 /**
  * 
  * @export
+ * @interface MinimalReleaseDto
+ */
+export interface MinimalReleaseDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof MinimalReleaseDto
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MinimalReleaseDto
+     */
+    'version': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MinimalReleaseDto
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof MinimalReleaseDto
+     */
+    'requiredRegulationsCount': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MinimalReleaseDto
+     */
+    'compliantRegulationsCount': number;
+}
+/**
+ * 
+ * @export
  * @interface NewBugReportDto
  */
 export interface NewBugReportDto {
@@ -3224,29 +3300,17 @@ export interface ProjectDto {
      */
     'versions': number;
     /**
-     * Latest release of the project
-     * @type {string}
-     * @memberof ProjectDto
-     */
-    'latestRelease'?: string;
-    /**
-     * Upcoming release
-     * @type {string}
-     * @memberof ProjectDto
-     */
-    'upcomingRelease'?: string;
-    /**
-     * Upcoming release stage
-     * @type {string}
-     * @memberof ProjectDto
-     */
-    'upcomingReleaseStage'?: string;
-    /**
      * Current member context
      * @type {ProjectMemberContextDto}
      * @memberof ProjectDto
      */
     'memberContext'?: ProjectMemberContextDto;
+    /**
+     * Summary of the project
+     * @type {ProjectSummaryDto}
+     * @memberof ProjectDto
+     */
+    'summary'?: ProjectSummaryDto;
 }
 /**
  * 
@@ -3382,6 +3446,25 @@ export const ProjectReleasesDtoUploadStatusEnum = {
 
 export type ProjectReleasesDtoUploadStatusEnum = typeof ProjectReleasesDtoUploadStatusEnum[keyof typeof ProjectReleasesDtoUploadStatusEnum];
 
+/**
+ * 
+ * @export
+ * @interface ProjectSummaryDto
+ */
+export interface ProjectSummaryDto {
+    /**
+     * Latest release of the project
+     * @type {MinimalReleaseDto}
+     * @memberof ProjectSummaryDto
+     */
+    'latestRelease'?: MinimalReleaseDto;
+    /**
+     * Upcoming release of the project
+     * @type {MinimalReleaseDto}
+     * @memberof ProjectSummaryDto
+     */
+    'upcomingRelease'?: MinimalReleaseDto;
+}
 /**
  * 
  * @export
@@ -4422,6 +4505,12 @@ export interface WindowsConfigDto {
      * @memberof WindowsConfigDto
      */
     'matomoSiteId'?: string;
+    /**
+     * 
+     * @type {Array<LayersConfigDto>}
+     * @memberof WindowsConfigDto
+     */
+    'layers'?: Array<LayersConfigDto>;
 }
 
 /**
