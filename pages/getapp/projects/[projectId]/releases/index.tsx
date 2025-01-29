@@ -7,7 +7,7 @@ import { NextPageWithLayout } from '@/types/types';
 
 import { SS_ProjectsClient } from "@/apis/server-side/ss_projects-client";
 import GA_layout from "@/components/layout/GA-layout";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { Q_RELEASE } from "@/apis/query-keys";
 import { Edit } from "@mui/icons-material";
@@ -16,23 +16,27 @@ import { useGetApp } from "@/providers/getapp.provider";
 import { ReleaseDtoStatusEnum } from "@/api/src";
 import LTR_MuiProvider from "@/providers/ltr-mui.provider";
 import ProjectReleases from "@/components/projects/releases/releases-list";
+import { useProject } from "@/hooks/project.query.hook";
 
 interface ProductReleasesProps {
 }
 
 const Releases: NextPageWithLayout<ProductReleasesProps> = () => {
-
+  const { router } = useGetApp()
+  const { project } = useProject(router.query.projectId as string)
 
   return (
     <Fragment>
       <Box>
-        <Typography variant="h6" gutterBottom>
-          Version History
-        </Typography>
-        <ProjectReleases></ProjectReleases>
-        <Button variant="contained" color="primary" startIcon={<Edit />}>
-          + New Version
-        </Button>
+        <Stack direction={"row"} justifyContent={"space-between"}>
+          <Typography variant="h6" gutterBottom>
+            Version History
+          </Typography>
+          <Button variant="contained" color="primary" >
+            + New Version
+          </Button>
+        </Stack>
+        {project && <ProjectReleases project={project}></ProjectReleases>}
       </Box>
 
     </Fragment>

@@ -1,14 +1,22 @@
 import { NextPageWithLayout } from '@/types/types';
 
-import { Box, Card, CardContent, Chip, IconButton, LinearProgress, Stack, Typography } from "@mui/material";
+import { Box, Card, CardContent, Chip, IconButton, LinearProgress, Stack, Tooltip, Typography } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
-import { ReleaseDto, ReleaseDtoStatusEnum } from "@/api/src";
+import Distribute from "../../../assets/projects/distribute.svg"
+import { ProjectDto, ReleaseDto, ReleaseDtoStatusEnum } from "@/api/src";
+import { useGetApp } from '@/providers/getapp.provider';
+import { R_APP_DEVICES } from '@/apis/routes';
+import { useDeleteRelease } from '@/hooks/releases.query.hook';
 
 interface ReleasesItemProps {
   release: ReleaseDto
+  project: ProjectDto
 }
 
-const ReleasesItem: NextPageWithLayout<ReleasesItemProps> = ({ release }) => {
+const ReleasesItem: NextPageWithLayout<ReleasesItemProps> = ({ release, project }) => {
+
+  const { router } = useGetApp()
+  const deleteRelease = useDeleteRelease()
 
   const materialStatusColors: Record<ReleaseDtoStatusEnum, string> = {
     [ReleaseDtoStatusEnum.Draft]: '#E0E0E0', // Light gray
@@ -43,15 +51,20 @@ const ReleasesItem: NextPageWithLayout<ReleasesItemProps> = ({ release }) => {
             </Typography>
             <Chip
               label={release.status}
-              sx={{ backgroundColor: getChipColor(release.status), height: 20, width: 60 }}
+              sx={{ backgroundColor: getChipColor(release.status), height: 20, width: 80 }}
               size="small"
             />
           </Stack>
           <Box>
+            <Tooltip title="Distribute version" arrow>
+              <IconButton onClick={() => router.push(R_APP_DEVICES + "?software=" + release.id)}>
+                <Distribute />
+              </IconButton>
+            </Tooltip>
             <IconButton color="primary" aria-label="Edit version">
               <Edit />
             </IconButton>
-            <IconButton color="error" aria-label="Delete version">
+            <IconButton color="error" aria-label="Delete version" onClick={() => deleteRelease.mutate({ projectName: project.name, version: release.version })}>
               <Delete />
             </IconButton>
           </Box>
