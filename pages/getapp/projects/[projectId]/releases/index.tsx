@@ -49,7 +49,7 @@ export default Releases
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
-  const params = ctx.params?.projectId
+  const projectName = ctx.params?.projectId
   const queryClient = new QueryClient();
 
   const httpClient = new SS_ProjectsClient(ctx)
@@ -57,13 +57,14 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     await Promise.allSettled([
       await queryClient.prefetchQuery({
-        queryKey: [Q_RELEASE, params],
-        queryFn: () => httpClient.getProjectReleases(params as string),
+        queryKey: [Q_RELEASE, projectName],
+        queryFn: () => httpClient.getProjectReleases(projectName as string),
       }),
     ])
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
+        projectName
       }
     }
   } catch (error: any) {
@@ -74,11 +75,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 Releases.getLayout = (page: ReactElement) => {
   return <GA_layout page={page} >
     <LTR_MuiProvider>
-      <Box sx={{ padding: 2 }}>
-        <NavBar />
-        <Box sx={{ m: 2 }}>
-          {page}
-        </Box>
+      <NavBar projectName={page.props.projectName} />
+      <Box sx={{ padding: 4 }}>
+        {page}
       </Box>
     </LTR_MuiProvider>
   </GA_layout>

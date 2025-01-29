@@ -14,9 +14,10 @@ import Docs from '../../assets/nav-bar/docs.svg'
 import DocsAct from '../../assets/nav-bar/docs-active.svg'
 import Set from '../../assets/nav-bar/settings.svg'
 import SetAct from '../../assets/nav-bar/settings-active.svg'
-import { Tab, Tabs } from "@mui/material";
+import { Box, Tab, Tabs, Typography } from "@mui/material";
 import { useGetApp } from "@/providers/getapp.provider";
 import { R_PROJECTS } from "@/apis/routes";
+import { FC } from "react";
 
 interface NavBarItem {
   key: NavBarOption,
@@ -78,8 +79,11 @@ const items: NavBarItem[] = [
   }
 ]
 
+interface NavBarProps {
+  projectName: string
+}
 
-const NavBar = () => {
+const NavBar: FC<NavBarProps> = ({ projectName }) => {
   const { navBarActive, router } = useGetApp()
 
   const getNavItems = () => {
@@ -99,9 +103,14 @@ const NavBar = () => {
     })
   }
   return (
-    <Tabs value={navBarActive} onChange={() => { }} role="navigation" variant="scrollable" >
-      {getNavItems()}
-    </Tabs>
+    <Box bgcolor={'#f1f0fb'} sx={{ px: 4, pt: 1, borderTopRightRadius: 24 }}>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', px: 1 }}>
+        {projectName}
+      </Typography>
+      <Tabs value={navBarActive} onChange={() => { }} role="navigation" variant="scrollable" >
+        {getNavItems()}
+      </Tabs>
+    </Box>
   )
 }
 

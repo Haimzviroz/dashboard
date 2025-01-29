@@ -26,16 +26,13 @@ const ProjectOverview: NextPageWithLayout<ManagementProjectsPageProps> = () => {
 
   return (
     <Fragment>
-      <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-        {project?.name}
-      </Typography>
-      <Typography
+      {/* <Typography
         variant="body1"
         color="text.secondary"
         sx={{ mt: 1, mb: 2 }}
       >
         {project?.description}
-      </Typography>
+      </Typography> */}
       <Divider />
       {project && <ProjectMembers project={project} />}
       {tokens && project && <ProjectTokens project={project} tokens={tokens}></ProjectTokens>}
@@ -48,7 +45,7 @@ export default ProjectOverview
 
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const params = ctx.params?.projectId
+  const projectName = ctx.params?.projectId
   const queryClient = new QueryClient();
 
   const httpClient = new SS_ProjectsClient(ctx)
@@ -56,18 +53,19 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   try {
     await Promise.allSettled([
       await queryClient.prefetchQuery({
-        queryKey: [Q_PROJECT, params],
-        queryFn: () => httpClient.getProjectByName(params as string),
+        queryKey: [Q_PROJECT, projectName],
+        queryFn: () => httpClient.getProjectByName(projectName as string),
       }),
       await queryClient.prefetchQuery({
-        queryKey: [Q_TOKENS, params],
-        queryFn: () => httpClient.getProjectTokens(params as string),
+        queryKey: [Q_TOKENS, projectName],
+        queryFn: () => httpClient.getProjectTokens(projectName as string),
       }),
     ])
 
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
+        projectName
       }
     }
   } catch (error: any) {
@@ -78,11 +76,9 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 ProjectOverview.getLayout = (page: ReactElement) => {
   return <GA_layout page={page} >
     <LTR_MuiProvider>
-      <Box sx={{ padding: 2 }}>
-        <NavBar />
-        <Box sx={{ m: 2 }}>
-          {page}
-        </Box>
+      <NavBar projectName={page.props.projectName} />
+      <Box sx={{ padding: 4 }}>
+        {page}
       </Box>
     </LTR_MuiProvider>
   </GA_layout>
