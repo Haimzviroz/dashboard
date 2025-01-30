@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement, ReactNode } from "react";
+import React, { Fragment, ReactElement, ReactNode, useState } from "react";
 import { Typography, Button, Box, Stack } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { GetServerSidePropsContext } from "next";
@@ -7,18 +7,24 @@ import { SS_ProjectsClient } from "@/apis/server-side/ss_projects-client";
 import NavBar from "@/components/header/navigation";
 import GA_layout from "@/components/layout/GA-layout";
 import LTR_MuiProvider from "@/providers/ltr-mui.provider";
-import { Q_REGULATIONS } from "@/apis/query-keys";
 import RegItem from "@/components/projects/regulations/reg-item";
-import {  useRegulations } from "@/hooks/reg.query.hook";
+import { useReg } from "@/hooks/reg.query.hook";
 import { useGetApp } from "@/providers/getapp.provider";
+import RegBetItem from "@/components/projects/regulations/reg-bet-item";
+import { Q_PROJECT, Q_REGULATIONS } from "@/apis/query-keys";
+import { SS_ProjectsClient } from "@/apis/server-side/ss_projects-client";
+import { QueryClient, dehydrate } from "@tanstack/react-query";
+import { GetServerSidePropsContext } from "next";
+import RegForm from "@/components/projects/regulations/reg-form";
+import { useProject } from "@/hooks/project.query.hook";
 
-const TableOf = (body: ReactNode, header = false) => (
+export const TableOf = (body: ReactNode, header = false, over = false) => (
   <Box
     sx={{
       display: "grid",
-      gridTemplateColumns: "1.5fr 3fr 1fr .5fr 1fr", // Ensure consistency     
+      gridTemplateColumns: "3fr 6fr 2fr 1fr 2fr",
       gap: 3,
-      alignItems: "center", // Ensure vertical alignment
+      alignItems: "center",
       p: 2,
       bgcolor: header ? "#f1f3f5" : "#fff",
       borderBottom: !header ? "1px solid #ddd" : "none",
@@ -31,32 +37,36 @@ const TableOf = (body: ReactNode, header = false) => (
 
 const RegHeader = () => (
   <Fragment>
-    {["Name", "Description", "Type", "Order", "Actions"].map((text) => (
-      <Typography key={text} variant="subtitle2" >
-        {text}
-      </Typography>
+    {["Name", "Description", "Type", "Config", "Actions"].map((text) => (
+      <Typography key={text} variant="subtitle2" fontWeight={"bold"}>{text}</Typography>
     ))}
   </Fragment>
 );
 
-
 const ProjectRegulations = () => {
   const { router } = useGetApp()
-  const { regulations } = useRegulations(router.query.projectId as string)
-  
+  const { project } = useProject(router.query.projectId as string)
+  const { regulations } = useReg(router.query.projectId as string);
+  const [open, setOpen] = useState(false);
+
   return (
     <Fragment>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6" fontWeight="bold">Regulations</Typography>
-        <Button variant="contained" startIcon={<Add />}>Add Regulation</Button>
+        <Button variant="contained" startIcon={<Add />} onClick={() => setOpen(true)}>Add Regulation</Button>
       </Stack>
 
       <Box sx={{ boxShadow: 2, borderRadius: "10px 10px 0 0" }}>
         {TableOf(<RegHeader />, true)}
-        {regulations && regulations.map((regulation) => TableOf(<RegItem key={regulation.name} reg={regulation} />, false))}
+        {project && regulations && regulations.map((regulation) =>
+          <Fragment key={JSON.stringify(regulation)}>
+            <RegItem reg={regulation} project={project} />
+          </Fragment>
+        )}
       </Box>
+      {project && <RegForm isOpen={open} setIsOpen={setOpen} project={project} />}
     </Fragment>
-  )
+  );
 };
 
 export default ProjectRegulations;
@@ -74,10 +84,10 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
         queryKey: [Q_REGULATIONS, projectName],
         queryFn: () => httpClient.getProjectRegulations(projectName as string),
       }),
-      // await queryClient.prefetchQuery({
-      //   queryKey: [Q_TOKENS, projectName],
-      //   queryFn: () => httpClient.getProjectTokens(projectName as string),
-      // }),
+      await queryClient.prefetchQuery({
+        queryKey: [Q_PROJECT, projectName],
+        queryFn: () => httpClient.getProjectByName(projectName as string),
+      }),
     ])
 
     return {

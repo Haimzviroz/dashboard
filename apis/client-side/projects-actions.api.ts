@@ -5,6 +5,7 @@ import {
   BaseProjectDto,
   CreateProjectDto,
   CreateProjectTokenDto,
+  CreateRegulationDto,
   DetailedProjectDto,
   EditProjectDto,
   EditProjectMemberDto,
@@ -16,6 +17,7 @@ import {
   ReleaseDto,
   ReleasesApiFp,
   UpdateProjectTokenDto,
+  UpdateRegulationDto,
   UsersApiFactory,
   UserSearchDto
 } from '@/api/src';
@@ -113,7 +115,27 @@ export const deleteRelease = async (projectId: string, version: string): Promise
   return (await fun()).data
 }
 
+export const getRegulationsTypes = async () => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerGetAllRegulationTypes()
+  return (await fun()).data
+}
+
 export const getProjectRegulations = async (projectId: string) => {
   const fun = await ProjectApiFp(await conf()).projectManagementControllerGetProjectRegulations(projectId)
+  return (await fun()).data
+}
+
+export const addRegulation = async (projectId: string, data: CreateRegulationDto) => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerCreateProjectRegulation(projectId, data)
+  return (await fun()).data
+}
+
+export const updateRegulation = async (projectId: string, regId: string, data: UpdateRegulationDto) => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerEditProjectRegulation(projectId, regId, data)
+  return (await fun()).data
+}
+
+export const deleteRegulation = async (projectId: string, regId: string) => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerDeleteProjectRegulation(projectId, regId)
   return (await fun()).data
 }
