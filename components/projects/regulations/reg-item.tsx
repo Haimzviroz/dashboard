@@ -63,6 +63,28 @@ const RegItem: FC<RegItemProps> = ({ reg }) => {
     })
   }
 
+  function stringToColor(string: string) {
+    let hash = 0;
+    for (let i = 0; i < string.length; i++) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = "#";
+    let oppositeColor = "#";
+
+    for (let i = 0; i < 3; i++) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+
+      // Invert the color: (255 - value)
+      const invertedValue = 255 - value;
+      oppositeColor += `00${invertedValue.toString(16)}`.slice(-2);
+    }
+
+    return { bgcolor: oppositeColor };
+  }
+
+
   return (
     <Fragment>
 
@@ -75,8 +97,7 @@ const RegItem: FC<RegItemProps> = ({ reg }) => {
               label={reg.type.name}
               sx={{
                 width: 100,
-                // backgroundColor: reg.type === "Type 1" ? "#d1fae5" : "#e0e7ff",
-                // color: reg.type === "Type 1" ? "#065f46" : "#3730a3",
+                ...stringToColor(reg.type.name),
                 fontWeight: "bold",
               }}
             />
