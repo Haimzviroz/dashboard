@@ -25,10 +25,10 @@ export const TableOf = (body: ReactNode, header = false, index?: number) => (
   <Box
     sx={{
       display: "grid",
-      gridTemplateColumns: "3fr 6fr 2fr 1fr 2fr",
+      gridTemplateColumns: ".5fr 2fr 6fr 2fr 1fr 2fr",
       gap: 3,
       alignItems: "center",
-      p: 2,
+      pr: 2,
       pb: header ? 2 : 0,
       pt: header ? 2 : index === 0 ? 0 : 2,
       bgcolor: header ? "#f1f3f5" : "#fff",
@@ -41,7 +41,7 @@ export const TableOf = (body: ReactNode, header = false, index?: number) => (
 
 const RegHeader = () => (
   <Fragment>
-    {["Name", "Description", "Type", "Config", "Actions"].map((text) => (
+    {["", "Name", "Description", "Type", "Config", "Actions"].map((text) => (
       <Typography key={text} variant="subtitle2" fontWeight={"bold"}>{text}</Typography>
     ))}
   </Fragment>

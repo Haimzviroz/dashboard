@@ -1,6 +1,6 @@
 import React, { FC, Fragment, useRef, useState } from "react";
 import { Typography, IconButton, Chip, Stack, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material";
+import { Edit, Delete, DragIndicator } from "@mui/icons-material";
 import { DetailedProjectDto, RegulationDto } from "@/api/src";
 import { ItemType, TableOf } from "@/pages/getapp/projects/[projectId]/regulations";
 import { useDrag, useDrop } from "react-dnd";
@@ -41,25 +41,23 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
   </Dialog>
 );
 
-
 interface RegItemProps {
   project: DetailedProjectDto;
   reg: RegulationDto;
-  index:number
+  index: number;
 }
 
 const RegItem: FC<RegItemProps> = ({ reg, project, index }) => {
-
   const [openEditReg, setOpenEditReg] = useState(false);
   const [confirmDeleteToggle, setConfirmDeleteToggle] = useState<boolean>(false);
 
-  const delReg = useDeleteReg()
+  const delReg = useDeleteReg();
 
   const ref = useRef<HTMLElement>(null);
 
-  const [, drag] = useDrag({
+  const [,drag, dragPreview] = useDrag({
     type: ItemType,
-    item: {...reg, index},
+    item: { ...reg, index },
   });
 
   const [{ isOver }, drop] = useDrop({
@@ -70,14 +68,14 @@ const RegItem: FC<RegItemProps> = ({ reg, project, index }) => {
     }),
   });
 
-  drag(drop(ref))
+  dragPreview(drop(ref));
 
   const handleDelete = () => {
     delReg.mutate({
       projectName: project.name,
-      regId: reg.name
-    })
-  }
+      regId: reg.name,
+    });
+  };
 
   function stringToColor(string: string) {
     let hash = 0;
@@ -100,13 +98,14 @@ const RegItem: FC<RegItemProps> = ({ reg, project, index }) => {
     return { bgcolor: oppositeColor };
   }
 
-
   return (
     <Fragment>
-
-      <Box ref={ref}>
+      <Box ref={ref} sx={{ opacity: isOver ? 0.5 : 1 }}>
         {TableOf(
           <Fragment>
+            <IconButton ref={drag} sx={{ cursor: "move", color: "#8e8e8e", }}>
+              <DragIndicator />
+            </IconButton>
             <Typography variant="body1">{reg.displayName ?? reg.name}</Typography>
             <Typography variant="body2" color="textSecondary">{reg.description}</Typography>
             <Chip
@@ -127,8 +126,9 @@ const RegItem: FC<RegItemProps> = ({ reg, project, index }) => {
               </IconButton>
             </Stack>
           </Fragment>
-        , false, index)}
+          , false, index)}
       </Box>
+
       <RegForm isOpen={openEditReg} setIsOpen={setOpenEditReg} reg={reg} project={project} />
 
       <DeleteConfirmationDialog
@@ -136,12 +136,12 @@ const RegItem: FC<RegItemProps> = ({ reg, project, index }) => {
         projectName={project.name}
         regName={reg.displayName ?? reg.name}
         onClose={() => {
-          setConfirmDeleteToggle(false)
+          setConfirmDeleteToggle(false);
         }}
         onConfirm={handleDelete}
       />
     </Fragment>
-  )
+  );
 };
 
 export default RegItem;
