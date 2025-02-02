@@ -78,3 +78,21 @@ export const useDeleteReg = () => {
     onError: (error => alert(error))
   })
 }
+
+export const useSetRegOrder = () => {
+  const client = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (updateMes: { projectName: string, regs: RegulationDto[] }) => {
+      // Your mutation logic here
+    },
+    // Notice the second argument is the variables object that the `mutate` function receives
+    onMutate: async (updateMes: { projectName: string, regs: RegulationDto[] }) => {
+
+      client.setQueryData([Q_REGULATIONS, updateMes.projectName], () => {
+        return [...updateMes.regs]
+      })
+    },
+    onError: (error => alert(error))
+  })
+}

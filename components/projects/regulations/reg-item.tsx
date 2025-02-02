@@ -2,8 +2,8 @@ import React, { FC, Fragment, useRef, useState } from "react";
 import { Typography, IconButton, Chip, Stack, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import { DetailedProjectDto, RegulationDto } from "@/api/src";
-import { TableOf } from "@/pages/getapp/projects/[projectId]/regulations";
-
+import { ItemType, TableOf } from "@/pages/getapp/projects/[projectId]/regulations";
+import { useDrag, useDrop } from "react-dnd";
 import RegForm from "./reg-form";
 
 import { useDeleteReg } from "@/hooks/reg.query.hook";
@@ -44,17 +44,33 @@ const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
 
 interface RegItemProps {
   project: DetailedProjectDto;
-  reg: RegulationDto
+  reg: RegulationDto;
+  index:number
 }
 
-const RegItem: FC<RegItemProps> = ({ reg, project }) => {
+const RegItem: FC<RegItemProps> = ({ reg, project, index }) => {
 
   const [openEditReg, setOpenEditReg] = useState(false);
   const [confirmDeleteToggle, setConfirmDeleteToggle] = useState<boolean>(false);
 
   const delReg = useDeleteReg()
 
-const RegItem: FC<RegItemProps> = ({ reg }) => {
+  const ref = useRef<HTMLElement>(null);
+
+  const [, drag] = useDrag({
+    type: ItemType,
+    item: {...reg, index},
+  });
+
+  const [{ isOver }, drop] = useDrop({
+    accept: ItemType,
+    canDrop: (item: RegulationDto) => item.name != reg.name,
+    collect: (monitor) => ({
+      isOver: monitor.isOver(), // Tracks if the item is currently over the target
+    }),
+  });
+
+  drag(drop(ref))
 
   const handleDelete = () => {
     delReg.mutate({
@@ -88,7 +104,7 @@ const RegItem: FC<RegItemProps> = ({ reg }) => {
   return (
     <Fragment>
 
-      <Box>
+      <Box ref={ref}>
         {TableOf(
           <Fragment>
             <Typography variant="body1">{reg.displayName ?? reg.name}</Typography>
@@ -111,7 +127,7 @@ const RegItem: FC<RegItemProps> = ({ reg }) => {
               </IconButton>
             </Stack>
           </Fragment>
-        )}
+        , false, index)}
       </Box>
       <RegForm isOpen={openEditReg} setIsOpen={setOpenEditReg} reg={reg} project={project} />
 
