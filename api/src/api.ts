@@ -481,6 +481,37 @@ export interface CreateDevicesGroupDto {
 /**
  * 
  * @export
+ * @interface CreateDocDto
+ */
+export interface CreateDocDto {
+    /**
+     * The name of the documentation
+     * @type {string}
+     * @memberof CreateDocDto
+     */
+    'name': string;
+    /**
+     * Whether the documentation is an external URL
+     * @type {boolean}
+     * @memberof CreateDocDto
+     */
+    'isUrl': boolean;
+    /**
+     * The content of the README if isUrl is false
+     * @type {string}
+     * @memberof CreateDocDto
+     */
+    'readme'?: string;
+    /**
+     * The URL to the external documentation if isUrl is true
+     * @type {string}
+     * @memberof CreateDocDto
+     */
+    'docUrl'?: string;
+}
+/**
+ * 
+ * @export
  * @interface CreateImportDto
  */
 export interface CreateImportDto {
@@ -1612,6 +1643,55 @@ export interface DiscoverySoftwareDto {
      * @memberof DiscoverySoftwareDto
      */
     'platform'?: PlatformDto;
+}
+/**
+ * 
+ * @export
+ * @interface DocDto
+ */
+export interface DocDto {
+    /**
+     * The name of the documentation
+     * @type {string}
+     * @memberof DocDto
+     */
+    'name': string;
+    /**
+     * Whether the documentation is an external URL
+     * @type {boolean}
+     * @memberof DocDto
+     */
+    'isUrl': boolean;
+    /**
+     * The content of the README if isUrl is false
+     * @type {string}
+     * @memberof DocDto
+     */
+    'readme'?: string;
+    /**
+     * The URL to the external documentation if isUrl is true
+     * @type {string}
+     * @memberof DocDto
+     */
+    'docUrl'?: string;
+    /**
+     * Unique identifier of the documentation
+     * @type {number}
+     * @memberof DocDto
+     */
+    'id': number;
+    /**
+     * Timestamp when the doc was created
+     * @type {string}
+     * @memberof DocDto
+     */
+    'createdAt': string;
+    /**
+     * Timestamp when the doc was last updated
+     * @type {string}
+     * @memberof DocDto
+     */
+    'updatedAt': string;
 }
 /**
  * 
@@ -4178,6 +4258,86 @@ export interface TokensDto {
      * @memberof TokensDto
      */
     'refreshExpireAt'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateDocDto
+ */
+export interface UpdateDocDto {
+    /**
+     * The name of the documentation
+     * @type {string}
+     * @memberof UpdateDocDto
+     */
+    'name'?: string;
+    /**
+     * Whether the documentation is an external URL
+     * @type {boolean}
+     * @memberof UpdateDocDto
+     */
+    'isUrl'?: boolean;
+    /**
+     * The content of the README if isUrl is false
+     * @type {string}
+     * @memberof UpdateDocDto
+     */
+    'readme'?: string;
+    /**
+     * The URL to the external documentation if isUrl is true
+     * @type {string}
+     * @memberof UpdateDocDto
+     */
+    'docUrl'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateOneOfManyRegulationDto
+ */
+export interface UpdateOneOfManyRegulationDto {
+    /**
+     * Name of the regulation
+     * @type {string}
+     * @memberof UpdateOneOfManyRegulationDto
+     */
+    'name'?: string;
+    /**
+     * Display name of the regulation
+     * @type {string}
+     * @memberof UpdateOneOfManyRegulationDto
+     */
+    'displayName'?: string;
+    /**
+     * Description of the regulation
+     * @type {string}
+     * @memberof UpdateOneOfManyRegulationDto
+     */
+    'description'?: string;
+    /**
+     * ID of the regulation type
+     * @type {number}
+     * @memberof UpdateOneOfManyRegulationDto
+     */
+    'typeId'?: number;
+    /**
+     * Configuration of the regulation
+     * @type {string}
+     * @memberof UpdateOneOfManyRegulationDto
+     */
+    'config'?: string;
+    /**
+     * Order of the regulation
+     * @type {number}
+     * @memberof UpdateOneOfManyRegulationDto
+     */
+    'order'?: number;
+    /**
+     * Identifier (name) of the regulation
+     * @type {string}
+     * @memberof UpdateOneOfManyRegulationDto
+     */
+    'regulation': string;
 }
 /**
  * 
@@ -8370,6 +8530,50 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Create a document for a project
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {CreateDocDto} createDocDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerCreateDoc: async (projectIdentifier: string, createDocDto: CreateDocDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectIdentifier' is not null or undefined
+            assertParamExists('projectManagementControllerCreateDoc', 'projectIdentifier', projectIdentifier)
+            // verify required parameter 'createDocDto' is not null or undefined
+            assertParamExists('projectManagementControllerCreateDoc', 'createDocDto', createDocDto)
+            const localVarPath = `/api/v1/project/{projectIdentifier}/docs`
+                .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createDocDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Create Project
          * @param {CreateProjectDto} createProjectDto 
          * @param {*} [options] Override http request option.
@@ -8516,6 +8720,48 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
             }
 
             const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Delete a document by ID
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {number} id Unique identifier of the documentation
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerDeleteDoc: async (projectIdentifier: string, id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectIdentifier' is not null or undefined
+            assertParamExists('projectManagementControllerDeleteDoc', 'projectIdentifier', projectIdentifier)
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('projectManagementControllerDeleteDoc', 'id', id)
+            const localVarPath = `/api/v1/project/{projectIdentifier}/docs/{id}`
+                .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)))
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -8798,6 +9044,50 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Edit Regulations
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {Array<UpdateOneOfManyRegulationDto>} updateOneOfManyRegulationDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerEditProjectRegulations: async (projectIdentifier: string, updateOneOfManyRegulationDto: Array<UpdateOneOfManyRegulationDto>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectIdentifier' is not null or undefined
+            assertParamExists('projectManagementControllerEditProjectRegulations', 'projectIdentifier', projectIdentifier)
+            // verify required parameter 'updateOneOfManyRegulationDto' is not null or undefined
+            assertParamExists('projectManagementControllerEditProjectRegulations', 'updateOneOfManyRegulationDto', updateOneOfManyRegulationDto)
+            const localVarPath = `/api/v1/project/{projectIdentifier}/regulation`
+                .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateOneOfManyRegulationDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get all Regulation Types
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -8918,6 +9208,86 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
             assertParamExists('projectManagementControllerGetDevicesByProject', 'projectId', projectId)
             const localVarPath = `/api/v1/project/devices/project/{projectId}`
                 .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get a document by ID
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {number} id Unique identifier of the documentation
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerGetDocById: async (projectIdentifier: string, id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectIdentifier' is not null or undefined
+            assertParamExists('projectManagementControllerGetDocById', 'projectIdentifier', projectIdentifier)
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('projectManagementControllerGetDocById', 'id', id)
+            const localVarPath = `/api/v1/project/{projectIdentifier}/docs/{id}`
+                .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)))
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get all documents for a project
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerGetDocs: async (projectIdentifier: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectIdentifier' is not null or undefined
+            assertParamExists('projectManagementControllerGetDocs', 'projectIdentifier', projectIdentifier)
+            const localVarPath = `/api/v1/project/{projectIdentifier}/docs`
+                .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -9414,6 +9784,54 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Update a document
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {number} id Unique identifier of the documentation
+         * @param {UpdateDocDto} updateDocDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerUpdateDoc: async (projectIdentifier: string, id: number, updateDocDto: UpdateDocDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectIdentifier' is not null or undefined
+            assertParamExists('projectManagementControllerUpdateDoc', 'projectIdentifier', projectIdentifier)
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('projectManagementControllerUpdateDoc', 'id', id)
+            // verify required parameter 'updateDocDto' is not null or undefined
+            assertParamExists('projectManagementControllerUpdateDoc', 'updateDocDto', updateDocDto)
+            const localVarPath = `/api/v1/project/{projectIdentifier}/docs/{id}`
+                .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)))
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateDocDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Update member project preferences
          * @param {string} projectIdentifier Project identifier (ID or name)
          * @param {ProjectMemberPreferencesDto} projectMemberPreferencesDto 
@@ -9543,6 +9961,20 @@ export const ProjectApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Create a document for a project
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {CreateDocDto} createDocDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projectManagementControllerCreateDoc(projectIdentifier: string, createDocDto: CreateDocDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DocDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerCreateDoc(projectIdentifier, createDocDto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerCreateDoc']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Create Project
          * @param {CreateProjectDto} createProjectDto 
          * @param {*} [options] Override http request option.
@@ -9593,6 +10025,20 @@ export const ProjectApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerCreateToken(projectIdentifier, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerCreateToken']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Delete a document by ID
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {number} id Unique identifier of the documentation
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projectManagementControllerDeleteDoc(projectIdentifier: string, id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerDeleteDoc(projectIdentifier, id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerDeleteDoc']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -9682,6 +10128,20 @@ export const ProjectApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Edit Regulations
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {Array<UpdateOneOfManyRegulationDto>} updateOneOfManyRegulationDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projectManagementControllerEditProjectRegulations(projectIdentifier: string, updateOneOfManyRegulationDto: Array<UpdateOneOfManyRegulationDto>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RegulationDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerEditProjectRegulations(projectIdentifier, updateOneOfManyRegulationDto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerEditProjectRegulations']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Get all Regulation Types
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -9729,6 +10189,33 @@ export const ProjectApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerGetDevicesByProject(projectId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerGetDevicesByProject']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Get a document by ID
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {number} id Unique identifier of the documentation
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projectManagementControllerGetDocById(projectIdentifier: string, id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DocDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerGetDocById(projectIdentifier, id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerGetDocById']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Get all documents for a project
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projectManagementControllerGetDocs(projectIdentifier: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<DocDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerGetDocs(projectIdentifier, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerGetDocs']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -9886,6 +10373,21 @@ export const ProjectApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Update a document
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {number} id Unique identifier of the documentation
+         * @param {UpdateDocDto} updateDocDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projectManagementControllerUpdateDoc(projectIdentifier: string, id: number, updateDocDto: UpdateDocDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DocDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerUpdateDoc(projectIdentifier, id, updateDocDto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerUpdateDoc']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Update member project preferences
          * @param {string} projectIdentifier Project identifier (ID or name)
          * @param {ProjectMemberPreferencesDto} projectMemberPreferencesDto 
@@ -9946,6 +10448,17 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary Create a document for a project
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {CreateDocDto} createDocDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerCreateDoc(projectIdentifier: string, createDocDto: CreateDocDto, options?: RawAxiosRequestConfig): AxiosPromise<DocDto> {
+            return localVarFp.projectManagementControllerCreateDoc(projectIdentifier, createDocDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Create Project
          * @param {CreateProjectDto} createProjectDto 
          * @param {*} [options] Override http request option.
@@ -9985,6 +10498,17 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          */
         projectManagementControllerCreateToken(projectIdentifier: string, options?: RawAxiosRequestConfig): AxiosPromise<ProjectTokenDto> {
             return localVarFp.projectManagementControllerCreateToken(projectIdentifier, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Delete a document by ID
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {number} id Unique identifier of the documentation
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerDeleteDoc(projectIdentifier: string, id: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.projectManagementControllerDeleteDoc(projectIdentifier, id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -10055,6 +10579,17 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary Edit Regulations
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {Array<UpdateOneOfManyRegulationDto>} updateOneOfManyRegulationDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerEditProjectRegulations(projectIdentifier: string, updateOneOfManyRegulationDto: Array<UpdateOneOfManyRegulationDto>, options?: RawAxiosRequestConfig): AxiosPromise<Array<RegulationDto>> {
+            return localVarFp.projectManagementControllerEditProjectRegulations(projectIdentifier, updateOneOfManyRegulationDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Get all Regulation Types
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -10091,6 +10626,27 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          */
         projectManagementControllerGetDevicesByProject(projectId: number, options?: RawAxiosRequestConfig): AxiosPromise<Array<DeviceResDto>> {
             return localVarFp.projectManagementControllerGetDevicesByProject(projectId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get a document by ID
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {number} id Unique identifier of the documentation
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerGetDocById(projectIdentifier: string, id: number, options?: RawAxiosRequestConfig): AxiosPromise<DocDto> {
+            return localVarFp.projectManagementControllerGetDocById(projectIdentifier, id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get all documents for a project
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerGetDocs(projectIdentifier: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<DocDto>> {
+            return localVarFp.projectManagementControllerGetDocs(projectIdentifier, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -10214,6 +10770,18 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary Update a document
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {number} id Unique identifier of the documentation
+         * @param {UpdateDocDto} updateDocDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerUpdateDoc(projectIdentifier: string, id: number, updateDocDto: UpdateDocDto, options?: RawAxiosRequestConfig): AxiosPromise<DocDto> {
+            return localVarFp.projectManagementControllerUpdateDoc(projectIdentifier, id, updateDocDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Update member project preferences
          * @param {string} projectIdentifier Project identifier (ID or name)
          * @param {ProjectMemberPreferencesDto} projectMemberPreferencesDto 
@@ -10272,6 +10840,19 @@ export class ProjectApi extends BaseAPI {
 
     /**
      * 
+     * @summary Create a document for a project
+     * @param {string} projectIdentifier Project identifier (ID or name)
+     * @param {CreateDocDto} createDocDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public projectManagementControllerCreateDoc(projectIdentifier: string, createDocDto: CreateDocDto, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerCreateDoc(projectIdentifier, createDocDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Create Project
      * @param {CreateProjectDto} createProjectDto 
      * @param {*} [options] Override http request option.
@@ -10318,6 +10899,19 @@ export class ProjectApi extends BaseAPI {
      */
     public projectManagementControllerCreateToken(projectIdentifier: string, options?: RawAxiosRequestConfig) {
         return ProjectApiFp(this.configuration).projectManagementControllerCreateToken(projectIdentifier, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Delete a document by ID
+     * @param {string} projectIdentifier Project identifier (ID or name)
+     * @param {number} id Unique identifier of the documentation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public projectManagementControllerDeleteDoc(projectIdentifier: string, id: number, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerDeleteDoc(projectIdentifier, id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10401,6 +10995,19 @@ export class ProjectApi extends BaseAPI {
 
     /**
      * 
+     * @summary Edit Regulations
+     * @param {string} projectIdentifier Project identifier (ID or name)
+     * @param {Array<UpdateOneOfManyRegulationDto>} updateOneOfManyRegulationDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public projectManagementControllerEditProjectRegulations(projectIdentifier: string, updateOneOfManyRegulationDto: Array<UpdateOneOfManyRegulationDto>, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerEditProjectRegulations(projectIdentifier, updateOneOfManyRegulationDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Get all Regulation Types
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -10444,6 +11051,31 @@ export class ProjectApi extends BaseAPI {
      */
     public projectManagementControllerGetDevicesByProject(projectId: number, options?: RawAxiosRequestConfig) {
         return ProjectApiFp(this.configuration).projectManagementControllerGetDevicesByProject(projectId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get a document by ID
+     * @param {string} projectIdentifier Project identifier (ID or name)
+     * @param {number} id Unique identifier of the documentation
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public projectManagementControllerGetDocById(projectIdentifier: string, id: number, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerGetDocById(projectIdentifier, id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get all documents for a project
+     * @param {string} projectIdentifier Project identifier (ID or name)
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public projectManagementControllerGetDocs(projectIdentifier: string, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerGetDocs(projectIdentifier, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10586,6 +11218,20 @@ export class ProjectApi extends BaseAPI {
      */
     public projectManagementControllerSearchProjects(query: string, status?: string, page?: number, perPage?: number, options?: RawAxiosRequestConfig) {
         return ProjectApiFp(this.configuration).projectManagementControllerSearchProjects(query, status, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Update a document
+     * @param {string} projectIdentifier Project identifier (ID or name)
+     * @param {number} id Unique identifier of the documentation
+     * @param {UpdateDocDto} updateDocDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public projectManagementControllerUpdateDoc(projectIdentifier: string, id: number, updateDocDto: UpdateDocDto, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerUpdateDoc(projectIdentifier, id, updateDocDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

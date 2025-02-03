@@ -738,6 +738,22 @@ paths:
                           $ref: '#/components/schemas/BaseProjectDto'
       tags: *ref_9
       security: *ref_10
+  /api/v1/project/regulation-types:
+    get:
+      operationId: ProjectManagementController_getAllRegulationTypes
+      summary: Get all Regulation Types
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RegulationTypeDto'
+      tags: *ref_9
+      security: *ref_10
   /api/v1/project/{projectIdentifier}:
     get:
       operationId: ProjectManagementController_getProject
@@ -1045,22 +1061,6 @@ paths:
                   $ref: '#/components/schemas/DeviceResDto'
       tags: *ref_9
       security: *ref_10
-  /api/v1/project/regulation-types:
-    get:
-      operationId: ProjectManagementController_getAllRegulationTypes
-      summary: Get all Regulation Types
-      parameters: []
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RegulationTypeDto'
-      tags: *ref_9
-      security: *ref_10
   /api/v1/project/{projectIdentifier}/regulation:
     get:
       operationId: ProjectManagementController_getProjectRegulations
@@ -1111,6 +1111,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RegulationDto'
+      tags: *ref_9
+      security: *ref_10
+    put:
+      operationId: ProjectManagementController_editProjectRegulations
+      summary: Edit Regulations
+      parameters:
+        - name: projectIdentifier
+          required: true
+          in: path
+          description: Project identifier (ID or name)
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/UpdateOneOfManyRegulationDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RegulationDto'
       tags: *ref_9
       security: *ref_10
   /api/v1/project/{projectIdentifier}/regulation/{regulation}:
@@ -1311,6 +1340,134 @@ paths:
         - name: tokenId
           required: true
           in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+      tags: *ref_9
+      security: *ref_10
+  /api/v1/project/{projectIdentifier}/docs:
+    get:
+      operationId: ProjectManagementController_getDocs
+      summary: Get all documents for a project
+      parameters:
+        - name: projectIdentifier
+          required: true
+          in: path
+          description: Project identifier (ID or name)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DocDto'
+      tags: *ref_9
+      security: *ref_10
+    post:
+      operationId: ProjectManagementController_createDoc
+      summary: Create a document for a project
+      parameters:
+        - name: projectIdentifier
+          required: true
+          in: path
+          description: Project identifier (ID or name)
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDocDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocDto'
+      tags: *ref_9
+      security: *ref_10
+  /api/v1/project/{projectIdentifier}/docs/{id}:
+    get:
+      operationId: ProjectManagementController_getDocById
+      summary: Get a document by ID
+      parameters:
+        - name: projectIdentifier
+          required: true
+          in: path
+          description: Project identifier (ID or name)
+          schema:
+            type: string
+        - name: id
+          required: true
+          in: path
+          description: Unique identifier of the documentation
+          example: 1
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocDto'
+      tags: *ref_9
+      security: *ref_10
+    put:
+      operationId: ProjectManagementController_updateDoc
+      summary: Update a document
+      parameters:
+        - name: projectIdentifier
+          required: true
+          in: path
+          description: Project identifier (ID or name)
+          schema:
+            type: string
+        - name: id
+          required: true
+          in: path
+          description: Unique identifier of the documentation
+          example: 1
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDocDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocDto'
+      tags: *ref_9
+      security: *ref_10
+    delete:
+      operationId: ProjectManagementController_deleteDoc
+      summary: Delete a document by ID
+      parameters:
+        - name: projectIdentifier
+          required: true
+          in: path
+          description: Project identifier (ID or name)
+          schema:
+            type: string
+        - name: id
+          required: true
+          in: path
+          description: Unique identifier of the documentation
+          example: 1
           schema:
             type: number
       responses:
@@ -2881,6 +3038,22 @@ components:
         - name
         - owner
         - versions
+    RegulationTypeDto:
+      type: object
+      properties:
+        id:
+          type: number
+          description: ID of the regulation type
+        name:
+          type: string
+          description: Name of the regulation type
+        description:
+          type: string
+          description: Description of the regulation type
+      required:
+        - id
+        - name
+        - description
     ProjectTokenDto:
       type: object
       properties:
@@ -3047,22 +3220,6 @@ components:
           type: string
         availableStorage:
           type: string
-    RegulationTypeDto:
-      type: object
-      properties:
-        id:
-          type: number
-          description: ID of the regulation type
-        name:
-          type: string
-          description: Name of the regulation type
-        description:
-          type: string
-          description: Description of the regulation type
-      required:
-        - id
-        - name
-        - description
     RegulationDto:
       type: object
       properties:
@@ -3120,6 +3277,33 @@ components:
       required:
         - name
         - typeId
+    UpdateOneOfManyRegulationDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the regulation
+        displayName:
+          type: string
+          description: Display name of the regulation
+        description:
+          type: string
+          description: Description of the regulation
+        typeId:
+          type: number
+          description: ID of the regulation type
+        config:
+          type: string
+          description: Configuration of the regulation
+        order:
+          type: number
+          description: Order of the regulation
+          default: 0
+        regulation:
+          type: string
+          description: Identifier (name) of the regulation
+      required:
+        - regulation
     UpdateRegulationDto:
       type: object
       properties:
@@ -3141,6 +3325,7 @@ components:
         order:
           type: number
           description: Order of the regulation
+          default: 0
     CreateProjectTokenDto:
       type: object
       properties:
@@ -3166,6 +3351,86 @@ components:
           type: boolean
       required:
         - name
+    DocDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the documentation
+          example: Project README
+        isUrl:
+          type: boolean
+          description: Whether the documentation is an external URL
+          example: false
+        readme:
+          type: string
+          description: The content of the README if isUrl is false
+          example: '# Project Documentation'
+        docUrl:
+          type: string
+          description: The URL to the external documentation if isUrl is true
+          example: https://example.com/docs
+        id:
+          type: number
+          description: Unique identifier of the documentation
+          example: 1
+        createdAt:
+          format: date-time
+          type: string
+          description: Timestamp when the doc was created
+          example: '2025-02-03T12:34:56Z'
+        updatedAt:
+          format: date-time
+          type: string
+          description: Timestamp when the doc was last updated
+          example: '2025-02-03T12:34:56Z'
+      required:
+        - name
+        - isUrl
+        - id
+        - createdAt
+        - updatedAt
+    CreateDocDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the documentation
+          example: Project README
+        isUrl:
+          type: boolean
+          description: Whether the documentation is an external URL
+          example: false
+        readme:
+          type: string
+          description: The content of the README if isUrl is false
+          example: '# Project Documentation'
+        docUrl:
+          type: string
+          description: The URL to the external documentation if isUrl is true
+          example: https://example.com/docs
+      required:
+        - name
+        - isUrl
+    UpdateDocDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the documentation
+          example: Project README
+        isUrl:
+          type: boolean
+          description: Whether the documentation is an external URL
+          example: false
+        readme:
+          type: string
+          description: The content of the README if isUrl is false
+          example: '# Project Documentation'
+        docUrl:
+          type: string
+          description: The URL to the external documentation if isUrl is true
+          example: https://example.com/docs
     UserSearchDto:
       type: object
       properties:
