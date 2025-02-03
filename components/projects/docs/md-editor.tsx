@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
-import { FC, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import * as commands from "@uiw/react-md-editor/commands"
+import { Box } from "@mui/material";
 
 
 
@@ -9,14 +10,19 @@ const MDEditor = dynamic(
   { ssr: false }
 );
 
-const MdDocs: FC = () => {
-  const [value, setValue] = useState("**Hello world!!!**");
+interface MdDocsProps {
+  content: string
+  setContent: Dispatch<SetStateAction<string>>
+}
+
+const MdDocs: FC<MdDocsProps> = ({ content, setContent }) => {
   return (
-    <MDEditor 
-      value={value}
-      onChange={(value?: string) => setValue(value || "")}
-      
-    />
+    <Box mt={2}>
+      <MDEditor
+        value={content}
+        onChange={(value?: string) => setContent(value ?? "")}
+      />
+    </Box>
   );
 }
 
