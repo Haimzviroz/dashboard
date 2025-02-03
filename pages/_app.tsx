@@ -1,6 +1,8 @@
 
 import { AppPropsWithLayout } from '@/types/types';
 
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
 import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import { useState } from 'react';

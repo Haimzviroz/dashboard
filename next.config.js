@@ -1,10 +1,13 @@
 /** @type {import('next').NextConfig} */
 
+const removeImports = require("next-remove-imports")();
+
+
 const nextConfig = {
   reactStrictMode: false,
-  publicRuntimeConfig:{
+  publicRuntimeConfig: {
     BASE_URL: process.env.BASE_PATH || process.env.NEXT_PUBLIC_BASE_PATH,
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_NEXTAUTH_URL, 
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_NEXTAUTH_URL,
   },
   webpack(config) {
     // Grab the existing rule that handles SVG imports
@@ -32,7 +35,7 @@ const nextConfig = {
     fileLoaderRule.exclude = /\.svg$/i
 
     return config
-  },
+  }
 }
 
-module.exports = nextConfig
+module.exports = removeImports(nextConfig)

@@ -87,3 +87,16 @@ li {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
+
+.w-md-editor-toolbar {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.w-md-editor-toolbar li {
+  width: 30px;
+}
+
+.w-md-editor-toolbar-divider {
+  width: 1px !important;
+}

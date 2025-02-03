@@ -66,7 +66,6 @@ const items: NavBarItem[] = [
     name: "Docs",
     icon: <Docs />,
     activeIcon: <DocsAct />,
-    disabled: true,
     route: NavBarOption.DOCS
   },
   {
