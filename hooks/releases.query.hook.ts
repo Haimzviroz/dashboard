@@ -5,7 +5,7 @@ import { ReleaseDto } from "@/api/src";
 
 export const useReleases = (projectName:string) => {
   const { data: releases, refetch } = useQuery<ReleaseDto[]>({
-    queryKey: [Q_RELEASES],
+    queryKey: [Q_RELEASES, projectName],
     queryFn: () => getReleases(projectName),
   })
   return { releases, refetch }
