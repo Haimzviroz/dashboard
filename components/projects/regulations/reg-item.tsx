@@ -55,7 +55,7 @@ const RegItem: FC<RegItemProps> = ({ reg, project, index }) => {
 
   const ref = useRef<HTMLElement>(null);
 
-  const [,drag, dragPreview] = useDrag({
+  const [, drag, dragPreview] = useDrag({
     type: ItemType,
     item: { ...reg, index },
   });
@@ -116,7 +116,7 @@ const RegItem: FC<RegItemProps> = ({ reg, project, index }) => {
                 fontWeight: "bold",
               }}
             />
-            <Typography textAlign={"center"} variant="body2">{reg.config}</Typography>
+            <Typography variant="body2">{reg.config}</Typography>
             <Stack direction="row" spacing={1}>
               <IconButton sx={{ color: "#1e88e5" }} onClick={() => setOpenEditReg(true)}>
                 <Edit />

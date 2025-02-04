@@ -20,9 +20,7 @@ const RegBetItem: FC<RegBetItemProps> = ({ reg, index, moveOrder }) => {
       isOver: monitor.isOver(),
       canDrop: monitor.getItem()?.name !== reg.name && monitor.getItem()?.index != index + 1
     }),
-    drop(item) {
-      console.log("item", item.name);
-      
+    drop(item) {      
       if (item.index < index) {
         console.log(index);
         moveOrder(index, item)

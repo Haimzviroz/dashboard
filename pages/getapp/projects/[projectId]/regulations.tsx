@@ -78,7 +78,7 @@ const ProjectRegulations = () => {
       projectName: project.name,
       regs
     }, {
-      // onSuccess: () => refetch()
+      onSuccess: () => refetch()
     });
   };
 

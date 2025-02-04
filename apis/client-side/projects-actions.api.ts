@@ -16,6 +16,7 @@ import {
   ProjectTokenDto,
   ReleaseDto,
   ReleasesApiFp,
+  UpdateOneOfManyRegulationDto,
   UpdateProjectTokenDto,
   UpdateRegulationDto,
   UsersApiFactory,
@@ -132,6 +133,11 @@ export const addRegulation = async (projectId: string, data: CreateRegulationDto
 
 export const updateRegulation = async (projectId: string, regId: string, data: UpdateRegulationDto) => {
   const fun = await ProjectApiFp(await conf()).projectManagementControllerEditProjectRegulation(projectId, regId, data)
+  return (await fun()).data
+}
+
+export const updateRegulations = async (projectId: string, data: UpdateOneOfManyRegulationDto[]) => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerEditProjectRegulations(projectId, data)
   return (await fun()).data
 }
 

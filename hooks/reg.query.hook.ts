@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Q_REGULATIONS, Q_REG_TYPES } from "../apis/query-keys";
-import { addRegulation, deleteRegulation, getProjectRegulations, getRegulationsTypes, updateRegulation } from "@/apis/client-side/projects-actions.api";
-import { CreateRegulationDto, RegulationDto, RegulationTypeDto, UpdateRegulationDto } from "@/api/src";
+import { addRegulation, deleteRegulation, getProjectRegulations, getRegulationsTypes, updateRegulation, updateRegulations } from "@/apis/client-side/projects-actions.api";
+import { CreateRegulationDto, RegulationDto, RegulationTypeDto, UpdateOneOfManyRegulationDto, UpdateRegulationDto } from "@/api/src";
 
 export const useRegulationsTypes = () => {
   const { data: regTypes, refetch } = useQuery<RegulationTypeDto[]>({
@@ -83,12 +83,13 @@ export const useSetRegOrder = () => {
   const client = useQueryClient()
 
   return useMutation({
-    mutationFn: async (updateMes: { projectName: string, regs: RegulationDto[] }) => {
-      // Your mutation logic here
-    },
+    mutationFn: async (updateMes: { projectName: string, regs: RegulationDto[] }) =>
+      updateRegulations(updateMes.projectName, updateMes.regs.map(r => {
+        (r as unknown as UpdateOneOfManyRegulationDto).regulation = r.name
+        return r as unknown as UpdateOneOfManyRegulationDto
+      })),
     // Notice the second argument is the variables object that the `mutate` function receives
     onMutate: async (updateMes: { projectName: string, regs: RegulationDto[] }) => {
-
       client.setQueryData([Q_REGULATIONS, updateMes.projectName], () => {
         return [...updateMes.regs]
       })
