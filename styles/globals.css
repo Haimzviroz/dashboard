@@ -100,3 +100,20 @@ li {
 .w-md-editor-toolbar-divider {
   width: 1px !important;
 }
+
+.w-md-editor {
+  min-height: calc(100vh - 330px) !important;
+}
+
+.hide-mode .w-md-editor {
+  min-height: 100px !important;
+  max-height: 100px !important;
+}
+
+.hide-mode .w-md-editor-preview {
+  overflow: hidden;
+}
+
+.show-mode .w-md-editor-bar {
+  z-index: -1;
+}

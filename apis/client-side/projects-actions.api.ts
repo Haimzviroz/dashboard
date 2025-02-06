@@ -3,6 +3,7 @@ import { clientRequestWithAuth, conf } from './token-client.middleware';
 import {
   AddMemberToProjectDto,
   BaseProjectDto,
+  CreateDocDto,
   CreateProjectDto,
   CreateProjectTokenDto,
   CreateRegulationDto,
@@ -16,6 +17,7 @@ import {
   ProjectTokenDto,
   ReleaseDto,
   ReleasesApiFp,
+  UpdateDocDto,
   UpdateOneOfManyRegulationDto,
   UpdateProjectTokenDto,
   UpdateRegulationDto,
@@ -143,5 +145,30 @@ export const updateRegulations = async (projectId: string, data: UpdateOneOfMany
 
 export const deleteRegulation = async (projectId: string, regId: string) => {
   const fun = await ProjectApiFp(await conf()).projectManagementControllerDeleteProjectRegulation(projectId, regId)
+  return (await fun()).data
+}
+
+export const getProjectDocs = async (projectId: string) => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerGetDocs(projectId)
+  return (await fun()).data
+}
+
+export const getDoc = async (projectId: string, docId:number) => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerGetDocById(projectId, docId)
+  return (await fun()).data
+}
+
+export const addDoc = async (projectId: string, data: CreateDocDto) => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerCreateDoc(projectId, data)
+  return (await fun()).data
+}
+
+export const updateDoc = async (projectId: string, docId: number, data: UpdateDocDto) => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerUpdateDoc(projectId, docId, data)
+  return (await fun()).data
+}
+
+export const deleteDoc = async (projectId: string, docId: number) => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerDeleteDoc(projectId, docId)
   return (await fun()).data
 }

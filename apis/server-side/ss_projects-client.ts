@@ -54,5 +54,23 @@ export class SS_ProjectsClient extends SS_HttpClient {
       return this.errorHandler(error as AxiosError)
     }
   }
+  
+  async getProjectDocs(projectId: string) {
+    try {
+      const tokenFun = await ProjectApiFp(await this.getOpenApiConf()).projectManagementControllerGetDocs(projectId)
+      return (await tokenFun()).data
+    } catch (error) {
+      return this.errorHandler(error as AxiosError)
+    }
+  }
+  
+  async getProjectDoc(projectId: string, docId:number) {
+    try {
+      const tokenFun = await ProjectApiFp(await this.getOpenApiConf()).projectManagementControllerGetDocById(projectId, docId)
+      return (await tokenFun()).data
+    } catch (error) {
+      return this.errorHandler(error as AxiosError)
+    }
+  }
 
 }
