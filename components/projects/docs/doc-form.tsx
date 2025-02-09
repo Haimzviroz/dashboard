@@ -173,4 +173,5 @@ const DocForm = forwardRef(({ project, doc }: RegFormProps, ref) => {
   );
 });
 
+DocForm.displayName = 'DocForm';
 export default DocForm;
