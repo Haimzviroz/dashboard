@@ -6,7 +6,7 @@ import { NextPageWithLayout } from '@/types/types';
 import { SS_ProjectsClient } from '@/apis/server-side/ss_projects-client';
 import GA_layout from '@/components/layout/GA-layout';
 import { Box, Divider, Typography } from '@mui/material';
-import NavBar from '@/components/header/navigation';
+import ProNavBar from '@/components/header/project-nav';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { Q_PROJECT, Q_TOKENS } from '@/apis/query-keys';
 import { useProject } from '@/hooks/project.query.hook';
@@ -76,7 +76,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 ProjectOverview.getLayout = (page: ReactElement) => {
   return <GA_layout page={page} >
     <LTR_MuiProvider>
-      <NavBar projectName={page.props.projectName} />
+      <ProNavBar projectName={page.props.projectName} />
       <Box sx={{ padding: 4 }}>
         {page}
       </Box>

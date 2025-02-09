@@ -1,8 +1,7 @@
 import { Project } from "@/types/interfaces/project.interface"
 import { createContext, FC, useEffect, useState } from "react"
 import { ProjectProps } from './../types/interfaces/props.interface';
-import { useRouter } from 'next/router';
-import { NavBarOption } from "@/types/enum";
+import { ProNavBarOption } from "@/types/enum";
 import { R_PROJECTS } from "@/apis/routes";
 import { useGetApp } from "@/providers/getapp.provider";
 
@@ -11,7 +10,7 @@ export const GlobalContext = createContext({} as ProjectProps)
 const GlobalProvider: FC<any> = ({ children }: any) => {
 	const [projects, setProjects] = useState<Project[]>([])
 	const [selectedProject, setSelectedProject] = useState<Project>({} as Project)
-	const [activated, setActivated] = useState<NavBarOption | null>(null);
+	const [activated, setActivated] = useState<ProNavBarOption | null>(null);
 
 	const { router } = useGetApp()
 

@@ -2,7 +2,7 @@ import { Dispatch, FC, Fragment, SetStateAction, useState } from "react"
 
 
 import { Project } from '@/types/interfaces';
-import { NavBarOption } from "@/types/enum";
+import { ProNavBarOption } from "@/types/enum";
 
 import s from '../../styles/management-project.module.css';
 
@@ -10,7 +10,7 @@ import { confirmProjectInvitation } from "@/apis/client-side/projects-actions.ap
 
 interface ProjectInvitationProps {
   setProject: (project: Project) => void,
-  setActivated: Dispatch<SetStateAction<NavBarOption | null>>;
+  setActivated: Dispatch<SetStateAction<ProNavBarOption | null>>;
   invitedProjects: Project[]
 }
 
@@ -25,7 +25,7 @@ const ProjectInvitationHandler: FC<ProjectInvitationProps> = ({ setProject, setA
     try {
       const res = await confirmProjectInvitation(data)
       setProject(res)
-      setActivated(NavBarOption.ACTIVITY)
+      setActivated(ProNavBarOption.ACTIVITY)
       createProjectHandler()
     } catch (error) {
       console.error(error)

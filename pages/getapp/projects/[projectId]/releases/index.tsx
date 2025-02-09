@@ -1,7 +1,7 @@
 import { Fragment, ReactElement } from "react"
 import { GetServerSidePropsContext } from "next/types";
 
-import NavBar from "@/components/header/navigation";
+import ProNavBar from "@/components/header/project-nav";
 
 import { NextPageWithLayout } from '@/types/types';
 
@@ -73,7 +73,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 Releases.getLayout = (page: ReactElement) => {
   return <GA_layout page={page} >
     <LTR_MuiProvider>
-      <NavBar projectName={page.props.projectName} />
+      <ProNavBar projectName={page.props.projectName} />
       <Box sx={{ padding: 4 }}>
         {page}
       </Box>

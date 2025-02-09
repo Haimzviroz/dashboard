@@ -1,4 +1,4 @@
-import { NavBarOption, SideBarOption } from "@/types/enum";
+import { DashNavBarOption, ProNavBarOption, SideBarOption } from "@/types/enum";
 import { Dispatch, SetStateAction } from "react";
 import { Group } from "../devices";
 import { NextRouter } from "next/router";
@@ -10,8 +10,10 @@ export interface GetAppProviderProps {
   setGroupInSelectedGroup: (group: Group) => void,
   activated: Activate | null
   setActivated: Dispatch<SetStateAction<Activate | null>>;
-  navBarActive: NavBarOption | null
-  setNavBarActive: Dispatch<SetStateAction<NavBarOption | null>>;
+  proNavBarActive: ProNavBarOption | null
+  setProNavBarActive: Dispatch<SetStateAction<ProNavBarOption | null>>;
+  dashNavBarActive: DashNavBarOption | null
+  setDashNavBarActive: Dispatch<SetStateAction<DashNavBarOption | null>>;
   sideBarCollapse: boolean
   setSideBarCollapse: Dispatch<SetStateAction<boolean>>;
 }

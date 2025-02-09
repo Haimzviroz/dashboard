@@ -17,7 +17,7 @@ import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { GetServerSidePropsContext } from 'next';
 import { NextPageWithLayout } from '@/types/types';
 import { useGetApp } from '@/providers/getapp.provider';
-import NavBar from '@/components/header/navigation';
+import ProNavBar from '@/components/header/project-nav';
 import DocsItem from '@/components/projects/docs/doc-card';
 import { useDocs } from '@/hooks/docs.query.hook';
 import { useProject } from '@/hooks/project.query.hook';
@@ -80,7 +80,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 ProjectDocs.getLayout = (page: ReactElement) => {
 	return <GA_layout page={page} >
 		<LTR_MuiProvider>
-			<NavBar projectName={page.props.projectName} />
+			<ProNavBar projectName={page.props.projectName} />
 			<Box sx={{ padding: 4 }}>
 				{page}
 			</Box>

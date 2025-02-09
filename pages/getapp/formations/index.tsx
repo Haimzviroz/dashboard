@@ -20,14 +20,12 @@ interface ProjectsPageProps {
 const ProjectsPage: NextPageWithLayout<ProjectsPageProps> = () => {
 	return (
 		<Fragment>
-			<ProjectsDashboard projectType={CreateProjectDtoProjectTypeEnum["Product"]} />
+			<ProjectsDashboard projectType={CreateProjectDtoProjectTypeEnum["Formation"]} />
 		</Fragment>
 	)
 }
 
 export default ProjectsPage
-
-
 
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

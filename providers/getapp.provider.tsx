@@ -1,5 +1,5 @@
 import { createContext, FC, useEffect, useState, useRef, useContext } from "react"
-import { NavBarOption, SideBarOption } from "@/types/enum";
+import { DashNavBarOption, ProNavBarOption, SideBarOption } from "@/types/enum";
 import { Activate, GetAppProviderProps } from "@/types/interfaces";
 import { useRouter } from "next/router";
 import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS, R_GET_APP } from "@/apis/routes";
@@ -24,7 +24,8 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 
 	const [selectedGroup, setSelectedGroup] = useState<number[]>(getSelectedGroups())
 	const [activated, setActivated] = useState<Activate | null>(null);
-	const [navBarActive, setNavBarActive] = useState<NavBarOption | null>(NavBarOption.OVERVIEW);
+	const [proNavBarActive, setProNavBarActive] = useState<ProNavBarOption | null>(ProNavBarOption.OVERVIEW);
+	const [dashNavBarActive, setDashNavBarActive ] = useState<DashNavBarOption | null>(DashNavBarOption.PRODUCTS);
 	const [sideBarCollapse, setSideBarCollapse] = useState<boolean>(true);
 
 	const isFirstLoad = useRef(true); // useRef to track first load without causing re-render
@@ -34,8 +35,10 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 	useEffect(() => {
 		const active = getSideBarActivated()
 		active && active !== activated?.active && setActivated({ active, trigger: null })
-		const navActive = getNavBarActivated()
-		navActive && navActive !== navBarActive && setNavBarActive(navActive)
+		const proNavActive = getProNavBarActivated()
+		proNavActive && proNavActive !== proNavBarActive && setProNavBarActive(proNavActive)
+		const dashNavActive = getDashNavBarActivated()
+		dashNavActive && dashNavActive !== dashNavBarActive && setDashNavBarActive(dashNavActive)
 	}, [router])
 
 	// useEffect(() => {
@@ -76,14 +79,21 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 		if (router.pathname.startsWith(R_PROJECTS)) return SideBarOption.APPS;
 	}
 
-	const getNavBarActivated = () => {
+	const getProNavBarActivated = () => {
 		if (router.pathname.startsWith(R_GET_APP)) {
-			if (router.pathname.endsWith(NavBarOption.OVERVIEW)) return NavBarOption.OVERVIEW;
-			if (router.pathname.endsWith(NavBarOption.RELEASES)) return NavBarOption.RELEASES;
-			if (router.pathname.endsWith(NavBarOption.REGULATION)) return NavBarOption.REGULATION;
-			if (router.pathname.endsWith(NavBarOption.POLICY)) return NavBarOption.POLICY;
-			if (router.pathname.endsWith(NavBarOption.DOCS)) return NavBarOption.DOCS;
-			if (router.pathname.endsWith(NavBarOption.SETTINGS)) return NavBarOption.SETTINGS;
+			if (router.pathname.endsWith(ProNavBarOption.OVERVIEW)) return ProNavBarOption.OVERVIEW;
+			if (router.pathname.endsWith(ProNavBarOption.RELEASES)) return ProNavBarOption.RELEASES;
+			if (router.pathname.endsWith(ProNavBarOption.REGULATION)) return ProNavBarOption.REGULATION;
+			if (router.pathname.endsWith(ProNavBarOption.POLICY)) return ProNavBarOption.POLICY;
+			if (router.pathname.endsWith(ProNavBarOption.DOCS)) return ProNavBarOption.DOCS;
+			if (router.pathname.endsWith(ProNavBarOption.SETTINGS)) return ProNavBarOption.SETTINGS;
+		}
+	}
+	
+	const getDashNavBarActivated = () => {
+		if (router.pathname.startsWith(R_GET_APP)) {
+			if (router.pathname.endsWith(DashNavBarOption.PRODUCTS)) return DashNavBarOption.PRODUCTS;
+			if (router.pathname.endsWith(DashNavBarOption.FORMATIONS)) return DashNavBarOption.FORMATIONS;
 		}
 	}
 
@@ -149,8 +159,10 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 			setActivated,
 			sideBarCollapse,
 			setSideBarCollapse,
-			navBarActive,
-			setNavBarActive,
+			proNavBarActive,
+			setProNavBarActive,
+			dashNavBarActive,
+			setDashNavBarActive
 		}}>
 			{children}
 		</GetAppContext.Provider>

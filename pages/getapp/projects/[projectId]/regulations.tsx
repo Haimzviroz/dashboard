@@ -1,7 +1,7 @@
 import React, { Fragment, ReactElement, ReactNode, useEffect, useState } from "react";
 import { Typography, Button, Box, Stack } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import NavBar from "@/components/header/navigation";
+import ProNavBar from "@/components/header/project-nav";
 import GA_layout from "@/components/layout/GA-layout";
 import LTR_MuiProvider from "@/providers/ltr-mui.provider";
 import RegItem from "@/components/projects/regulations/reg-item";
@@ -139,7 +139,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 ProjectRegulations.getLayout = (page: ReactElement) => {
   return <GA_layout page={page} >
     <LTR_MuiProvider>
-      <NavBar projectName={page.props.projectName} />
+      <ProNavBar projectName={page.props.projectName} />
       <Box sx={{ padding: 4 }}>
         <DndProvider backend={HTML5Backend}>
           {page}

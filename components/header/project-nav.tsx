@@ -1,6 +1,6 @@
 
 
-import { NavBarOption } from "@/types/enum";
+import { ProNavBarOption } from "@/types/enum";
 
 import Overview from '../../assets/nav-bar/overview.svg'
 import OverviewAct from '../../assets/nav-bar/overview-active.svg'
@@ -20,7 +20,7 @@ import { R_PROJECTS } from "@/apis/routes";
 import { FC } from "react";
 
 interface NavBarItem {
-  key: NavBarOption,
+  key: ProNavBarOption,
   name: string,
   icon: any,
   activeIcon: any,
@@ -31,58 +31,58 @@ interface NavBarItem {
 
 const items: NavBarItem[] = [
   {
-    key: NavBarOption.OVERVIEW,
+    key: ProNavBarOption.OVERVIEW,
     name: "Overview",
     icon: <Overview />,
     activeIcon: <OverviewAct />,
-    route: NavBarOption.OVERVIEW
+    route: ProNavBarOption.OVERVIEW
   },
   {
-    key: NavBarOption.RELEASES,
+    key: ProNavBarOption.RELEASES,
     name: "Versions",
     icon: <Version />,
     activeIcon: <VersionAct />,
-    route: NavBarOption.RELEASES,
+    route: ProNavBarOption.RELEASES,
   },
   {
-    key: NavBarOption.REGULATION,
+    key: ProNavBarOption.REGULATION,
     name: "Regulations",
     icon: <Regulations />,
     activeIcon: <RegulationsAct />,
     isActive: true,
-    route: NavBarOption.REGULATION,
+    route: ProNavBarOption.REGULATION,
   },
   {
-    key: NavBarOption.POLICY,
+    key: ProNavBarOption.POLICY,
     name: "Policy",
     icon: <Policy />,
     activeIcon: <PolicyAct />,
     isActive: true,
     disabled: true,
-    route: NavBarOption.POLICY,
+    route: ProNavBarOption.POLICY,
   },
   {
-    key: NavBarOption.DOCS,
+    key: ProNavBarOption.DOCS,
     name: "Docs",
     icon: <Docs />,
     activeIcon: <DocsAct />,
-    route: NavBarOption.DOCS
+    route: ProNavBarOption.DOCS
   },
   {
-    key: NavBarOption.SETTINGS,
+    key: ProNavBarOption.SETTINGS,
     name: "Settings",
     icon: <Set />,
     activeIcon: <SetAct />,
-    route: NavBarOption.SETTINGS
+    route: ProNavBarOption.SETTINGS
   }
 ]
 
-interface NavBarProps {
+interface ProNavBarProps {
   projectName: string
 }
 
-const NavBar: FC<NavBarProps> = ({ projectName }) => {
-  const { navBarActive, router } = useGetApp()
+const ProNavBar: FC<ProNavBarProps> = ({ projectName }) => {
+  const { proNavBarActive: navBarActive, router } = useGetApp()
 
   const getNavItems = () => {
     return items.map((item: NavBarItem) => {
@@ -112,4 +112,4 @@ const NavBar: FC<NavBarProps> = ({ projectName }) => {
   )
 }
 
-export default NavBar
+export default ProNavBar

@@ -10,7 +10,7 @@ import {
 import { Star, StarBorder } from "@mui/icons-material";
 import { NextRouter } from "next/router";
 import { R_PROJECTS } from "@/apis/routes";
-import { NavBarOption } from "@/types/enum";
+import { ProNavBarOption } from "@/types/enum";
 import { ProjectDto } from "@/api/src";
 import { usePinProject } from "@/hooks/project-member.query.hook";
 
@@ -57,7 +57,7 @@ const ProjectItem: FC<ProjectItemProps> = ({ project, router }) => {
             sx={{ mt: 2 }}
             onClick={() => {
               router.push(
-                R_PROJECTS + "/" + project.name + "/" + NavBarOption.OVERVIEW
+                R_PROJECTS + "/" + project.name + "/" + ProNavBarOption.OVERVIEW
               );
             }}
           >

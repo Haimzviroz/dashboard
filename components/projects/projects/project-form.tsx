@@ -18,9 +18,9 @@ import {
 } from "@mui/material";
 import { createProject, deleteProject, SearchProjects } from '@/apis/client-side/projects-actions.api';
 import { R_PROJECTS } from '@/apis/routes';
-import { NavBarOption } from '@/types/enum';
+import { ProNavBarOption } from '@/types/enum';
 import { useRouter } from 'next/router';
-import { DetailedProjectDto } from '@/api/src';
+import { CreateProjectDtoProjectTypeEnum, DetailedProjectDto } from '@/api/src';
 import { useUpdateProject } from '@/hooks/project.query.hook';
 import { AxiosError } from 'axios';
 
@@ -64,10 +64,12 @@ const DeleteDialog: FC<DeleteDialogProps> = ({ openDialog, handleCloseDialog, is
 
 
 interface ProjectFormProps {
-	project?: DetailedProjectDto
+	project?: DetailedProjectDto,
+	projectType: CreateProjectDtoProjectTypeEnum
+
 }
 
-const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
+const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 	const router = useRouter()
 	const updateProject = useUpdateProject()
 
@@ -137,11 +139,11 @@ const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
 		try {
 			if (!project) {
 				const res = await createProject({ name, description })
-				router.push(R_PROJECTS + "/" + res.name + "/" + NavBarOption.OVERVIEW, undefined, { shallow: true })
+				router.push(R_PROJECTS + "/" + res.name + "/" + ProNavBarOption.OVERVIEW, undefined, { shallow: true })
 			} else {
 				updateProject.mutate({ projectName: project.name, data: { name, description } }, {
 					onSuccess(data) {
-						router.push(R_PROJECTS + "/" + data.name + "/" + NavBarOption.SETTINGS)
+						router.push(R_PROJECTS + "/" + data.name + "/" + ProNavBarOption.SETTINGS)
 					},
 					onError(error) {
 						handleError(error)
@@ -177,10 +179,13 @@ const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
 				mt: 4,
 			}}
 		>
-			<Typography variant="h5">{project ? "Edit Project" : "Create New Project"}</Typography>
+			{projectType === "product"
+				? <Typography variant="h5">{project ? "Edit Project" : "Create New Project"}</Typography>
+				: <Typography variant="h5">{project ? "Edit Formation" : "Create New Formation"}</Typography>
+			}
 			{error && <Typography color="error">{error}</Typography>}
 			<TextField
-				label="Project Name"
+				label={`${projectType === "product" ? 'Project' : "Formation"} Name`}
 				value={name}
 				onChange={handleNameChange}
 				error={!isCheckingName && !isNameValid}
@@ -192,6 +197,11 @@ const ProjectForm: FC<ProjectFormProps> = ({ project }) => {
 							: name.length ? "Project name is available." : ""
 				}
 				required
+				sx={{
+					"& label": {
+						width: "fit-content"
+					}
+				}}
 			/>
 			<TextField
 				label="Description"

@@ -1,14 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Q_P_SEARCH_RESULT, Q_PROJECT, Q_PROJECTS } from "../apis/query-keys";
 import { getProject, getProjects, SearchProjects, updateProject } from "@/apis/client-side/projects-actions.api";
-import { BaseProjectDto, DetailedProjectDto, EditProjectDto, ProjectDto } from "@/api/src";
+import { BaseProjectDto, CreateProjectDtoProjectTypeEnum, DetailedProjectDto, EditProjectDto, ProjectDto } from "@/api/src";
 
-export const useProjects = () => {
+export const useProjects = (projectType?: CreateProjectDtoProjectTypeEnum) => {
   const { data: projects, refetch } = useQuery<ProjectDto[]>({
     queryKey: [Q_PROJECTS],
     queryFn: () => getProjects(),
   })
-  return { projects, refetch }
+  return { projects: projectType ? projects?.filter(p => p.projectType === projectType) : projects, refetch }
 }
 
 export const useSearchedProjects = () => {

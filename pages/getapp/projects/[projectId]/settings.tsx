@@ -16,7 +16,7 @@ import { NextPageWithLayout } from '@/types/types';
 import ProjectForm from '@/components/projects/projects/project-form';
 import { useProject } from '@/hooks/project.query.hook';
 import { useGetApp } from '@/providers/getapp.provider';
-import NavBar from '@/components/header/navigation';
+import ProNavBar from '@/components/header/project-nav';
 
 interface ProjectFormProps {
 }
@@ -61,7 +61,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 ProjectSettings.getLayout = (page: ReactElement) => {
 	return <GA_layout page={page} >
 		<LTR_MuiProvider>
-			<NavBar projectName={page.props.projectName} />
+			<ProNavBar projectName={page.props.projectName} />
 			<Box sx={{ padding: 4 }}>
 				{page}
 			</Box>

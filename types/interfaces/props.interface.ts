@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { NavBarOption } from "../enum";
+import { ProNavBarOption } from "../enum";
 import { Project } from "./project.interface";
 
 export interface ProjectProps{
@@ -8,6 +8,6 @@ export interface ProjectProps{
   setProjects: Dispatch<SetStateAction<Project[]>>;
   setSelectedProject: Dispatch<SetStateAction<Project>>;
   updateProject: (project:Project) =>  void;
-  activated : NavBarOption | null
-  setActivated: Dispatch<SetStateAction<NavBarOption | null>>;
+  activated : ProNavBarOption | null
+  setActivated: Dispatch<SetStateAction<ProNavBarOption | null>>;
 }

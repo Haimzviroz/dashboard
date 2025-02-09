@@ -14,7 +14,7 @@ import { CreateProjectDtoProjectTypeEnum } from '@/api/src';
 const NewProjectForm = () => {
 
 	return (
-		<ProjectForm projectType={CreateProjectDtoProjectTypeEnum["Product"]}/>
+		<ProjectForm projectType={CreateProjectDtoProjectTypeEnum["Formation"]}/>
 	);
 };
 
