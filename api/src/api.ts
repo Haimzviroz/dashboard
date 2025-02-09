@@ -237,12 +237,26 @@ export interface BaseProjectDto {
      */
     'description'?: string;
     /**
+     * 
+     * @type {string}
+     * @memberof BaseProjectDto
+     */
+    'projectType': BaseProjectDtoProjectTypeEnum;
+    /**
      * Status of the project (active, completed, on-hold)
      * @type {string}
      * @memberof BaseProjectDto
      */
     'status'?: string;
 }
+
+export const BaseProjectDtoProjectTypeEnum = {
+    Product: 'product',
+    Formation: 'formation'
+} as const;
+
+export type BaseProjectDtoProjectTypeEnum = typeof BaseProjectDtoProjectTypeEnum[keyof typeof BaseProjectDtoProjectTypeEnum];
+
 /**
  * 
  * @export
@@ -585,14 +599,34 @@ export interface CreateProjectDto {
      * @type {string}
      * @memberof CreateProjectDto
      */
-    'name'?: string;
+    'name': string;
     /**
      * 
      * @type {string}
      * @memberof CreateProjectDto
      */
     'description'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CreateProjectDto
+     */
+    'platforms'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateProjectDto
+     */
+    'projectType'?: CreateProjectDtoProjectTypeEnum;
 }
+
+export const CreateProjectDtoProjectTypeEnum = {
+    Product: 'product',
+    Formation: 'formation'
+} as const;
+
+export type CreateProjectDtoProjectTypeEnum = typeof CreateProjectDtoProjectTypeEnum[keyof typeof CreateProjectDtoProjectTypeEnum];
+
 /**
  * 
  * @export
@@ -948,6 +982,12 @@ export interface DetailedProjectDto {
      */
     'description'?: string;
     /**
+     * 
+     * @type {string}
+     * @memberof DetailedProjectDto
+     */
+    'projectType': DetailedProjectDtoProjectTypeEnum;
+    /**
      * Status of the project (active, completed, on-hold)
      * @type {string}
      * @memberof DetailedProjectDto
@@ -959,6 +999,12 @@ export interface DetailedProjectDto {
      * @memberof DetailedProjectDto
      */
     'owner': string;
+    /**
+     * Platforms supported by the project
+     * @type {Array<string>}
+     * @memberof DetailedProjectDto
+     */
+    'platforms'?: Array<string>;
     /**
      * Number of members in the project
      * @type {number}
@@ -1002,6 +1048,110 @@ export interface DetailedProjectDto {
      */
     'tokens'?: Array<ProjectTokenDto>;
 }
+
+export const DetailedProjectDtoProjectTypeEnum = {
+    Product: 'product',
+    Formation: 'formation'
+} as const;
+
+export type DetailedProjectDtoProjectTypeEnum = typeof DetailedProjectDtoProjectTypeEnum[keyof typeof DetailedProjectDtoProjectTypeEnum];
+
+/**
+ * 
+ * @export
+ * @interface DetailedReleaseDto
+ */
+export interface DetailedReleaseDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof DetailedReleaseDto
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DetailedReleaseDto
+     */
+    'version': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof DetailedReleaseDto
+     */
+    'projectId'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof DetailedReleaseDto
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DetailedReleaseDto
+     */
+    'releaseNotes': string;
+    /**
+     * 
+     * @type {object}
+     * @memberof DetailedReleaseDto
+     */
+    'metadata': object;
+    /**
+     * 
+     * @type {string}
+     * @memberof DetailedReleaseDto
+     */
+    'status': DetailedReleaseDtoStatusEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof DetailedReleaseDto
+     */
+    'createdAt': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DetailedReleaseDto
+     */
+    'updatedAt': string;
+    /**
+     * Total number of required regulations
+     * @type {number}
+     * @memberof DetailedReleaseDto
+     */
+    'requiredRegulationsCount': number;
+    /**
+     * Total number of compliant regulations
+     * @type {number}
+     * @memberof DetailedReleaseDto
+     */
+    'compliantRegulationsCount': number;
+    /**
+     * 
+     * @type {Array<ReleaseArtifactDto>}
+     * @memberof DetailedReleaseDto
+     */
+    'artifacts'?: Array<ReleaseArtifactDto>;
+    /**
+     * 
+     * @type {Array<ReleaseDto>}
+     * @memberof DetailedReleaseDto
+     */
+    'dependencies'?: Array<ReleaseDto>;
+}
+
+export const DetailedReleaseDtoStatusEnum = {
+    Draft: 'draft',
+    InReview: 'in_review',
+    Approved: 'approved',
+    Released: 'released',
+    Archived: 'archived'
+} as const;
+
+export type DetailedReleaseDtoStatusEnum = typeof DetailedReleaseDtoStatusEnum[keyof typeof DetailedReleaseDtoStatusEnum];
+
 /**
  * 
  * @export
@@ -1736,7 +1886,27 @@ export interface EditProjectDto {
      * @memberof EditProjectDto
      */
     'description'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof EditProjectDto
+     */
+    'platforms'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof EditProjectDto
+     */
+    'projectType'?: EditProjectDtoProjectTypeEnum;
 }
+
+export const EditProjectDtoProjectTypeEnum = {
+    Product: 'product',
+    Formation: 'formation'
+} as const;
+
+export type EditProjectDtoProjectTypeEnum = typeof EditProjectDtoProjectTypeEnum[keyof typeof EditProjectDtoProjectTypeEnum];
+
 /**
  * 
  * @export
@@ -3356,6 +3526,12 @@ export interface ProjectDto {
      */
     'description'?: string;
     /**
+     * 
+     * @type {string}
+     * @memberof ProjectDto
+     */
+    'projectType': ProjectDtoProjectTypeEnum;
+    /**
      * Status of the project (active, completed, on-hold)
      * @type {string}
      * @memberof ProjectDto
@@ -3367,6 +3543,12 @@ export interface ProjectDto {
      * @memberof ProjectDto
      */
     'owner': string;
+    /**
+     * Platforms supported by the project
+     * @type {Array<string>}
+     * @memberof ProjectDto
+     */
+    'platforms'?: Array<string>;
     /**
      * Number of members in the project
      * @type {number}
@@ -3392,6 +3574,14 @@ export interface ProjectDto {
      */
     'summary'?: ProjectSummaryDto;
 }
+
+export const ProjectDtoProjectTypeEnum = {
+    Product: 'product',
+    Formation: 'formation'
+} as const;
+
+export type ProjectDtoProjectTypeEnum = typeof ProjectDtoProjectTypeEnum[keyof typeof ProjectDtoProjectTypeEnum];
+
 /**
  * 
  * @export
@@ -3912,12 +4102,6 @@ export interface ReleaseDto {
     'status': ReleaseDtoStatusEnum;
     /**
      * 
-     * @type {Array<ReleaseArtifactDto>}
-     * @memberof ReleaseDto
-     */
-    'artifacts'?: Array<ReleaseArtifactDto>;
-    /**
-     * 
      * @type {string}
      * @memberof ReleaseDto
      */
@@ -4128,6 +4312,12 @@ export interface SetReleaseDto {
      * @memberof SetReleaseDto
      */
     'isDraft'?: boolean;
+    /**
+     * List of dependencies. Providing an empty array will remove all dependencies. Omitting this field or setting it to null will leave dependencies unchanged.
+     * @type {Array<string>}
+     * @memberof SetReleaseDto
+     */
+    'dependencies'?: Array<string>;
 }
 /**
  * 
@@ -9354,6 +9544,45 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Get all platforms
+         * @param {string} [query] Query to search platforms
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerGetPlatforms: async (query?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/v1/project/platforms`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (query !== undefined) {
+                localVarQueryParameter['query'] = query;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get Project details
          * @param {string} projectIdentifier Project identifier (ID or name)
          * @param {*} [options] Override http request option.
@@ -9980,7 +10209,7 @@ export const ProjectApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectManagementControllerCreateProject(createProjectDto: CreateProjectDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BaseProjectDto>> {
+        async projectManagementControllerCreateProject(createProjectDto: CreateProjectDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerCreateProject(createProjectDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerCreateProject']?.[localVarOperationServerIndex]?.url;
@@ -10105,7 +10334,7 @@ export const ProjectApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectManagementControllerEditProject(projectIdentifier: string, editProjectDto: EditProjectDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BaseProjectDto>> {
+        async projectManagementControllerEditProject(projectIdentifier: string, editProjectDto: EditProjectDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerEditProject(projectIdentifier, editProjectDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerEditProject']?.[localVarOperationServerIndex]?.url;
@@ -10229,6 +10458,19 @@ export const ProjectApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerGetMemberProjectPreferences(projectIdentifier, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerGetMemberProjectPreferences']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Get all platforms
+         * @param {string} [query] Query to search platforms
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projectManagementControllerGetPlatforms(query?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerGetPlatforms(query, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerGetPlatforms']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -10464,7 +10706,7 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectManagementControllerCreateProject(createProjectDto: CreateProjectDto, options?: RawAxiosRequestConfig): AxiosPromise<BaseProjectDto> {
+        projectManagementControllerCreateProject(createProjectDto: CreateProjectDto, options?: RawAxiosRequestConfig): AxiosPromise<ProjectDto> {
             return localVarFp.projectManagementControllerCreateProject(createProjectDto, options).then((request) => request(axios, basePath));
         },
         /**
@@ -10562,7 +10804,7 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectManagementControllerEditProject(projectIdentifier: string, editProjectDto: EditProjectDto, options?: RawAxiosRequestConfig): AxiosPromise<BaseProjectDto> {
+        projectManagementControllerEditProject(projectIdentifier: string, editProjectDto: EditProjectDto, options?: RawAxiosRequestConfig): AxiosPromise<ProjectDto> {
             return localVarFp.projectManagementControllerEditProject(projectIdentifier, editProjectDto, options).then((request) => request(axios, basePath));
         },
         /**
@@ -10657,6 +10899,16 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          */
         projectManagementControllerGetMemberProjectPreferences(projectIdentifier: string, options?: RawAxiosRequestConfig): AxiosPromise<ProjectMemberPreferencesDto> {
             return localVarFp.projectManagementControllerGetMemberProjectPreferences(projectIdentifier, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get all platforms
+         * @param {string} [query] Query to search platforms
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projectManagementControllerGetPlatforms(query?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<string>> {
+            return localVarFp.projectManagementControllerGetPlatforms(query, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -11088,6 +11340,18 @@ export class ProjectApi extends BaseAPI {
      */
     public projectManagementControllerGetMemberProjectPreferences(projectIdentifier: string, options?: RawAxiosRequestConfig) {
         return ProjectApiFp(this.configuration).projectManagementControllerGetMemberProjectPreferences(projectIdentifier, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get all platforms
+     * @param {string} [query] Query to search platforms
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectApi
+     */
+    public projectManagementControllerGetPlatforms(query?: string, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerGetPlatforms(query, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11894,7 +12158,7 @@ export const ReleasesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async releasesControllerGetRelease(projectIdentifier: string, version: string, xProjectToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ReleaseDto>> {
+        async releasesControllerGetRelease(projectIdentifier: string, version: string, xProjectToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DetailedReleaseDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.releasesControllerGetRelease(projectIdentifier, version, xProjectToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ReleasesApi.releasesControllerGetRelease']?.[localVarOperationServerIndex]?.url;
@@ -11972,7 +12236,7 @@ export const ReleasesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async releasesControllerSetRelease(projectIdentifier: string, setReleaseDto: SetReleaseDto, xProjectToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ReleaseDto>> {
+        async releasesControllerSetRelease(projectIdentifier: string, setReleaseDto: SetReleaseDto, xProjectToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DetailedReleaseDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.releasesControllerSetRelease(projectIdentifier, setReleaseDto, xProjectToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ReleasesApi.releasesControllerSetRelease']?.[localVarOperationServerIndex]?.url;
@@ -12064,7 +12328,7 @@ export const ReleasesApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        releasesControllerGetRelease(projectIdentifier: string, version: string, xProjectToken?: string, options?: RawAxiosRequestConfig): AxiosPromise<ReleaseDto> {
+        releasesControllerGetRelease(projectIdentifier: string, version: string, xProjectToken?: string, options?: RawAxiosRequestConfig): AxiosPromise<DetailedReleaseDto> {
             return localVarFp.releasesControllerGetRelease(projectIdentifier, version, xProjectToken, options).then((request) => request(axios, basePath));
         },
         /**
@@ -12127,7 +12391,7 @@ export const ReleasesApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        releasesControllerSetRelease(projectIdentifier: string, setReleaseDto: SetReleaseDto, xProjectToken?: string, options?: RawAxiosRequestConfig): AxiosPromise<ReleaseDto> {
+        releasesControllerSetRelease(projectIdentifier: string, setReleaseDto: SetReleaseDto, xProjectToken?: string, options?: RawAxiosRequestConfig): AxiosPromise<DetailedReleaseDto> {
             return localVarFp.releasesControllerSetRelease(projectIdentifier, setReleaseDto, xProjectToken, options).then((request) => request(axios, basePath));
         },
         /**

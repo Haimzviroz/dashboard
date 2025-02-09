@@ -144,7 +144,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReleaseDto'
+                $ref: '#/components/schemas/DetailedReleaseDto'
       tags: &ref_3
         - Releases
       security: &ref_4
@@ -196,7 +196,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReleaseDto'
+                $ref: '#/components/schemas/DetailedReleaseDto'
       tags: *ref_3
       security: *ref_4
     delete:
@@ -623,7 +623,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BaseProjectDto'
+                $ref: '#/components/schemas/ProjectDto'
       tags: &ref_9
         - Project
       security: &ref_10
@@ -754,6 +754,28 @@ paths:
                   $ref: '#/components/schemas/RegulationTypeDto'
       tags: *ref_9
       security: *ref_10
+  /api/v1/project/platforms:
+    get:
+      operationId: ProjectManagementController_getPlatforms
+      summary: Get all platforms
+      parameters:
+        - name: query
+          required: false
+          in: query
+          description: Query to search platforms
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+      tags: *ref_9
+      security: *ref_10
   /api/v1/project/{projectIdentifier}:
     get:
       operationId: ProjectManagementController_getProject
@@ -796,7 +818,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BaseProjectDto'
+                $ref: '#/components/schemas/ProjectDto'
       tags: *ref_9
       security: *ref_10
     delete:
@@ -2430,6 +2452,14 @@ components:
         isDraft:
           type: boolean
           default: true
+        dependencies:
+          description: >-
+            List of dependencies. Providing an empty array will remove all
+            dependencies. Omitting this field or setting it to null will leave
+            dependencies unchanged.
+          type: array
+          items:
+            type: string
       required:
         - version
     ReleaseArtifactDto:
@@ -2473,16 +2503,12 @@ components:
           type: object
         status:
           type: string
-          enum:
+          enum: &ref_21
             - draft
             - in_review
             - approved
             - released
             - archived
-        artifacts:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReleaseArtifactDto'
         createdAt:
           format: date-time
           type: string
@@ -2495,6 +2521,55 @@ components:
         compliantRegulationsCount:
           type: number
           description: Total number of compliant regulations
+      required:
+        - id
+        - version
+        - name
+        - releaseNotes
+        - metadata
+        - status
+        - createdAt
+        - updatedAt
+        - requiredRegulationsCount
+        - compliantRegulationsCount
+    DetailedReleaseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        version:
+          type: string
+        projectId:
+          type: number
+        name:
+          type: string
+        releaseNotes:
+          type: string
+        metadata:
+          type: object
+        status:
+          type: string
+          enum: *ref_21
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        requiredRegulationsCount:
+          type: number
+          description: Total number of required regulations
+        compliantRegulationsCount:
+          type: number
+          description: Total number of compliant regulations
+        artifacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleaseArtifactDto'
+        dependencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReleaseDto'
       required:
         - id
         - version
@@ -2867,7 +2942,67 @@ components:
           type: string
         description:
           type: string
-    BaseProjectDto:
+        platforms:
+          type: array
+          items:
+            type: string
+        projectType:
+          type: string
+          enum:
+            - product
+            - formation
+          default: product
+      required:
+        - name
+    ProjectMemberPreferencesDto:
+      type: object
+      properties:
+        pinned:
+          type: boolean
+    ProjectMemberContextDto:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+            - project-owner
+            - project-admin
+            - project-member
+        preferences:
+          $ref: '#/components/schemas/ProjectMemberPreferencesDto'
+      required:
+        - role
+        - preferences
+    MinimalReleaseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        version:
+          type: string
+        name:
+          type: string
+        requiredRegulationsCount:
+          type: number
+        compliantRegulationsCount:
+          type: number
+      required:
+        - id
+        - version
+        - requiredRegulationsCount
+        - compliantRegulationsCount
+    ProjectSummaryDto:
+      type: object
+      properties:
+        latestRelease:
+          description: Latest release of the project
+          allOf:
+            - $ref: '#/components/schemas/MinimalReleaseDto'
+        upcomingRelease:
+          description: Upcoming release of the project
+          allOf:
+            - $ref: '#/components/schemas/MinimalReleaseDto'
+    ProjectDto:
       type: object
       properties:
         id:
@@ -2878,12 +3013,43 @@ components:
           description: Name of the project
         description:
           type: string
+        projectType:
+          type: string
+          enum: &ref_22
+            - product
+            - formation
         status:
           type: string
           description: Status of the project (active, completed, on-hold)
+        owner:
+          type: string
+          description: Owner of the project
+        platforms:
+          description: Platforms supported by the project
+          type: array
+          items:
+            type: string
+        numMembers:
+          type: number
+          description: Number of members in the project
+        versions:
+          type: number
+          description: Number of versions available for the project
+          example: 5
+        memberContext:
+          description: Current member context
+          allOf:
+            - $ref: '#/components/schemas/ProjectMemberContextDto'
+        summary:
+          description: Summary of the project
+          allOf:
+            - $ref: '#/components/schemas/ProjectSummaryDto'
       required:
         - id
         - name
+        - projectType
+        - owner
+        - versions
     MemberResDto:
       type: object
       properties:
@@ -2953,55 +3119,7 @@ components:
         - total
         - page
         - perPage
-    ProjectMemberPreferencesDto:
-      type: object
-      properties:
-        pinned:
-          type: boolean
-    ProjectMemberContextDto:
-      type: object
-      properties:
-        role:
-          type: string
-          enum:
-            - project-owner
-            - project-admin
-            - project-member
-        preferences:
-          $ref: '#/components/schemas/ProjectMemberPreferencesDto'
-      required:
-        - role
-        - preferences
-    MinimalReleaseDto:
-      type: object
-      properties:
-        id:
-          type: string
-        version:
-          type: string
-        name:
-          type: string
-        requiredRegulationsCount:
-          type: number
-        compliantRegulationsCount:
-          type: number
-      required:
-        - id
-        - version
-        - requiredRegulationsCount
-        - compliantRegulationsCount
-    ProjectSummaryDto:
-      type: object
-      properties:
-        latestRelease:
-          description: Latest release of the project
-          allOf:
-            - $ref: '#/components/schemas/MinimalReleaseDto'
-        upcomingRelease:
-          description: Upcoming release of the project
-          allOf:
-            - $ref: '#/components/schemas/MinimalReleaseDto'
-    ProjectDto:
+    BaseProjectDto:
       type: object
       properties:
         id:
@@ -3012,32 +3130,16 @@ components:
           description: Name of the project
         description:
           type: string
+        projectType:
+          type: string
+          enum: *ref_22
         status:
           type: string
           description: Status of the project (active, completed, on-hold)
-        owner:
-          type: string
-          description: Owner of the project
-        numMembers:
-          type: number
-          description: Number of members in the project
-        versions:
-          type: number
-          description: Number of versions available for the project
-          example: 5
-        memberContext:
-          description: Current member context
-          allOf:
-            - $ref: '#/components/schemas/ProjectMemberContextDto'
-        summary:
-          description: Summary of the project
-          allOf:
-            - $ref: '#/components/schemas/ProjectSummaryDto'
       required:
         - id
         - name
-        - owner
-        - versions
+        - projectType
     RegulationTypeDto:
       type: object
       properties:
@@ -3093,12 +3195,20 @@ components:
           description: Name of the project
         description:
           type: string
+        projectType:
+          type: string
+          enum: *ref_22
         status:
           type: string
           description: Status of the project (active, completed, on-hold)
         owner:
           type: string
           description: Owner of the project
+        platforms:
+          description: Platforms supported by the project
+          type: array
+          items:
+            type: string
         numMembers:
           type: number
           description: Number of members in the project
@@ -3128,6 +3238,7 @@ components:
       required:
         - id
         - name
+        - projectType
         - owner
         - versions
         - createdAt
@@ -3138,6 +3249,15 @@ components:
           type: string
         description:
           type: string
+        platforms:
+          type: array
+          items:
+            type: string
+        projectType:
+          type: string
+          enum:
+            - product
+            - formation
     AddMemberToProjectDto:
       type: object
       properties:
@@ -3489,7 +3609,7 @@ components:
             $ref: '#/components/schemas/MapProductResDto'
         status:
           type: string
-          enum: &ref_22
+          enum: &ref_24
             - Success
             - Error
         error:
@@ -3534,7 +3654,7 @@ components:
           type: string
         status:
           type: string
-          enum: &ref_21
+          enum: &ref_23
             - Start
             - InProgress
             - Done
@@ -3584,7 +3704,7 @@ components:
           type: string
         status:
           type: string
-          enum: *ref_21
+          enum: *ref_23
         error:
           $ref: '#/components/schemas/ErrorDto'
         metaData:
@@ -4055,7 +4175,7 @@ components:
             $ref: '#/components/schemas/MapProductResDto'
         status:
           type: string
-          enum: *ref_22
+          enum: *ref_24
         error:
           $ref: '#/components/schemas/ErrorDto'
       required:
