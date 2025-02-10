@@ -40,7 +40,6 @@ const RegForm: FC<RegFormProps> = ({ isOpen, setIsOpen, reg, project }) => {
     };
 
     setErrors(newErrors);
-    console.log(Object.values(newErrors).every((err) => err === ""))
     return Object.values(newErrors).every((err) => err === "");
   };
 

@@ -8,6 +8,7 @@ import {
   CreateProjectTokenDto,
   CreateRegulationDto,
   DetailedProjectDto,
+  DetailedReleaseDto,
   EditProjectDto,
   EditProjectMemberDto,
   MemberResDto,
@@ -17,6 +18,7 @@ import {
   ProjectTokenDto,
   ReleaseDto,
   ReleasesApiFp,
+  SetReleaseDto,
   UpdateDocDto,
   UpdateOneOfManyRegulationDto,
   UpdateProjectTokenDto,
@@ -115,6 +117,18 @@ export const deleteToken = async (projectId: string, tokenId: number,): Promise<
 
 export const getReleases = async (projectId: string): Promise<ReleaseDto[]> => {
   const fun = await ReleasesApiFp(await conf()).releasesControllerGetReleases(projectId)
+  return (await fun()).data
+}
+
+export const setRelease = async (projectId: string, data: SetReleaseDto,): Promise<DetailedReleaseDto> => {
+  console.log(data);
+  
+  const fun = await ReleasesApiFp(await conf()).releasesControllerSetRelease(projectId, data)
+  return (await fun()).data
+}
+
+export const getRelease = async (projectId: string, version: string,): Promise<DetailedReleaseDto> => {
+  const fun = await ReleasesApiFp(await conf()).releasesControllerGetRelease(projectId, version)
   return (await fun()).data
 }
 

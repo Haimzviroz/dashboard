@@ -61,10 +61,12 @@ const ReleasesItem: NextPageWithLayout<ReleasesItemProps> = ({ release, project 
                 <Distribute />
               </IconButton>
             </Tooltip>
-            <IconButton color="primary" aria-label="Edit version">
+            <IconButton color="primary" aria-label="Edit version"
+              onClick={() => router.push(`${router.asPath}/${release.version}`)}>
               <Edit />
             </IconButton>
-            <IconButton color="error" aria-label="Delete version" onClick={() => deleteRelease.mutate({ projectName: project.name, version: release.version })}>
+            <IconButton color="error" aria-label="Delete version"
+              onClick={() => deleteRelease.mutate({ projectName: project.name, version: release.version })}>
               <Delete />
             </IconButton>
           </Box>

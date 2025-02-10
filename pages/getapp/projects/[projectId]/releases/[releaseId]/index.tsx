@@ -7,58 +7,53 @@ import { NextPageWithLayout } from '@/types/types';
 
 import { SS_ProjectsClient } from "@/apis/server-side/ss_projects-client";
 import GA_layout from "@/components/layout/GA-layout";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
-import { Q_RELEASES } from "@/apis/query-keys";
+import { Q_RELEASE } from "@/apis/query-keys";
+import { useRelease } from "@/hooks/releases.query.hook";
 import { useGetApp } from "@/providers/getapp.provider";
 import LTR_MuiProvider from "@/providers/ltr-mui.provider";
-import ProjectReleases from "@/components/projects/releases/releases-list";
 import { useProject } from "@/hooks/project.query.hook";
 import RelForm from "@/components/projects/releases/release-form";
 import React from "react";
 
-interface ProductReleasesProps {
+interface DetailedReleaseProps {
 }
 
-const Releases: NextPageWithLayout<ProductReleasesProps> = () => {
+const DetailedRelease: NextPageWithLayout<DetailedReleaseProps> = () => {
   const { router } = useGetApp()
   const { project } = useProject(router.query.projectId as string)
+  const { release } = useRelease(router.query.projectId as string, router.query.releaseId as string)
   const [open, setOpen] = useState(false);
 
 
   return (
     <Fragment>
-      <Box>
-        <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="h6" fontWeight="bold">Version History</Typography>
-          <Button variant="contained" onClick={() => setOpen(true)}>
-            + New Version
-          </Button>
-        </Stack>
-        {project && <ProjectReleases project={project}></ProjectReleases>}
-        {project && <RelForm isOpen={open} setIsOpen={setOpen} project={project} />}
-      </Box>
-
+      {project && release && <RelForm isOpen={open} setIsOpen={setOpen} project={project} rel={release} />}
     </Fragment>
   )
 }
 
-export default Releases
+export default DetailedRelease
 
 
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
   const projectName = ctx.params?.projectId
+  const releaseVersion = ctx.params?.releaseId
   const queryClient = new QueryClient();
+
+  console.log(releaseVersion);
+  
 
   const httpClient = new SS_ProjectsClient(ctx)
 
   try {
     await Promise.allSettled([
       await queryClient.fetchQuery({
-        queryKey: [Q_RELEASES, projectName],
-        queryFn: () => httpClient.getProjectReleases(projectName as string),
+        queryKey: [Q_RELEASE, releaseVersion],
+        queryFn: () => httpClient.getDetailedRelease(projectName as string, releaseVersion as string),
       }),
     ])
     return {
@@ -72,7 +67,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   }
 }
 
-Releases.getLayout = (page: ReactElement) => {
+DetailedRelease.getLayout = (page: ReactElement) => {
   return <GA_layout page={page} >
     <LTR_MuiProvider>
       <ProNavBar projectName={page.props.projectName} />

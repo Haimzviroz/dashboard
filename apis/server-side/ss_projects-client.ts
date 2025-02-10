@@ -36,10 +36,19 @@ export class SS_ProjectsClient extends SS_HttpClient {
       return this.errorHandler(error as AxiosError)
     }
   }
-  
+
   async getProjectReleases(projectId: string) {
     try {
       const tokenFun = await ReleasesApiFp(await this.getOpenApiConf()).releasesControllerGetReleases(projectId)
+      return (await tokenFun()).data
+    } catch (error) {
+      return this.errorHandler(error as AxiosError)
+    }
+  }
+
+  async getDetailedRelease(projectId: string, version: string) {
+    try {
+      const tokenFun = await ReleasesApiFp(await this.getOpenApiConf()).releasesControllerGetRelease(projectId, version)
       return (await tokenFun()).data
     } catch (error) {
       return this.errorHandler(error as AxiosError)
@@ -54,7 +63,7 @@ export class SS_ProjectsClient extends SS_HttpClient {
       return this.errorHandler(error as AxiosError)
     }
   }
-  
+
   async getProjectDocs(projectId: string) {
     try {
       const tokenFun = await ProjectApiFp(await this.getOpenApiConf()).projectManagementControllerGetDocs(projectId)
@@ -63,8 +72,8 @@ export class SS_ProjectsClient extends SS_HttpClient {
       return this.errorHandler(error as AxiosError)
     }
   }
-  
-  async getProjectDoc(projectId: string, docId:number) {
+
+  async getProjectDoc(projectId: string, docId: number) {
     try {
       const tokenFun = await ProjectApiFp(await this.getOpenApiConf()).projectManagementControllerGetDocById(projectId, docId)
       return (await tokenFun()).data
