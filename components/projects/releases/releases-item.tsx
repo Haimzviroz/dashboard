@@ -83,7 +83,7 @@ const ReleasesItem: NextPageWithLayout<ReleasesItemProps> = ({ release, project 
                   )} */}
         </Stack>
 
-        <Box sx={{ marginTop: 2 }}>
+        {!!release.requiredRegulationsCount && <Box sx={{ marginTop: 2 }}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
             Compliance Progress
           </Typography>
@@ -105,7 +105,7 @@ const ReleasesItem: NextPageWithLayout<ReleasesItemProps> = ({ release, project 
           <Typography variant="caption" color="text.secondary" sx={{ marginTop: 1 }}>
             {release.compliantRegulationsCount}/{release.requiredRegulationsCount} regulations compliant
           </Typography>
-        </Box>
+        </Box>}
       </CardContent>
     </Card>
   )
