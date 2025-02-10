@@ -7,6 +7,7 @@ import { useDrag, useDrop } from "react-dnd";
 import RegForm from "./reg-form";
 
 import { useDeleteReg } from "@/hooks/reg.query.hook";
+import O_IconButton from "@/ui/o-icon-button";
 
 interface DeleteConfirmationDialogProps {
   open: boolean;
@@ -118,12 +119,12 @@ const RegItem: FC<RegItemProps> = ({ reg, project, index }) => {
             />
             <Typography variant="body2">{reg.config}</Typography>
             <Stack direction="row" spacing={1}>
-              <IconButton sx={{ color: "#1e88e5" }} onClick={() => setOpenEditReg(true)}>
+              <O_IconButton sx={{ color: "#1e88e5" }} onClick={() => setOpenEditReg(true)}>
                 <Edit />
-              </IconButton>
-              <IconButton sx={{ color: "#e53935" }} onClick={() => setConfirmDeleteToggle(true)}>
-                <Delete />
-              </IconButton>
+              </O_IconButton>
+              <O_IconButton sx={{ color: "#e53935" }} onClick={() => setConfirmDeleteToggle(true)}>
+                <Delete/>
+              </O_IconButton>
             </Stack>
           </Fragment>
           , false, index)}
