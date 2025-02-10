@@ -11,13 +11,13 @@ export const useProjects = (projectType?: CreateProjectDtoProjectTypeEnum) => {
   return { projects: projectType ? projects?.filter(p => p.projectType === projectType) : projects, refetch }
 }
 
-export const useSearchedProjects = () => {
+export const useSearchedProjects = (projectType?: CreateProjectDtoProjectTypeEnum) => {
   const { data: pSearchResult, refetch } = useQuery<ProjectDto[]>({
     queryKey: [Q_P_SEARCH_RESULT],
     queryFn: () => getProjects(),
     enabled: false
   })
-  return { pSearchResult, refetch }
+  return { pSearchResult: projectType ? pSearchResult?.filter(p => p.projectType === projectType) : pSearchResult, refetch }
 }
 
 export const useSearchProjects = () => {

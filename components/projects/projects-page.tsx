@@ -17,7 +17,7 @@ const ProjectsDashboard: FC<ProjectsProps> = ({projectType}) => {
 
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { projects } = useProjects(projectType)
-  const searchedP = useSearchedProjects()
+  const searchedP = useSearchedProjects(projectType)
   const searchP = useSearchProjects()
 
   useEffect(() => {
