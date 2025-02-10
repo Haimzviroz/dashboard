@@ -1,4 +1,4 @@
-import { FC, Fragment } from 'react';
+import { FC, Fragment, useEffect } from 'react';
 
 
 import React, { useState } from "react";
@@ -14,9 +14,11 @@ import {
 	DialogActions,
 	DialogContent,
 	DialogContentText,
-	DialogTitle
+	DialogTitle,
+	Autocomplete,
+	Chip
 } from "@mui/material";
-import { createProject, deleteProject, SearchProjects } from '@/apis/client-side/projects-actions.api';
+import { createProject, deleteProject, getPlats, SearchProjects } from '@/apis/client-side/projects-actions.api';
 import { R_PROJECTS } from '@/apis/routes';
 import { ProNavBarOption } from '@/types/enum';
 import { useRouter } from 'next/router';
@@ -62,7 +64,6 @@ const DeleteDialog: FC<DeleteDialogProps> = ({ openDialog, handleCloseDialog, is
 	)
 }
 
-
 interface ProjectFormProps {
 	project?: DetailedProjectDto,
 	projectType: CreateProjectDtoProjectTypeEnum
@@ -74,7 +75,12 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 	const updateProject = useUpdateProject()
 
 	const [name, setName] = useState(project?.name || "");
+	const [platforms, setPlatforms] = useState<string[]>(project?.platforms ?? []);
+	const [inputPlat, setInputPlat] = useState<string>();
 	const [description, setDescription] = useState(project?.description || "");
+
+	const [loading, setLoading] = useState(false);
+	const [suggestedPlats, setSuggestedPlats] = useState<string[]>([]);
 
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [openDialog, setOpenDialog] = useState(false);
@@ -85,7 +91,26 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 	const handleOpenDialog = () => setOpenDialog(true);
 	const handleCloseDialog = () => setOpenDialog(false);
 
-	// Mock function to check name availability
+	const typeToString = () => {
+		return projectType === "product" ? "Product" : "Formation"
+	}
+
+	const typeToLowerString = () => {
+		return projectType === "product" ? "product" : "formation"
+	}
+
+	const fetchPlats = async (query: string) => {
+		setLoading(true);
+		try {
+			const plats = await getPlats(query)
+			setLoading(false);
+			return plats
+		} catch (error) {
+			console.error(`Err getting all platforms: ${error}`);
+			setLoading(false);
+		}
+	};
+
 	const checkNameAvailability = async (name: string) => {
 		setIsCheckingName(true);
 		// Simulate an API call
@@ -98,12 +123,12 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 
 	const handleNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const newName = e.target.value;
-		setName(newName);
+		setName(newName.split(" ").join("_"));
 		if (newName) {
 			const isAvailable = await checkNameAvailability(newName);
 			setIsNameValid(isAvailable);
 			if (!isAvailable) {
-				setError("This project name is already taken or unavailable.");
+				setError(`This ${typeToLowerString()} name is already taken or unavailable.`);
 			} else {
 				setError("");
 			}
@@ -113,10 +138,25 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 		}
 	};
 
+	const handlePlatChange = async (value: string | string[] | null) => {
+		value ? setPlatforms(Array.isArray(value) ? value : [value]) : setPlatforms([]);
+	};
+
+	const handlePlatInputChange = async (value: string) => {
+		const transformedValue = value.split(" ").join("-").toLowerCase();
+		setInputPlat(transformedValue);
+		if (value && value.length >= 2) {
+			const plats = await fetchPlats(value);
+			plats && setSuggestedPlats(plats)
+		} else {
+			setSuggestedPlats([]);
+		}
+	};
+
 	const handleError = (error: any) => {
 		if (error instanceof AxiosError) {
 			if (error.response?.status === 409) {
-				setError("This project name is already taken or unavailable.");
+				setError(`This ${typeToLowerString()} name is already taken or unavailable.`);
 				setIsNameValid(false)
 			}
 			else {
@@ -138,7 +178,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 		// Submit form data (API call)
 		try {
 			if (!project) {
-				const res = await createProject({ name, description })
+				const res = await createProject({ name, description, projectType, platforms })
 				router.push(R_PROJECTS + "/" + res.name + "/" + ProNavBarOption.OVERVIEW, undefined, { shallow: true })
 			} else {
 				updateProject.mutate({ projectName: project.name, data: { name, description } }, {
@@ -185,7 +225,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 			}
 			{error && <Typography color="error">{error}</Typography>}
 			<TextField
-				label={`${projectType === "product" ? 'Project' : "Formation"} Name`}
+				label={`${typeToString()} Name`}
 				value={name}
 				onChange={handleNameChange}
 				error={!isCheckingName && !isNameValid}
@@ -193,8 +233,8 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 					isCheckingName
 						? "Checking availability..."
 						: !isNameValid
-							? "Project name is not available."
-							: name.length ? "Project name is available." : ""
+							? `${typeToString()} name is not available.`
+							: name.length ? `${typeToString()} name is available.` : ""
 				}
 				required
 				sx={{
@@ -203,6 +243,42 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 					}
 				}}
 			/>
+
+			<Autocomplete
+				multiple={projectType === "product"}
+				freeSolo
+				options={suggestedPlats}
+				loading={loading}
+				value={projectType === "product" ? platforms : (platforms[0] ?? "")}
+				inputValue={inputPlat ?? ""} // Ensure input is controlled properly
+				onChange={(event, value) => handlePlatChange(value)}
+				onInputChange={(event, newInputValue) => handlePlatInputChange(newInputValue)}
+				renderTags={(value, getTagProps) => {
+					return value.map((option, index) => (
+						<Chip label={option} {...getTagProps({ index })} />
+					));
+				}}
+				renderOption={(props, option) => (
+					<li {...props} style={{ width: "100%" }}>
+						{option}
+					</li>
+				)}
+				renderInput={(params) => (
+					<TextField
+						{...params}
+						label="Platform"
+						variant="outlined"
+						required={projectType === "formation"}
+						onKeyDown={(e) => {
+							if (e.key === "Enter") {
+								e.preventDefault()
+							}
+						}}
+					/>
+				)}
+			/>
+
+
 			<TextField
 				label="Description"
 				value={description}
@@ -216,14 +292,14 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 				color="primary"
 				disabled={!isNameValid}
 			>
-				{isCheckingName ? <CircularProgress size={24} /> : project ? "Update Project" : "Create Project"}
+				{isCheckingName ? <CircularProgress size={24} /> : project ? `Update ${typeToString()}` : `Create ${typeToString()}`}
 			</Button>
 			{project &&
 				<Fragment>
 					<Divider sx={{ my: 2 }} />
 					<Box sx={{ textAlign: "center" }}>
 						<Alert severity="warning" sx={{ mb: 2 }}>
-							Deleting this project is a permanent action and cannot be undone.
+							{`Deleting this ${typeToLowerString()} is a permanent action and cannot be undone.`}
 						</Alert>
 						<Button
 							variant="outlined"
@@ -231,7 +307,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 							onClick={handleOpenDialog}
 						// disabled={isDeleting}
 						>
-							Delete Project
+							{`Delete ${typeToString()}`}
 						</Button>
 					</Box>
 					<DeleteDialog

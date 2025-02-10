@@ -30,6 +30,11 @@ export const getUsers = async (params: UserSearchDto): Promise<MemberResDto[]> =
   return res.data
 }
 
+export const getPlats = async (params: string): Promise<string[]> => {
+  const fun = await ProjectApiFp(await conf()).projectManagementControllerGetPlatforms(params)
+  return (await fun()).data
+}
+
 export const getProjects = async (): Promise<ProjectDto[]> => {
   const fun = await ProjectApiFp(await conf()).projectManagementControllerGetProjects()
   return (await fun()).data.data
@@ -153,7 +158,7 @@ export const getProjectDocs = async (projectId: string) => {
   return (await fun()).data
 }
 
-export const getDoc = async (projectId: string, docId:number) => {
+export const getDoc = async (projectId: string, docId: number) => {
   const fun = await ProjectApiFp(await conf()).projectManagementControllerGetDocById(projectId, docId)
   return (await fun()).data
 }

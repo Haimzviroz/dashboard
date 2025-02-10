@@ -17,6 +17,7 @@ import ProjectForm from '@/components/projects/projects/project-form';
 import { useProject } from '@/hooks/project.query.hook';
 import { useGetApp } from '@/providers/getapp.provider';
 import ProNavBar from '@/components/header/project-nav';
+import { CreateProjectDtoProjectTypeEnum } from '@/api/src';
 
 interface ProjectFormProps {
 }
@@ -26,7 +27,7 @@ const ProjectSettings: NextPageWithLayout<ProjectFormProps> = () => {
 	const { project } = useProject(router.query.projectId as string)
 
 	return (
-		<ProjectForm project={project} />
+		<ProjectForm project={project} projectType={project?.projectType ?? CreateProjectDtoProjectTypeEnum["Product"]} />
 	);
 };
 
