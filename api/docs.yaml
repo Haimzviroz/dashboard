@@ -708,6 +708,15 @@ paths:
           example: active
           schema:
             type: string
+        - name: type
+          required: false
+          in: query
+          description: Filter by project type
+          schema:
+            enum:
+              - product
+              - formation
+            type: string
         - name: page
           required: false
           in: query
@@ -2493,6 +2502,8 @@ components:
           type: string
         version:
           type: string
+        projectName:
+          type: string
         projectId:
           type: number
         name:
@@ -2524,6 +2535,7 @@ components:
       required:
         - id
         - version
+        - projectName
         - name
         - releaseNotes
         - metadata
@@ -2538,6 +2550,8 @@ components:
         id:
           type: string
         version:
+          type: string
+        projectName:
           type: string
         projectId:
           type: number
@@ -2573,6 +2587,7 @@ components:
       required:
         - id
         - version
+        - projectName
         - name
         - releaseNotes
         - metadata

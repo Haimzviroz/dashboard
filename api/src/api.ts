@@ -1076,6 +1076,12 @@ export interface DetailedReleaseDto {
     'version': string;
     /**
      * 
+     * @type {string}
+     * @memberof DetailedReleaseDto
+     */
+    'projectName': string;
+    /**
+     * 
      * @type {number}
      * @memberof DetailedReleaseDto
      */
@@ -4070,6 +4076,12 @@ export interface ReleaseDto {
      * @memberof ReleaseDto
      */
     'version': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ReleaseDto
+     */
+    'projectName': string;
     /**
      * 
      * @type {number}
@@ -9960,12 +9972,13 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
          * @summary Search projects
          * @param {string} query The search term (matches project name or partial match)
          * @param {string} [status] Filter by project status (active, completed, on-hold)
+         * @param {ProjectManagementControllerSearchProjectsTypeEnum} [type] Filter by project type
          * @param {number} [page] The page number to fetch (default: 1)
          * @param {number} [perPage] Number of projects per page (default: 10)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectManagementControllerSearchProjects: async (query: string, status?: string, page?: number, perPage?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projectManagementControllerSearchProjects: async (query: string, status?: string, type?: ProjectManagementControllerSearchProjectsTypeEnum, page?: number, perPage?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'query' is not null or undefined
             assertParamExists('projectManagementControllerSearchProjects', 'query', query)
             const localVarPath = `/api/v1/project/search`;
@@ -9990,6 +10003,10 @@ export const ProjectApiAxiosParamCreator = function (configuration?: Configurati
 
             if (status !== undefined) {
                 localVarQueryParameter['status'] = status;
+            }
+
+            if (type !== undefined) {
+                localVarQueryParameter['type'] = type;
             }
 
             if (page !== undefined) {
@@ -10602,13 +10619,14 @@ export const ProjectApiFp = function(configuration?: Configuration) {
          * @summary Search projects
          * @param {string} query The search term (matches project name or partial match)
          * @param {string} [status] Filter by project status (active, completed, on-hold)
+         * @param {ProjectManagementControllerSearchProjectsTypeEnum} [type] Filter by project type
          * @param {number} [page] The page number to fetch (default: 1)
          * @param {number} [perPage] Number of projects per page (default: 10)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectManagementControllerSearchProjects(query: string, status?: string, page?: number, perPage?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedBaseProjectDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerSearchProjects(query, status, page, perPage, options);
+        async projectManagementControllerSearchProjects(query: string, status?: string, type?: ProjectManagementControllerSearchProjectsTypeEnum, page?: number, perPage?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedBaseProjectDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectManagementControllerSearchProjects(query, status, type, page, perPage, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectApi.projectManagementControllerSearchProjects']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -11012,13 +11030,14 @@ export const ProjectApiFactory = function (configuration?: Configuration, basePa
          * @summary Search projects
          * @param {string} query The search term (matches project name or partial match)
          * @param {string} [status] Filter by project status (active, completed, on-hold)
+         * @param {ProjectManagementControllerSearchProjectsTypeEnum} [type] Filter by project type
          * @param {number} [page] The page number to fetch (default: 1)
          * @param {number} [perPage] Number of projects per page (default: 10)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectManagementControllerSearchProjects(query: string, status?: string, page?: number, perPage?: number, options?: RawAxiosRequestConfig): AxiosPromise<PaginatedBaseProjectDto> {
-            return localVarFp.projectManagementControllerSearchProjects(query, status, page, perPage, options).then((request) => request(axios, basePath));
+        projectManagementControllerSearchProjects(query: string, status?: string, type?: ProjectManagementControllerSearchProjectsTypeEnum, page?: number, perPage?: number, options?: RawAxiosRequestConfig): AxiosPromise<PaginatedBaseProjectDto> {
+            return localVarFp.projectManagementControllerSearchProjects(query, status, type, page, perPage, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -11474,14 +11493,15 @@ export class ProjectApi extends BaseAPI {
      * @summary Search projects
      * @param {string} query The search term (matches project name or partial match)
      * @param {string} [status] Filter by project status (active, completed, on-hold)
+     * @param {ProjectManagementControllerSearchProjectsTypeEnum} [type] Filter by project type
      * @param {number} [page] The page number to fetch (default: 1)
      * @param {number} [perPage] Number of projects per page (default: 10)
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectApi
      */
-    public projectManagementControllerSearchProjects(query: string, status?: string, page?: number, perPage?: number, options?: RawAxiosRequestConfig) {
-        return ProjectApiFp(this.configuration).projectManagementControllerSearchProjects(query, status, page, perPage, options).then((request) => request(this.axios, this.basePath));
+    public projectManagementControllerSearchProjects(query: string, status?: string, type?: ProjectManagementControllerSearchProjectsTypeEnum, page?: number, perPage?: number, options?: RawAxiosRequestConfig) {
+        return ProjectApiFp(this.configuration).projectManagementControllerSearchProjects(query, status, type, page, perPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11526,6 +11546,14 @@ export class ProjectApi extends BaseAPI {
     }
 }
 
+/**
+ * @export
+ */
+export const ProjectManagementControllerSearchProjectsTypeEnum = {
+    Product: 'product',
+    Formation: 'formation'
+} as const;
+export type ProjectManagementControllerSearchProjectsTypeEnum = typeof ProjectManagementControllerSearchProjectsTypeEnum[keyof typeof ProjectManagementControllerSearchProjectsTypeEnum];
 
 
 /**
