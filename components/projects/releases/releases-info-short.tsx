@@ -34,15 +34,33 @@ const RelShortInfo: NextPageWithLayout<RelShortInfoProps> = ({ type, release, pr
   return (
     <Fragment>
       <Stack direction={"row"} justifyContent={"space-between"}>
-        <Stack direction={"row"} justifyContent={"flex-start"} alignItems={"center"} flexWrap={"wrap"} gap={1}>
-          <Typography variant="h5" fontWeight={'bold'} >
-            Version {release.version}
-          </Typography>
-          <Chip
-            label={release.status}
-            sx={{ backgroundColor: getChipColor(release.status), height: 20, width: 80 }}
-            size="small"
-          />
+        <Stack direction={"column"} alignItems={"flex-start"} flexWrap={"wrap"} gap={1}>
+          {release.name && <Typography variant="h5" fontWeight={'bold'} >
+            {release.name}
+          </Typography>}
+          <Stack direction={"row"} justifyContent={"flex-start"} alignItems={"center"} flexWrap={"wrap"} gap={1}>
+            <Typography variant={!!release.name ? "h6" : "h5"} fontWeight={!!release.name ? "" : "bold"} >
+              Version {release.version}
+            </Typography>
+            <Chip
+              label={release.status}
+              sx={{ backgroundColor: getChipColor(release.status), height: 20, width: 80 }}
+              size="small"
+            />
+          </Stack>
+          <Stack direction={"row"} justifyContent={"flex-start"} alignItems={"center"} flexWrap={"wrap"} gap={2}>
+            <Typography variant="body2" color="text.secondary">
+              <b>Created On:</b> {release.createdAt ? new Date(release.createdAt).toLocaleDateString() : "N/A"}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              <b>Updated On: </b> {release.updatedAt ? new Date(release.updatedAt).toLocaleDateString() : "N/A"}
+            </Typography>
+            {/* {release.releasedOn && (
+              <Typography variant="body2" color="text.secondary">
+                Released On: {new Date(release.releasedOn).toLocaleDateString()}
+              </Typography>
+            )} */}
+          </Stack>
         </Stack>
         <Box>
           <Tooltip title="Distribute version" arrow>
@@ -50,7 +68,7 @@ const RelShortInfo: NextPageWithLayout<RelShortInfoProps> = ({ type, release, pr
               <Distribute />
             </IconButton>
           </Tooltip>
-          {type === "item" && <IconButton color="primary" aria-label="Edit version"
+          {type === "item" && <IconButton aria-label="Edit version"
             onClick={() => router.push(`${router.asPath}/${release.version}`)}>
             <OpenInNew />
           </IconButton>}
@@ -59,19 +77,6 @@ const RelShortInfo: NextPageWithLayout<RelShortInfoProps> = ({ type, release, pr
             <Delete />
           </IconButton>
         </Box>
-      </Stack>
-      <Stack direction={"row"} justifyContent={"flex-start"} alignItems={"center"} flexWrap={"wrap"} gap={2}>
-        <Typography variant="body2" color="text.secondary">
-          <b>Created On:</b> {release.createdAt ? new Date(release.createdAt).toLocaleDateString() : "N/A"}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          <b>Updated On: </b> {release.updatedAt ? new Date(release.updatedAt).toLocaleDateString() : "N/A"}
-        </Typography>
-        {/* {release.releasedOn && (
-          <Typography variant="body2" color="text.secondary">
-            Released On: {new Date(release.releasedOn).toLocaleDateString()}
-          </Typography>
-        )} */}
       </Stack>
 
       {!!release.requiredRegulationsCount && <Box sx={{ marginTop: 2 }}>

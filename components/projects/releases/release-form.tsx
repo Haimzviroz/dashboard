@@ -53,7 +53,11 @@ const RelForm: FC<RelFormProps> = ({ isOpen, setIsOpen, rel, project }) => {
         setErrors({ ...errors, version: "" })
       }
     }
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === "isDraft") {
+      setFormData({ ...formData, isDraft: e.target.checked });
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
   };
 
   const handleClose = () => {
