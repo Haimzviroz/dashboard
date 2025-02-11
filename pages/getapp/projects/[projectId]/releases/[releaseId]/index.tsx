@@ -1,4 +1,4 @@
-import { Fragment, ReactElement, useState } from "react"
+import { Fragment, ReactElement } from "react"
 import { GetServerSidePropsContext } from "next/types";
 
 import ProNavBar from "@/components/header/project-nav";
@@ -14,8 +14,7 @@ import { useRelease } from "@/hooks/releases.query.hook";
 import { useGetApp } from "@/providers/getapp.provider";
 import LTR_MuiProvider from "@/providers/ltr-mui.provider";
 import { useProject } from "@/hooks/project.query.hook";
-import RelForm from "@/components/projects/releases/release-form";
-import React from "react";
+import ReleasesInfo from "@/components/projects/releases/releases-info";
 
 interface DetailedReleaseProps {
 }
@@ -24,12 +23,11 @@ const DetailedRelease: NextPageWithLayout<DetailedReleaseProps> = () => {
   const { router } = useGetApp()
   const { project } = useProject(router.query.projectId as string)
   const { release } = useRelease(router.query.projectId as string, router.query.releaseId as string)
-  const [open, setOpen] = useState(false);
 
 
   return (
     <Fragment>
-      {project && release && <RelForm isOpen={open} setIsOpen={setOpen} project={project} rel={release} />}
+      {project && release && <ReleasesInfo project={project} release={release} />}
     </Fragment>
   )
 }
@@ -44,8 +42,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const releaseVersion = ctx.params?.releaseId
   const queryClient = new QueryClient();
 
-  console.log(releaseVersion);
-  
 
   const httpClient = new SS_ProjectsClient(ctx)
 
