@@ -27,9 +27,9 @@ export const useSetRelease = () => {
       setRelease(addMes.projectName, addMes.data),
 
     // Notice the second argument is the variables object that the `mutate` function receives
-    onSuccess: async (data: DetailedReleaseDto, addMes: { projectName: string, data: SetReleaseDto }) => {
-      client.setQueryData([Q_RELEASE, addMes.data.version], (preData: DetailedReleaseDto) => {
-        return { ...preData, ...data }
+    onSuccess: async (data: DetailedReleaseDto, addMes: { projectName: string, data: SetReleaseDto }) => {      
+      client.setQueryData([Q_RELEASE, addMes.data.version], (preData: DetailedReleaseDto) => {        
+        return { ...preData, ...JSON.parse(JSON.stringify(data)) }
       })
       client.refetchQueries({ queryKey: [Q_RELEASES, addMes.projectName] })
     },
