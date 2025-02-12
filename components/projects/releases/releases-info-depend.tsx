@@ -1,6 +1,6 @@
 import { Dispatch, FC, Fragment, SetStateAction, useEffect, useState } from 'react';
 import { BaseProjectDto, DetailedReleaseDto, ProjectDto, ReleaseDto, SetReleaseDto } from '@/api/src';
-import { Autocomplete, Box, Button, IconButton, List, ListItem, ListItemIcon, ListItemText, MenuItem, Stack, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import React from 'react';
 import { getReleases, searchProjects } from '@/apis/client-side/projects-actions.api';
 import AddIcon from '@mui/icons-material/Add';
@@ -11,12 +11,13 @@ import RemoveIcon from '@mui/icons-material/RemoveCircleOutline';
 
 
 interface DependItemProps {
+  project: ProjectDto
   edit?: boolean
   rel?: ReleaseDto;
   setRel: Dispatch<SetStateAction<SetReleaseDto>>;
   close?: () => void;
 }
-const DependItem: FC<DependItemProps> = ({ rel, setRel, close, edit }) => {
+const DependItem: FC<DependItemProps> = ({project, rel, setRel, close, edit }) => {
   const [editMode, setEditMode] = useState<boolean>(!!edit)
   const [inputProduct, setInputProduct] = useState<string | undefined | null>(rel?.projectName)
   const [selectedProduct, setSelectedProduct] = useState<string | undefined>(rel?.projectName)
@@ -116,9 +117,10 @@ const DependItem: FC<DependItemProps> = ({ rel, setRel, close, edit }) => {
     <Stack direction="row" alignItems={"center"} gap={1} my={2}>
       <Autocomplete
         sx={{ width: 200 }}
-        options={suggestedProducts?.map(p => p.name)}
+        options={suggestedProducts?.filter(p => p.name !== project.name).map(p => p.name)}
         loading={loading}
         value={inputProduct ?? ""}
+        isOptionEqualToValue={(option, value) => option.startsWith(value)}
         onInputChange={(event, value) => handleProductInputChange(value)}
         onChange={(event, value) => handleSelectProduct(value)}
         renderInput={(params) => (
@@ -142,17 +144,15 @@ const DependItem: FC<DependItemProps> = ({ rel, setRel, close, edit }) => {
         <TextField
           select
           label="Version"
-          value={selectedVersionId}
+          value={selectedVersionId ?? ""}
           onChange={handleVersionChange}
           required
           margin="normal"
           size="small"
           sx={{ width: 200, m: 0 }}
-        // error={!!errors.type}
-        // helperText={errors.type}
         >
           {!!suggestedReleases.length
-            ? suggestedReleases?.map(r => <MenuItem sx={{ width: "100%" }} key={r.version} value={r.id}>{r.version}</MenuItem>)
+            ? suggestedReleases?.map(r => <MenuItem sx={{ width: "100%" }} key={r.id} value={r.id}>{r.version}</MenuItem>)
             : <MenuItem sx={{ width: "100%" }}>{"No version found"}</MenuItem>
           }
         </TextField>}
@@ -195,12 +195,14 @@ const RelInfoDepend: FC<RelInfoDependProps> = ({ project, rel, setRel }) => {
 
   return (
     <Fragment>
-      <Box mb={2}>
-        <List sx={{ p: 0 }}>
-          {rel.dependencies?.map((dep) => <DependItem edit={false} rel={dep} setRel={setRel} />)}
-        </List>
-      </Box>
-      {addDepend && <DependItem edit={true} setRel={setRel} close={() => setAddDepend(false)}></DependItem>}
+      <Grid container rowSpacing={2} columnSpacing={10} direction="row">
+        {rel.dependencies?.map((dep) => (
+          <Grid item key={dep.id}>
+            <DependItem project={project} edit={false} rel={dep} setRel={setRel} />
+          </Grid>
+        ))}
+      </Grid>
+      {addDepend && <DependItem project={project} edit={true} setRel={setRel} close={() => setAddDepend(false)}></DependItem>}
       <Box marginTop={2}>
         <Button
           variant="text"

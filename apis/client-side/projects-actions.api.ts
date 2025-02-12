@@ -120,9 +120,7 @@ export const getReleases = async (projectId: string): Promise<ReleaseDto[]> => {
   return (await fun()).data
 }
 
-export const setRelease = async (projectId: string, data: SetReleaseDto,): Promise<DetailedReleaseDto> => {
-  console.log(data);
-  
+export const setRelease = async (projectId: string, data: SetReleaseDto,): Promise<DetailedReleaseDto> => {  
   const fun = await ReleasesApiFp(await conf()).releasesControllerSetRelease(projectId, data)
   return (await fun()).data
 }
