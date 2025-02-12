@@ -42,7 +42,7 @@ export const getProjects = async (): Promise<ProjectDto[]> => {
   return (await fun()).data.data
 }
 
-export const SearchProjects = async (name: string) => {
+export const searchProjects = async (name: string): Promise<BaseProjectDto[]> => {
   const fun = await ProjectApiFp(await conf()).projectManagementControllerSearchProjects(name)
   return (await fun()).data.data
 }

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Q_P_SEARCH_RESULT, Q_PROJECT, Q_PROJECTS } from "../apis/query-keys";
-import { getProject, getProjects, SearchProjects, updateProject } from "@/apis/client-side/projects-actions.api";
+import { getProject, getProjects, searchProjects, updateProject } from "@/apis/client-side/projects-actions.api";
 import { BaseProjectDto, CreateProjectDtoProjectTypeEnum, DetailedProjectDto, EditProjectDto, ProjectDto } from "@/api/src";
 
 export const useProjects = (projectType?: CreateProjectDtoProjectTypeEnum) => {
@@ -25,7 +25,7 @@ export const useSearchProjects = () => {
 
   return useMutation({
     mutationFn: (searchMes: { projectName: string }) =>
-      SearchProjects(searchMes.projectName),
+      searchProjects(searchMes.projectName),
 
     // Notice the second argument is the variables object that the `mutate` function receives
     onSuccess: async (data: BaseProjectDto[]) => {

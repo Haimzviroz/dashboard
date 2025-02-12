@@ -18,7 +18,7 @@ import {
 	Autocomplete,
 	Chip
 } from "@mui/material";
-import { createProject, deleteProject, getPlats, SearchProjects } from '@/apis/client-side/projects-actions.api';
+import { createProject, deleteProject, getPlats, searchProjects } from '@/apis/client-side/projects-actions.api';
 import { R_PROJECTS } from '@/apis/routes';
 import { ProNavBarOption } from '@/types/enum';
 import { useRouter } from 'next/router';
@@ -114,7 +114,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 	const checkNameAvailability = async (name: string) => {
 		setIsCheckingName(true);
 		// Simulate an API call
-		const exitsPro = await SearchProjects(name)
+		const exitsPro = await searchProjects(name)
 		// Replace this logic with real API check
 		const notAvailable = exitsPro && exitsPro.some(p => p.name === name) && (project ? project.name != name : true)
 		setIsCheckingName(false);
