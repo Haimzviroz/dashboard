@@ -35,9 +35,11 @@ const DocsItem: FC<DocsItemProps> = ({ project, doc }) => {
 						</Fragment>
 						}
 						{doc.isUrl
-							? <O_IconButton component="a" href={doc.docUrl} target="_blank" rel="noopener noreferrer">
-								<LinkIcon />
-							</O_IconButton>
+							? <a href={doc.docUrl} target="_blank" rel="noopener noreferrer">
+								<O_IconButton>
+									<LinkIcon />
+								</O_IconButton>
+							</a>
 							: <O_IconButton onClick={() => { router.push(router.asPath + "/" + doc.id.toString()) }}>
 								<LinkIcon />
 							</O_IconButton>}
