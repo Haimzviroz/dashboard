@@ -9,7 +9,7 @@ import { SS_ProjectsClient } from "@/apis/server-side/ss_projects-client";
 import GA_layout from "@/components/layout/GA-layout";
 import { Box } from "@mui/material";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
-import { Q_RELEASE } from "@/apis/query-keys";
+import { Q_PROJECT, Q_RELEASE } from "@/apis/query-keys";
 import { useRelease } from "@/hooks/releases.query.hook";
 import { useGetApp } from "@/providers/getapp.provider";
 import LTR_MuiProvider from "@/providers/ltr-mui.provider";
@@ -47,6 +47,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
   try {
     await Promise.allSettled([
+      await queryClient.fetchQuery({
+        queryKey: [Q_PROJECT, projectName],
+        queryFn: () => httpClient.getProjectByName(projectName as string),
+      }),
       await queryClient.fetchQuery({
         queryKey: [Q_RELEASE, releaseVersion],
         queryFn: () => httpClient.getDetailedRelease(projectName as string, releaseVersion as string),

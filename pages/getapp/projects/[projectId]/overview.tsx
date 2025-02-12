@@ -52,11 +52,11 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
   try {
     await Promise.allSettled([
-      await queryClient.prefetchQuery({
+      await queryClient.fetchQuery({
         queryKey: [Q_PROJECT, projectName],
         queryFn: () => httpClient.getProjectByName(projectName as string),
       }),
-      await queryClient.prefetchQuery({
+      await queryClient.fetchQuery({
         queryKey: [Q_TOKENS, projectName],
         queryFn: () => httpClient.getProjectTokens(projectName as string),
       }),

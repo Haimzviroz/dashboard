@@ -1,9 +1,7 @@
-import React, { Dispatch, FC, Fragment, SetStateAction, useEffect, useState } from "react";
-import { Typography, Button, Box, Stack, Modal, MenuItem, TextField, FormControlLabel, Checkbox } from "@mui/material";
-import { useAddReg, useRegulationsTypes, useUpdateReg } from "@/hooks/reg.query.hook";
+import React, { Dispatch, FC, Fragment, SetStateAction, useState } from "react";
+import { Typography, Button, Box, Stack, Modal, TextField, FormControlLabel, Checkbox } from "@mui/material";
 import { DetailedProjectDto, DetailedReleaseDto, SetReleaseDto } from "@/api/src";
 import { useSetRelease } from "@/hooks/releases.query.hook";
-import { CheckBox } from "@mui/icons-material";
 
 import * as Semver from 'semver'
 import { useGetApp } from "@/providers/getapp.provider";
