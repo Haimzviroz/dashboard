@@ -1,6 +1,6 @@
 import { Dispatch, FC, Fragment, SetStateAction, useEffect, useState } from 'react';
 import { BaseProjectDto, DetailedReleaseDto, ProjectDto, ReleaseDto, SetReleaseDto } from '@/api/src';
-import { Autocomplete, Box, Button, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, MenuItem, Stack, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Container, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import React from 'react';
 import { getReleases, searchProjects } from '@/apis/client-side/projects-actions.api';
 import AddIcon from '@mui/icons-material/Add';
@@ -194,7 +194,7 @@ const RelInfoDepend: FC<RelInfoDependProps> = ({ project, rel, setRel }) => {
   const [addDepend, setAddDepend] = useState<boolean>(false)
 
   return (
-    <Fragment>
+    <Container>
       <Grid container rowSpacing={2} columnSpacing={10} direction="row">
         {rel.dependencies?.map((dep) => (
           <Grid item key={dep.id}>
@@ -215,7 +215,7 @@ const RelInfoDepend: FC<RelInfoDependProps> = ({ project, rel, setRel }) => {
         </Button>
       </Box>
 
-    </Fragment>
+    </Container>
   );
 };
 
