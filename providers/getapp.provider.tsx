@@ -80,13 +80,13 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 	}
 
 	const getProNavBarActivated = () => {
-		if (router.pathname.startsWith(R_GET_APP)) {
-			if (router.pathname.endsWith(ProNavBarOption.OVERVIEW)) return ProNavBarOption.OVERVIEW;
-			if (router.pathname.endsWith(ProNavBarOption.RELEASES)) return ProNavBarOption.RELEASES;
-			if (router.pathname.endsWith(ProNavBarOption.REGULATION)) return ProNavBarOption.REGULATION;
-			if (router.pathname.endsWith(ProNavBarOption.POLICY)) return ProNavBarOption.POLICY;
-			if (router.pathname.endsWith(ProNavBarOption.DOCS)) return ProNavBarOption.DOCS;
-			if (router.pathname.endsWith(ProNavBarOption.SETTINGS)) return ProNavBarOption.SETTINGS;
+		if (router.pathname.startsWith(R_PROJECTS)) {
+			if (router.pathname.includes(ProNavBarOption.OVERVIEW)) return ProNavBarOption.OVERVIEW;
+			if (router.pathname.includes(ProNavBarOption.RELEASES)) return ProNavBarOption.RELEASES;
+			if (router.pathname.includes(ProNavBarOption.REGULATION)) return ProNavBarOption.REGULATION;
+			if (router.pathname.includes(ProNavBarOption.POLICY)) return ProNavBarOption.POLICY;
+			if (router.pathname.includes(ProNavBarOption.DOCS)) return ProNavBarOption.DOCS;
+			if (router.pathname.includes(ProNavBarOption.SETTINGS)) return ProNavBarOption.SETTINGS;
 		}
 	}
 	

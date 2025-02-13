@@ -1,15 +1,15 @@
 import { NextPageWithLayout } from '@/types/types';
-import { Fragment, useState } from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Collapse, IconButton, Stack, Typography } from '@mui/material';
-import { ExpandMore, ExpandLess } from '@mui/icons-material';
+import { ComponentType, Fragment, useState } from 'react';
+import { Accordion, AccordionDetails, AccordionSummary, IconButton, Stack, SvgIconProps, Typography } from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
 
 interface RelInfoSecProps {
   sectionName: string;
   info: React.ReactNode;
+  icon: ComponentType<SvgIconProps>;
 }
 
-const RelInfoSec: NextPageWithLayout<RelInfoSecProps> = ({ sectionName, info }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+const RelInfoSec: NextPageWithLayout<RelInfoSecProps> = ({ sectionName, info, icon: Icon }) => {
 
   return (
     <Fragment>
@@ -22,9 +22,12 @@ const RelInfoSec: NextPageWithLayout<RelInfoSecProps> = ({ sectionName, info }) 
             }
           }}
         >
-          <Typography variant="subtitle1" fontWeight="bold">
-            {sectionName}
-          </Typography>
+          <Stack direction={"row"} alignItems={"center"} gap={.5}>
+            <IconButton size='small'><Icon fontSize="small" sx={{ color: "#9575CD" }}/></IconButton>
+            <Typography variant="subtitle1" fontWeight="bold">
+              {sectionName}
+            </Typography>
+          </Stack>
         </AccordionSummary>
         <AccordionDetails sx={{ pt: 0 }}>
           {info}

@@ -6,6 +6,12 @@ import RelInfoSec from './releases-info-sec';
 import RelInfoDepend from './releases-info-depend';
 import { useSetRelease } from "@/hooks/releases.query.hook";
 
+import DescriptionIcon from '@mui/icons-material/Description';
+import InfoIcon from '@mui/icons-material/Info';
+import GavelIcon from '@mui/icons-material/Gavel';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import HubIcon from '@mui/icons-material/Hub';
+
 interface ReleasesInfoProps {
   release: DetailedReleaseDto;
   project: ProjectDto;
@@ -38,11 +44,11 @@ const ReleasesInfo: FC<ReleasesInfoProps> = ({ release, project }) => {
       <Box mb={2}>
         <RelShortInfo type="page" release={release} project={project} />
       </Box>
-      <RelInfoSec sectionName={'Release Notes'} info={"Release Note info"} />
-      <RelInfoSec sectionName={'Dependencies'} info={<RelInfoDepend project={project} rel={release} setRel={setRel} />} />
-      <RelInfoSec sectionName={'Meta data'} info={"Meta data info"} />
-      <RelInfoSec sectionName={'Regulations'} info={"Regulations info"} />
-      <RelInfoSec sectionName={'Artifacts'} info={"Artifacts info"} />
+      <RelInfoSec sectionName={'Release Notes'} icon={DescriptionIcon} info={"Release Note info"} />
+      <RelInfoSec sectionName={'Meta data'} icon={InfoIcon} info={"Meta data info"} />
+      <RelInfoSec sectionName={'Regulations'} icon={GavelIcon} info={"Regulations info"} />
+      <RelInfoSec sectionName={'Artifacts'} icon={InventoryIcon} info={"Artifacts info"} />
+      <RelInfoSec sectionName={'Dependencies'} icon={HubIcon} info={<RelInfoDepend project={project} rel={release} setRel={setRel} />} />
     </Fragment>
   );
 };
