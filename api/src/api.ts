@@ -468,6 +468,128 @@ export interface ComponentDto {
     'subComponents'?: Array<ComponentDto>;
 }
 /**
+ * 
+ * @export
+ * @interface ComponentStateDto
+ */
+export interface ComponentStateDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof ComponentStateDto
+     */
+    'catalogId': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ComponentStateDto
+     */
+    'state': ComponentStateDtoStateEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof ComponentStateDto
+     */
+    'error'?: string;
+}
+
+export const ComponentStateDtoStateEnum = {
+    Offering: 'offering',
+    Push: 'push',
+    Delivery: 'delivery',
+    Deleted: 'deleted',
+    Deploy: 'deploy',
+    Installed: 'installed',
+    Uninstalled: 'uninstalled'
+} as const;
+
+export type ComponentStateDtoStateEnum = typeof ComponentStateDtoStateEnum[keyof typeof ComponentStateDtoStateEnum];
+
+/**
+ * 
+ * @export
+ * @interface ComponentV2Dto
+ */
+export interface ComponentV2Dto {
+    /**
+     * 
+     * @type {string}
+     * @memberof ComponentV2Dto
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ComponentV2Dto
+     */
+    'version': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ComponentV2Dto
+     */
+    'projectName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ComponentV2Dto
+     */
+    'releaseNotes': string;
+    /**
+     * 
+     * @type {object}
+     * @memberof ComponentV2Dto
+     */
+    'metadata': object;
+    /**
+     * 
+     * @type {string}
+     * @memberof ComponentV2Dto
+     */
+    'status': ComponentV2DtoStatusEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof ComponentV2Dto
+     */
+    'type': ComponentV2DtoTypeEnum;
+    /**
+     * 
+     * @type {number}
+     * @memberof ComponentV2Dto
+     */
+    'size': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ComponentV2Dto
+     */
+    'createdAt': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ComponentV2Dto
+     */
+    'updatedAt': string;
+}
+
+export const ComponentV2DtoStatusEnum = {
+    Draft: 'draft',
+    InReview: 'in_review',
+    Approved: 'approved',
+    Released: 'released',
+    Archived: 'archived'
+} as const;
+
+export type ComponentV2DtoStatusEnum = typeof ComponentV2DtoStatusEnum[keyof typeof ComponentV2DtoStatusEnum];
+export const ComponentV2DtoTypeEnum = {
+    Product: 'product',
+    Formation: 'formation'
+} as const;
+
+export type ComponentV2DtoTypeEnum = typeof ComponentV2DtoTypeEnum[keyof typeof ComponentV2DtoTypeEnum];
+
+/**
  * @type ConfigDto
  * @export
  */
@@ -1180,6 +1302,25 @@ export interface DeviceComponentsOfferingDto {
 /**
  * 
  * @export
+ * @interface DeviceComponentsOfferingV2Dto
+ */
+export interface DeviceComponentsOfferingV2Dto {
+    /**
+     * 
+     * @type {Array<ComponentV2Dto>}
+     * @memberof DeviceComponentsOfferingV2Dto
+     */
+    'offer': Array<ComponentV2Dto>;
+    /**
+     * 
+     * @type {Array<ComponentV2Dto>}
+     * @memberof DeviceComponentsOfferingV2Dto
+     */
+    'push': Array<ComponentV2Dto>;
+}
+/**
+ * 
+ * @export
  * @interface DeviceContentResDto
  */
 export interface DeviceContentResDto {
@@ -1765,6 +1906,46 @@ export type DiscoveryMessageDtoDiscoveryTypeEnum = typeof DiscoveryMessageDtoDis
 /**
  * 
  * @export
+ * @interface DiscoveryMessageV2Dto
+ */
+export interface DiscoveryMessageV2Dto {
+    /**
+     * 
+     * @type {GeneralDiscoveryDto}
+     * @memberof DiscoveryMessageV2Dto
+     */
+    'general'?: GeneralDiscoveryDto;
+    /**
+     * 
+     * @type {string}
+     * @memberof DiscoveryMessageV2Dto
+     */
+    'discoveryType': DiscoveryMessageV2DtoDiscoveryTypeEnum;
+    /**
+     * 
+     * @type {DiscoverySoftwareV2Dto}
+     * @memberof DiscoveryMessageV2Dto
+     */
+    'softwareData'?: DiscoverySoftwareV2Dto;
+    /**
+     * 
+     * @type {DiscoveryMapDto}
+     * @memberof DiscoveryMessageV2Dto
+     */
+    'mapData'?: DiscoveryMapDto;
+}
+
+export const DiscoveryMessageV2DtoDiscoveryTypeEnum = {
+    GetApp: 'get-app',
+    GetMap: 'get-map',
+    MTls: 'mTls'
+} as const;
+
+export type DiscoveryMessageV2DtoDiscoveryTypeEnum = typeof DiscoveryMessageV2DtoDiscoveryTypeEnum[keyof typeof DiscoveryMessageV2DtoDiscoveryTypeEnum];
+
+/**
+ * 
+ * @export
  * @interface DiscoveryResDto
  */
 export interface DiscoveryResDto {
@@ -1799,6 +1980,31 @@ export interface DiscoverySoftwareDto {
      * @memberof DiscoverySoftwareDto
      */
     'platform'?: PlatformDto;
+}
+/**
+ * 
+ * @export
+ * @interface DiscoverySoftwareV2Dto
+ */
+export interface DiscoverySoftwareV2Dto {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DiscoverySoftwareV2Dto
+     */
+    'formations'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DiscoverySoftwareV2Dto
+     */
+    'platforms'?: Array<string>;
+    /**
+     * 
+     * @type {Array<ComponentStateDto>}
+     * @memberof DiscoverySoftwareV2Dto
+     */
+    'components'?: Array<ComponentStateDto>;
 }
 /**
  * 
@@ -4029,10 +4235,10 @@ export interface ReleaseArtifactDto {
     'artifactName': string;
     /**
      * 
-     * @type {object}
+     * @type {string}
      * @memberof ReleaseArtifactDto
      */
-    'type': object;
+    'type': ReleaseArtifactDtoTypeEnum;
     /**
      * 
      * @type {object}
@@ -4058,6 +4264,14 @@ export interface ReleaseArtifactDto {
      */
     'uploadId': number;
 }
+
+export const ReleaseArtifactDtoTypeEnum = {
+    File: 'file',
+    DockerImage: 'docker_image'
+} as const;
+
+export type ReleaseArtifactDtoTypeEnum = typeof ReleaseArtifactDtoTypeEnum[keyof typeof ReleaseArtifactDtoTypeEnum];
+
 /**
  * 
  * @export
@@ -6512,6 +6726,46 @@ export const DeviceDiscoveryApiAxiosParamCreator = function (configuration?: Con
             };
         },
         /**
+         * This service message allows a device to post the discovery context for getting device software offers.
+         * @summary Discover Device Component
+         * @param {DiscoveryMessageV2Dto} discoveryMessageV2Dto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        discoveryControllerDeviceComponentDiscoveryV2: async (discoveryMessageV2Dto: DiscoveryMessageV2Dto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'discoveryMessageV2Dto' is not null or undefined
+            assertParamExists('discoveryControllerDeviceComponentDiscoveryV2', 'discoveryMessageV2Dto', discoveryMessageV2Dto)
+            const localVarPath = `/api/v2/device/discover/component`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(discoveryMessageV2Dto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * This service message allows a device to post the discovery context.
          * @summary Discover Device Context
          * @param {DiscoveryMessageDto} discoveryMessageDto 
@@ -6774,6 +7028,19 @@ export const DeviceDiscoveryApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * This service message allows a device to post the discovery context for getting device software offers.
+         * @summary Discover Device Component
+         * @param {DiscoveryMessageV2Dto} discoveryMessageV2Dto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async discoveryControllerDeviceComponentDiscoveryV2(discoveryMessageV2Dto: DiscoveryMessageV2Dto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeviceComponentsOfferingV2Dto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.discoveryControllerDeviceComponentDiscoveryV2(discoveryMessageV2Dto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DeviceDiscoveryApi.discoveryControllerDeviceComponentDiscoveryV2']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * This service message allows a device to post the discovery context.
          * @summary Discover Device Context
          * @param {DiscoveryMessageDto} discoveryMessageDto 
@@ -6871,6 +7138,16 @@ export const DeviceDiscoveryApiFactory = function (configuration?: Configuration
             return localVarFp.discoveryControllerDeviceComponentDiscovery(discoveryMessageDto, options).then((request) => request(axios, basePath));
         },
         /**
+         * This service message allows a device to post the discovery context for getting device software offers.
+         * @summary Discover Device Component
+         * @param {DiscoveryMessageV2Dto} discoveryMessageV2Dto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        discoveryControllerDeviceComponentDiscoveryV2(discoveryMessageV2Dto: DiscoveryMessageV2Dto, options?: RawAxiosRequestConfig): AxiosPromise<DeviceComponentsOfferingV2Dto> {
+            return localVarFp.discoveryControllerDeviceComponentDiscoveryV2(discoveryMessageV2Dto, options).then((request) => request(axios, basePath));
+        },
+        /**
          * This service message allows a device to post the discovery context.
          * @summary Discover Device Context
          * @param {DiscoveryMessageDto} discoveryMessageDto 
@@ -6949,6 +7226,18 @@ export class DeviceDiscoveryApi extends BaseAPI {
      */
     public discoveryControllerDeviceComponentDiscovery(discoveryMessageDto: DiscoveryMessageDto, options?: RawAxiosRequestConfig) {
         return DeviceDiscoveryApiFp(this.configuration).discoveryControllerDeviceComponentDiscovery(discoveryMessageDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * This service message allows a device to post the discovery context for getting device software offers.
+     * @summary Discover Device Component
+     * @param {DiscoveryMessageV2Dto} discoveryMessageV2Dto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DeviceDiscoveryApi
+     */
+    public discoveryControllerDeviceComponentDiscoveryV2(discoveryMessageV2Dto: DiscoveryMessageV2Dto, options?: RawAxiosRequestConfig) {
+        return DeviceDiscoveryApiFp(this.configuration).discoveryControllerDeviceComponentDiscoveryV2(discoveryMessageV2Dto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

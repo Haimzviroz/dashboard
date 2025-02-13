@@ -1822,6 +1822,29 @@ paths:
                 $ref: '#/components/schemas/DeviceComponentsOfferingDto'
       tags: *ref_13
       security: *ref_14
+  /api/v2/device/discover/component:
+    post:
+      operationId: DiscoveryController_deviceComponentDiscoveryV2
+      summary: Discover Device Component
+      description: >-
+        This service message allows a device to post the discovery context for
+        getting device software offers.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscoveryMessageV2Dto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceComponentsOfferingV2Dto'
+      tags: *ref_13
+      security: *ref_14
   /api/v1/device/discover/map:
     post:
       operationId: DiscoveryController_deviceMapDiscovery
@@ -2479,7 +2502,10 @@ components:
         artifactName:
           type: string
         type:
-          type: object
+          type: string
+          enum:
+            - file
+            - docker_image
         metadata:
           type: object
         isInstallationFile:
@@ -4174,6 +4200,117 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ComponentDto'
+      required:
+        - offer
+        - push
+    ComponentStateDto:
+      type: object
+      properties:
+        catalogId:
+          type: string
+        state:
+          type: string
+          enum:
+            - offering
+            - push
+            - delivery
+            - deleted
+            - deploy
+            - installed
+            - uninstalled
+        error:
+          type: string
+      required:
+        - catalogId
+        - state
+    DiscoverySoftwareV2Dto:
+      type: object
+      properties:
+        formations:
+          type: array
+          items:
+            type: string
+        platforms:
+          type: array
+          items:
+            type: string
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComponentStateDto'
+    DiscoveryMessageV2Dto:
+      type: object
+      properties:
+        general:
+          $ref: '#/components/schemas/GeneralDiscoveryDto'
+        discoveryType:
+          type: string
+          enum:
+            - get-app
+            - get-map
+            - mTls
+        softwareData:
+          $ref: '#/components/schemas/DiscoverySoftwareV2Dto'
+        mapData:
+          $ref: '#/components/schemas/DiscoveryMapDto'
+      required:
+        - discoveryType
+    ComponentV2Dto:
+      type: object
+      properties:
+        id:
+          type: string
+        version:
+          type: string
+        projectName:
+          type: string
+        releaseNotes:
+          type: string
+        metadata:
+          type: object
+        status:
+          type: string
+          enum:
+            - draft
+            - in_review
+            - approved
+            - released
+            - archived
+        type:
+          type: string
+          enum:
+            - product
+            - formation
+        size:
+          type: integer
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - version
+        - projectName
+        - releaseNotes
+        - metadata
+        - status
+        - type
+        - size
+        - createdAt
+        - updatedAt
+    DeviceComponentsOfferingV2Dto:
+      type: object
+      properties:
+        offer:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComponentV2Dto'
+        push:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComponentV2Dto'
       required:
         - offer
         - push
