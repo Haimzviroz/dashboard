@@ -1,6 +1,6 @@
 import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react';
 import { DetailedReleaseDto, PrepareDeliveryReqDto, ProjectDto, ReleaseArtifactDto, SetReleaseDto } from '@/api/src';
-import { Box, Button, Chip, Container, Divider, IconButton, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Alert, Box, Button, Chip, Container, Divider, IconButton, ListItem, ListItemIcon, ListItemText, Snackbar, Typography } from '@mui/material';
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import { Description } from '@mui/icons-material';
@@ -14,6 +14,8 @@ interface ArtItemProps {
 }
 
 const ArtItem: FC<ArtItemProps> = ({ rel, art }) => {
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleDownload = async () => {
     try {
@@ -47,7 +49,14 @@ const ArtItem: FC<ArtItemProps> = ({ rel, art }) => {
 
 
   const handleCopyCommand = () => {
-    // Implement copy Docker pull command functionality here
+    if (art.dockerImageUrl) {
+      const dockerPullCommand = `docker pull ${art.dockerImageUrl}`;
+      navigator.clipboard.writeText(dockerPullCommand)
+        .then(() => {
+          setSnackbarOpen(true); // Show Snackbar
+        })
+        .catch(err => console.error("Failed to copy:", err));
+    }
   };
 
   const renderActions = () => {
@@ -66,6 +75,26 @@ const ArtItem: FC<ArtItemProps> = ({ rel, art }) => {
     }
     return null;
   };
+
+  const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
+  const snackbarBody = () => (
+    <Snackbar
+      open={snackbarOpen}
+      autoHideDuration={3000}
+      onClose={handleCloseSnackbar}
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+    >
+      <Alert onClose={handleCloseSnackbar} severity="success" variant="filled">
+        Docker pull command copied!
+      </Alert>
+    </Snackbar>
+  )
 
 
   return (
@@ -103,6 +132,7 @@ const ArtItem: FC<ArtItemProps> = ({ rel, art }) => {
         {renderActions()}
       </ListItem>
       <Divider />
+      {snackbarBody()}
     </Fragment>
   )
 };
