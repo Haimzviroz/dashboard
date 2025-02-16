@@ -2818,6 +2818,8 @@ components:
       properties:
         catalogId:
           type: string
+        id:
+          type: number
         itemKey:
           type: string
         metaData:
@@ -2830,6 +2832,7 @@ components:
           $ref: '#/components/schemas/HashDto'
       required:
         - catalogId
+        - id
         - itemKey
         - url
     ErrorDto:
@@ -4473,6 +4476,14 @@ components:
           type: number
         uid:
           type: number
+        platforms:
+          type: array
+          items:
+            type: string
+        formations:
+          type: array
+          items:
+            type: string
     AndroidConfigDto:
       type: object
       properties:
@@ -4657,6 +4668,14 @@ components:
           type: number
         uid:
           type: number
+        platforms:
+          type: array
+          items:
+            type: string
+        formations:
+          type: array
+          items:
+            type: string
         maps:
           type: array
           items:
@@ -4667,7 +4686,7 @@ components:
       type: object
       properties:
         software:
-          $ref: '#/components/schemas/ComponentDto'
+          $ref: '#/components/schemas/ComponentV2Dto'
         state:
           type: string
           enum:
@@ -4687,7 +4706,9 @@ components:
         offering:
           type: array
           items:
-            $ref: '#/components/schemas/ComponentDto'
+            $ref: '#/components/schemas/ComponentV2Dto'
+        error:
+          type: string
       required:
         - software
         - downloadDate
@@ -4722,6 +4743,14 @@ components:
           type: number
         uid:
           type: number
+        platforms:
+          type: array
+          items:
+            type: string
+        formations:
+          type: array
+          items:
+            type: string
         softwares:
           type: array
           items:

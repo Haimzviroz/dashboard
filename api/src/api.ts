@@ -862,6 +862,12 @@ export interface DeliveryItemDto {
     'catalogId': string;
     /**
      * 
+     * @type {number}
+     * @memberof DeliveryItemDto
+     */
+    'id': number;
+    /**
+     * 
      * @type {string}
      * @memberof DeliveryItemDto
      */
@@ -1440,6 +1446,18 @@ export interface DeviceDto {
      * @memberof DeviceDto
      */
     'uid'?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DeviceDto
+     */
+    'platforms'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DeviceDto
+     */
+    'formations'?: Array<string>;
 }
 /**
  * 
@@ -1519,6 +1537,18 @@ export interface DeviceMapDto {
      * @memberof DeviceMapDto
      */
     'uid'?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DeviceMapDto
+     */
+    'platforms'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DeviceMapDto
+     */
+    'formations'?: Array<string>;
     /**
      * 
      * @type {Array<MapStateDto>}
@@ -1691,6 +1721,18 @@ export interface DeviceSoftwareDto {
      * @memberof DeviceSoftwareDto
      */
     'uid'?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DeviceSoftwareDto
+     */
+    'platforms'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DeviceSoftwareDto
+     */
+    'formations'?: Array<string>;
     /**
      * 
      * @type {Array<SoftwareStateDto>}
@@ -4602,10 +4644,10 @@ export interface SituationalDiscoveryDto {
 export interface SoftwareStateDto {
     /**
      * 
-     * @type {ComponentDto}
+     * @type {ComponentV2Dto}
      * @memberof SoftwareStateDto
      */
-    'software': ComponentDto;
+    'software': ComponentV2Dto;
     /**
      * 
      * @type {string}
@@ -4626,10 +4668,16 @@ export interface SoftwareStateDto {
     'deployDate': string;
     /**
      * 
-     * @type {Array<ComponentDto>}
+     * @type {Array<ComponentV2Dto>}
      * @memberof SoftwareStateDto
      */
-    'offering': Array<ComponentDto>;
+    'offering': Array<ComponentV2Dto>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SoftwareStateDto
+     */
+    'error'?: string;
 }
 
 export const SoftwareStateDtoStateEnum = {
