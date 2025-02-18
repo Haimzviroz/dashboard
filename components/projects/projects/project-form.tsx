@@ -255,6 +255,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 				onInputChange={(event, newInputValue) => handlePlatInputChange(newInputValue)}
 				renderTags={(value, getTagProps) => {
 					return value.map((option, index) => (
+						// eslint-disable-next-line
 						<Chip label={option} {...getTagProps({ index })} />
 					));
 				}}
