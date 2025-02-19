@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SetReleaseArtifactDto } from "@/api/src";
-import { RemoveRelArt, uploadRelArt } from "@/apis/client-side/upload-actions.api";
+import { RemoveRelArt, uploadRelArt } from "@/apis/client-side/arts-actions.api";
 import { Q_RELEASE } from "@/apis/query-keys";
 import { Dispatch, SetStateAction } from 'react';
 import axios from "axios";
