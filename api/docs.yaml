@@ -1799,32 +1799,9 @@ paths:
         - Device - discovery
       security: &ref_14
         - bearer: []
-  /api/v1/device/discover/component:
-    post:
-      operationId: DiscoveryController_deviceComponentDiscovery
-      summary: Discover Device Component
-      description: >-
-        This service message allows a device to post the discovery context for
-        getting device software offers.
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DiscoveryMessageDto'
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeviceComponentsOfferingDto'
-      tags: *ref_13
-      security: *ref_14
   /api/v2/device/discover/component:
     post:
-      operationId: DiscoveryController_deviceComponentDiscoveryV2
+      operationId: DiscoveryController_deviceComponentDiscovery
       summary: Discover Device Component
       description: >-
         This service message allows a device to post the discovery context for
@@ -1842,7 +1819,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeviceComponentsOfferingV2Dto'
+                $ref: '#/components/schemas/DeviceComponentsOfferingDto'
       tags: *ref_13
       security: *ref_14
   /api/v1/device/discover/map:
@@ -1858,7 +1835,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DiscoveryMessageDto'
+              $ref: '#/components/schemas/DiscoveryMessageV2Dto'
       responses:
         '200':
           description: ''
@@ -2699,9 +2676,7 @@ components:
           type: string
           description: Update date of the regulation status
         regulationSnapshot:
-          description: Regulation snapshot
-          allOf:
-            - $ref: '#/components/schemas/RegulationSnapshotDto'
+          $ref: '#/components/schemas/RegulationSnapshotDto'
       required:
         - projectIdentifier
         - version
@@ -2822,6 +2797,8 @@ components:
           type: number
         itemKey:
           type: string
+        artifactType:
+          type: object
         metaData:
           type: string
         url:
@@ -4192,20 +4169,6 @@ components:
           $ref: '#/components/schemas/OfferingResponseDto'
         map:
           $ref: '#/components/schemas/OfferingMapProductsResDto'
-    DeviceComponentsOfferingDto:
-      type: object
-      properties:
-        offer:
-          type: array
-          items:
-            $ref: '#/components/schemas/ComponentDto'
-        push:
-          type: array
-          items:
-            $ref: '#/components/schemas/ComponentDto'
-      required:
-        - offer
-        - push
     ComponentStateDto:
       type: object
       properties:
@@ -4286,6 +4249,7 @@ components:
             - formation
         size:
           type: integer
+          format: int64
         createdAt:
           format: date-time
           type: string
@@ -4296,14 +4260,12 @@ components:
         - id
         - version
         - projectName
-        - releaseNotes
         - metadata
         - status
         - type
-        - size
         - createdAt
         - updatedAt
-    DeviceComponentsOfferingV2Dto:
+    DeviceComponentsOfferingDto:
       type: object
       properties:
         offer:
@@ -4346,7 +4308,7 @@ components:
         comps:
           type: array
           items:
-            $ref: '#/components/schemas/ComponentDto'
+            $ref: '#/components/schemas/ComponentV2Dto'
       required:
         - deviceId
         - produceTime

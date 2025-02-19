@@ -534,7 +534,7 @@ export interface ComponentV2Dto {
      * @type {string}
      * @memberof ComponentV2Dto
      */
-    'releaseNotes': string;
+    'releaseNotes'?: string;
     /**
      * 
      * @type {object}
@@ -558,7 +558,7 @@ export interface ComponentV2Dto {
      * @type {number}
      * @memberof ComponentV2Dto
      */
-    'size': number;
+    'size'?: number;
     /**
      * 
      * @type {string}
@@ -872,6 +872,12 @@ export interface DeliveryItemDto {
      * @memberof DeliveryItemDto
      */
     'itemKey': string;
+    /**
+     * 
+     * @type {object}
+     * @memberof DeliveryItemDto
+     */
+    'artifactType'?: object;
     /**
      * 
      * @type {string}
@@ -1294,33 +1300,14 @@ export type DetailedReleaseDtoStatusEnum = typeof DetailedReleaseDtoStatusEnum[k
 export interface DeviceComponentsOfferingDto {
     /**
      * 
-     * @type {Array<ComponentDto>}
-     * @memberof DeviceComponentsOfferingDto
-     */
-    'offer': Array<ComponentDto>;
-    /**
-     * 
-     * @type {Array<ComponentDto>}
-     * @memberof DeviceComponentsOfferingDto
-     */
-    'push': Array<ComponentDto>;
-}
-/**
- * 
- * @export
- * @interface DeviceComponentsOfferingV2Dto
- */
-export interface DeviceComponentsOfferingV2Dto {
-    /**
-     * 
      * @type {Array<ComponentV2Dto>}
-     * @memberof DeviceComponentsOfferingV2Dto
+     * @memberof DeviceComponentsOfferingDto
      */
     'offer': Array<ComponentV2Dto>;
     /**
      * 
      * @type {Array<ComponentV2Dto>}
-     * @memberof DeviceComponentsOfferingV2Dto
+     * @memberof DeviceComponentsOfferingDto
      */
     'push': Array<ComponentV2Dto>;
 }
@@ -1363,10 +1350,10 @@ export interface DeviceDiscoverResDto {
     'produceTime': string;
     /**
      * 
-     * @type {Array<ComponentDto>}
+     * @type {Array<ComponentV2Dto>}
      * @memberof DeviceDiscoverResDto
      */
-    'comps': Array<ComponentDto>;
+    'comps': Array<ComponentV2Dto>;
 }
 /**
  * 
@@ -4226,7 +4213,7 @@ export interface RegulationStatusDto {
      */
     'updatedAt': string;
     /**
-     * Regulation snapshot
+     * 
      * @type {RegulationSnapshotDto}
      * @memberof RegulationStatusDto
      */
@@ -6736,53 +6723,13 @@ export const DeviceDiscoveryApiAxiosParamCreator = function (configuration?: Con
         /**
          * This service message allows a device to post the discovery context for getting device software offers.
          * @summary Discover Device Component
-         * @param {DiscoveryMessageDto} discoveryMessageDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        discoveryControllerDeviceComponentDiscovery: async (discoveryMessageDto: DiscoveryMessageDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'discoveryMessageDto' is not null or undefined
-            assertParamExists('discoveryControllerDeviceComponentDiscovery', 'discoveryMessageDto', discoveryMessageDto)
-            const localVarPath = `/api/v1/device/discover/component`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(discoveryMessageDto, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * This service message allows a device to post the discovery context for getting device software offers.
-         * @summary Discover Device Component
          * @param {DiscoveryMessageV2Dto} discoveryMessageV2Dto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        discoveryControllerDeviceComponentDiscoveryV2: async (discoveryMessageV2Dto: DiscoveryMessageV2Dto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        discoveryControllerDeviceComponentDiscovery: async (discoveryMessageV2Dto: DiscoveryMessageV2Dto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'discoveryMessageV2Dto' is not null or undefined
-            assertParamExists('discoveryControllerDeviceComponentDiscoveryV2', 'discoveryMessageV2Dto', discoveryMessageV2Dto)
+            assertParamExists('discoveryControllerDeviceComponentDiscovery', 'discoveryMessageV2Dto', discoveryMessageV2Dto)
             const localVarPath = `/api/v2/device/discover/component`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6856,13 +6803,13 @@ export const DeviceDiscoveryApiAxiosParamCreator = function (configuration?: Con
         /**
          * This service message allows a device to post the discovery context for getting device maps offers.
          * @summary Discover Device map
-         * @param {DiscoveryMessageDto} discoveryMessageDto 
+         * @param {DiscoveryMessageV2Dto} discoveryMessageV2Dto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        discoveryControllerDeviceMapDiscovery: async (discoveryMessageDto: DiscoveryMessageDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'discoveryMessageDto' is not null or undefined
-            assertParamExists('discoveryControllerDeviceMapDiscovery', 'discoveryMessageDto', discoveryMessageDto)
+        discoveryControllerDeviceMapDiscovery: async (discoveryMessageV2Dto: DiscoveryMessageV2Dto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'discoveryMessageV2Dto' is not null or undefined
+            assertParamExists('discoveryControllerDeviceMapDiscovery', 'discoveryMessageV2Dto', discoveryMessageV2Dto)
             const localVarPath = `/api/v1/device/discover/map`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6886,7 +6833,7 @@ export const DeviceDiscoveryApiAxiosParamCreator = function (configuration?: Con
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(discoveryMessageDto, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(discoveryMessageV2Dto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7065,27 +7012,14 @@ export const DeviceDiscoveryApiFp = function(configuration?: Configuration) {
         /**
          * This service message allows a device to post the discovery context for getting device software offers.
          * @summary Discover Device Component
-         * @param {DiscoveryMessageDto} discoveryMessageDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async discoveryControllerDeviceComponentDiscovery(discoveryMessageDto: DiscoveryMessageDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeviceComponentsOfferingDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.discoveryControllerDeviceComponentDiscovery(discoveryMessageDto, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DeviceDiscoveryApi.discoveryControllerDeviceComponentDiscovery']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * This service message allows a device to post the discovery context for getting device software offers.
-         * @summary Discover Device Component
          * @param {DiscoveryMessageV2Dto} discoveryMessageV2Dto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async discoveryControllerDeviceComponentDiscoveryV2(discoveryMessageV2Dto: DiscoveryMessageV2Dto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeviceComponentsOfferingV2Dto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.discoveryControllerDeviceComponentDiscoveryV2(discoveryMessageV2Dto, options);
+        async discoveryControllerDeviceComponentDiscovery(discoveryMessageV2Dto: DiscoveryMessageV2Dto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeviceComponentsOfferingDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.discoveryControllerDeviceComponentDiscovery(discoveryMessageV2Dto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DeviceDiscoveryApi.discoveryControllerDeviceComponentDiscoveryV2']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['DeviceDiscoveryApi.discoveryControllerDeviceComponentDiscovery']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -7104,12 +7038,12 @@ export const DeviceDiscoveryApiFp = function(configuration?: Configuration) {
         /**
          * This service message allows a device to post the discovery context for getting device maps offers.
          * @summary Discover Device map
-         * @param {DiscoveryMessageDto} discoveryMessageDto 
+         * @param {DiscoveryMessageV2Dto} discoveryMessageV2Dto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async discoveryControllerDeviceMapDiscovery(discoveryMessageDto: DiscoveryMessageDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OfferingMapResDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.discoveryControllerDeviceMapDiscovery(discoveryMessageDto, options);
+        async discoveryControllerDeviceMapDiscovery(discoveryMessageV2Dto: DiscoveryMessageV2Dto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OfferingMapResDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.discoveryControllerDeviceMapDiscovery(discoveryMessageV2Dto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DeviceDiscoveryApi.discoveryControllerDeviceMapDiscovery']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -7178,22 +7112,12 @@ export const DeviceDiscoveryApiFactory = function (configuration?: Configuration
         /**
          * This service message allows a device to post the discovery context for getting device software offers.
          * @summary Discover Device Component
-         * @param {DiscoveryMessageDto} discoveryMessageDto 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        discoveryControllerDeviceComponentDiscovery(discoveryMessageDto: DiscoveryMessageDto, options?: RawAxiosRequestConfig): AxiosPromise<DeviceComponentsOfferingDto> {
-            return localVarFp.discoveryControllerDeviceComponentDiscovery(discoveryMessageDto, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * This service message allows a device to post the discovery context for getting device software offers.
-         * @summary Discover Device Component
          * @param {DiscoveryMessageV2Dto} discoveryMessageV2Dto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        discoveryControllerDeviceComponentDiscoveryV2(discoveryMessageV2Dto: DiscoveryMessageV2Dto, options?: RawAxiosRequestConfig): AxiosPromise<DeviceComponentsOfferingV2Dto> {
-            return localVarFp.discoveryControllerDeviceComponentDiscoveryV2(discoveryMessageV2Dto, options).then((request) => request(axios, basePath));
+        discoveryControllerDeviceComponentDiscovery(discoveryMessageV2Dto: DiscoveryMessageV2Dto, options?: RawAxiosRequestConfig): AxiosPromise<DeviceComponentsOfferingDto> {
+            return localVarFp.discoveryControllerDeviceComponentDiscovery(discoveryMessageV2Dto, options).then((request) => request(axios, basePath));
         },
         /**
          * This service message allows a device to post the discovery context.
@@ -7208,12 +7132,12 @@ export const DeviceDiscoveryApiFactory = function (configuration?: Configuration
         /**
          * This service message allows a device to post the discovery context for getting device maps offers.
          * @summary Discover Device map
-         * @param {DiscoveryMessageDto} discoveryMessageDto 
+         * @param {DiscoveryMessageV2Dto} discoveryMessageV2Dto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        discoveryControllerDeviceMapDiscovery(discoveryMessageDto: DiscoveryMessageDto, options?: RawAxiosRequestConfig): AxiosPromise<OfferingMapResDto> {
-            return localVarFp.discoveryControllerDeviceMapDiscovery(discoveryMessageDto, options).then((request) => request(axios, basePath));
+        discoveryControllerDeviceMapDiscovery(discoveryMessageV2Dto: DiscoveryMessageV2Dto, options?: RawAxiosRequestConfig): AxiosPromise<OfferingMapResDto> {
+            return localVarFp.discoveryControllerDeviceMapDiscovery(discoveryMessageV2Dto, options).then((request) => request(axios, basePath));
         },
         /**
          * This service message allows a device to post the discovery context for getting offers, software, and maps for the GetApp agent.
@@ -7267,25 +7191,13 @@ export class DeviceDiscoveryApi extends BaseAPI {
     /**
      * This service message allows a device to post the discovery context for getting device software offers.
      * @summary Discover Device Component
-     * @param {DiscoveryMessageDto} discoveryMessageDto 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DeviceDiscoveryApi
-     */
-    public discoveryControllerDeviceComponentDiscovery(discoveryMessageDto: DiscoveryMessageDto, options?: RawAxiosRequestConfig) {
-        return DeviceDiscoveryApiFp(this.configuration).discoveryControllerDeviceComponentDiscovery(discoveryMessageDto, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * This service message allows a device to post the discovery context for getting device software offers.
-     * @summary Discover Device Component
      * @param {DiscoveryMessageV2Dto} discoveryMessageV2Dto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DeviceDiscoveryApi
      */
-    public discoveryControllerDeviceComponentDiscoveryV2(discoveryMessageV2Dto: DiscoveryMessageV2Dto, options?: RawAxiosRequestConfig) {
-        return DeviceDiscoveryApiFp(this.configuration).discoveryControllerDeviceComponentDiscoveryV2(discoveryMessageV2Dto, options).then((request) => request(this.axios, this.basePath));
+    public discoveryControllerDeviceComponentDiscovery(discoveryMessageV2Dto: DiscoveryMessageV2Dto, options?: RawAxiosRequestConfig) {
+        return DeviceDiscoveryApiFp(this.configuration).discoveryControllerDeviceComponentDiscovery(discoveryMessageV2Dto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7303,13 +7215,13 @@ export class DeviceDiscoveryApi extends BaseAPI {
     /**
      * This service message allows a device to post the discovery context for getting device maps offers.
      * @summary Discover Device map
-     * @param {DiscoveryMessageDto} discoveryMessageDto 
+     * @param {DiscoveryMessageV2Dto} discoveryMessageV2Dto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DeviceDiscoveryApi
      */
-    public discoveryControllerDeviceMapDiscovery(discoveryMessageDto: DiscoveryMessageDto, options?: RawAxiosRequestConfig) {
-        return DeviceDiscoveryApiFp(this.configuration).discoveryControllerDeviceMapDiscovery(discoveryMessageDto, options).then((request) => request(this.axios, this.basePath));
+    public discoveryControllerDeviceMapDiscovery(discoveryMessageV2Dto: DiscoveryMessageV2Dto, options?: RawAxiosRequestConfig) {
+        return DeviceDiscoveryApiFp(this.configuration).discoveryControllerDeviceMapDiscovery(discoveryMessageV2Dto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
