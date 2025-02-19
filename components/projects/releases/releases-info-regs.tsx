@@ -4,7 +4,7 @@ import { Box, Chip, Container, Icon, IconButton, LinearProgress, Stack, Tooltip,
 import React from 'react';
 import { useReg, useRegsStatus } from '@/hooks/reg.query.hook';
 import { stringToColor } from '../regulations/reg-utils';
-import { Edit, CheckCircle, Cancel, HelpOutline } from "@mui/icons-material";
+import { Edit, CheckCircle, Cancel, HelpOutline, ReportProblemOutlined } from "@mui/icons-material";
 
 export const TableOf = (body: ReactNode, header = false, index?: number) => (
   <Box
@@ -83,25 +83,41 @@ interface RelInfoRegsProps {
 }
 
 const RelInfoRegs: FC<RelInfoRegsProps> = ({ project, rel, setRel }) => {
-
   const { regulations } = useReg(project.name);
-  const { regsStatus } = useRegsStatus(project.name, rel.version)
+  const { regsStatus } = useRegsStatus(project.name, rel.version);
+
   const RegHeader = () => (
     <Fragment>
       {["Name", "Type", "Status", "Updated", "Is compliant", ""].map((text) => (
-        <Typography key={text} variant="subtitle2" fontWeight={"bold"}>{text}</Typography>
+        <Typography key={text} variant="subtitle2" fontWeight={"bold"}>
+          {text}
+        </Typography>
       ))}
     </Fragment>
   );
+
+  if (!regulations || !regsStatus) return <LinearProgress />
+
   return (
     <Fragment>
-      {TableOf(<RegHeader />, true)}
-      {regulations && regsStatus ? regulations.map((reg) => (
-        <Box key={reg.name} >
-          <RegItem project={project} rel={rel} reg={reg} regsStatuses={regsStatus} />
-        </Box>
-      ))
-        : <LinearProgress />}
+      {!!regulations.length
+        ?
+        <Fragment>
+          {TableOf(<RegHeader />, true)}
+          {regulations.map((reg) => (
+            <Box key={reg.name}>
+              <RegItem project={project} rel={rel} reg={reg} regsStatuses={regsStatus} />
+            </Box>
+          ))}
+        </Fragment>
+        :
+        <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" sx={{ py: 2 }}>
+          <ReportProblemOutlined sx={{ color: "warning.main" }} />
+          <Typography variant="body1" color="text.secondary">
+            No regulations defined for this project.
+          </Typography>
+        </Stack>
+      }
     </Fragment>
   );
 };
