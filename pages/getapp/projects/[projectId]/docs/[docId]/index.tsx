@@ -3,6 +3,7 @@ import React, { Fragment, ReactElement, useRef, useState } from 'react';
 import GA_layout from '@/components/layout/GA-layout';
 
 import {
+	Container,
 	Box,
 	Stack,
 } from "@mui/material";
@@ -37,7 +38,7 @@ const ProjectDocs: NextPageWithLayout<ProjectFormProps> = () => {
 
 
 	return (
-		<Fragment>
+		<Container>
 			<Stack direction={"row-reverse"} alignItems={"center"} gap={1}>
 				<O_IconButton onClick={() => setIsEditing(!isEditing)}>
 					{isEditing ? <CancelIcon /> : <EditIcon />}
@@ -59,7 +60,7 @@ const ProjectDocs: NextPageWithLayout<ProjectFormProps> = () => {
 							: <DocViewer doc={doc} />
 					}
 				</Fragment>}
-		</Fragment>
+		</Container>
 	);
 };
 

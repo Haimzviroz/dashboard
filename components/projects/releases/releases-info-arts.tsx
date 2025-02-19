@@ -174,7 +174,7 @@ const RelInfoArts: FC<RelInfoArtsProps> = ({ project, rel, setRel }) => {
   const [addArt, setAddArt] = useState<boolean>(false)
 
   return (
-    <Container>
+    <Fragment>
       {rel.artifacts?.map((art) => (
         <Box key={art.id + art.artifactName} >
           <ArtItem project={project} rel={rel} art={art} />
@@ -195,7 +195,7 @@ const RelInfoArts: FC<RelInfoArtsProps> = ({ project, rel, setRel }) => {
           : <FileUpload project={project} rel={rel} />
         }
       </Box>
-    </Container>
+    </Fragment>
   );
 };
 

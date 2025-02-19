@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import ProNavBar from "@/components/header/project-nav";
 import GA_layout from "@/components/layout/GA-layout";
 import LTR_MuiProvider from "@/providers/ltr-mui.provider";
@@ -14,7 +14,9 @@ import Regulations from "@/components/projects/regulations/regulations";
 
 const ProjectRegulations = () => {
   return (
-    <Regulations />
+    <Container>
+      <Regulations />
+    </Container>
   );
 };
 

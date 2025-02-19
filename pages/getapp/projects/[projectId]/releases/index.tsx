@@ -7,7 +7,7 @@ import { NextPageWithLayout } from '@/types/types';
 
 import { SS_ProjectsClient } from "@/apis/server-side/ss_projects-client";
 import GA_layout from "@/components/layout/GA-layout";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { Q_RELEASES } from "@/apis/query-keys";
 import { useGetApp } from "@/providers/getapp.provider";
@@ -27,7 +27,7 @@ const Releases: NextPageWithLayout<ProductReleasesProps> = () => {
 
 
   return (
-    <Fragment>
+    <Container>
       <Box>
         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
           <Typography variant="h6" fontWeight="bold">Version History</Typography>
@@ -39,7 +39,7 @@ const Releases: NextPageWithLayout<ProductReleasesProps> = () => {
         {project && <RelForm isOpen={open} setIsOpen={setOpen} project={project} />}
       </Box>
 
-    </Fragment>
+    </Container>
   )
 }
 

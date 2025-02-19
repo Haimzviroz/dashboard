@@ -6,6 +6,7 @@ import GlobalProvider from '@/storage/global.storage';
 import React from "react";
 import {
 	Box,
+	Container,
 } from "@mui/material";
 import LTR_MuiProvider from '@/providers/ltr-mui.provider';
 import { Q_PROJECT } from '@/apis/query-keys';
@@ -27,7 +28,9 @@ const ProjectSettings: NextPageWithLayout<ProjectFormProps> = () => {
 	const { project } = useProject(router.query.projectId as string)
 
 	return (
-		<ProjectForm project={project} projectType={project?.projectType ?? CreateProjectDtoProjectTypeEnum["Product"]} />
+		<Container>
+			<ProjectForm project={project} projectType={project?.projectType ?? CreateProjectDtoProjectTypeEnum["Product"]} />
+		</Container>
 	);
 };
 

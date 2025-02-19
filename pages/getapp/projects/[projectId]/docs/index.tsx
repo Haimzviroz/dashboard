@@ -3,6 +3,7 @@ import React, { Fragment, ReactElement } from 'react';
 import GA_layout from '@/components/layout/GA-layout';
 
 import {
+	Container,
 	Box,
 	Button,
 	Card,
@@ -31,7 +32,7 @@ const ProjectDocs: NextPageWithLayout<ProjectFormProps> = () => {
 	const { docs } = useDocs(router.query.projectId as string)
 
 	return (
-		<Fragment>
+		<Container>
 			<Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
 				<Typography variant="h6" fontWeight="bold">Documentations</Typography>
 				<Button variant="contained" startIcon={<Add />} onClick={() => router.push(router.asPath + "/new")}>Add Docs</Button>
@@ -41,7 +42,7 @@ const ProjectDocs: NextPageWithLayout<ProjectFormProps> = () => {
 					<DocsItem key={doc.id} project={project} doc={doc}></DocsItem>
 				))}
 			</Card>}
-		</Fragment>
+		</Container>
 	);
 };
 

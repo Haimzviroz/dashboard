@@ -5,7 +5,7 @@ import { NextPageWithLayout } from '@/types/types';
 
 import { SS_ProjectsClient } from '@/apis/server-side/ss_projects-client';
 import GA_layout from '@/components/layout/GA-layout';
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Container, Divider, Typography } from '@mui/material';
 import ProNavBar from '@/components/header/project-nav';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { Q_PROJECT, Q_TOKENS } from '@/apis/query-keys';
@@ -25,7 +25,7 @@ const ProjectOverview: NextPageWithLayout<ManagementProjectsPageProps> = () => {
   const { tokens } = useTokens(router.query.projectId as string)
 
   return (
-    <Fragment>
+    <Container>
       {/* <Typography
         variant="body1"
         color="text.secondary"
@@ -36,7 +36,7 @@ const ProjectOverview: NextPageWithLayout<ManagementProjectsPageProps> = () => {
       <Divider />
       {project && <ProjectMembers project={project} />}
       {tokens && project && <ProjectTokens project={project} tokens={tokens}></ProjectTokens>}
-    </Fragment>
+    </Container>
 
   );
 }

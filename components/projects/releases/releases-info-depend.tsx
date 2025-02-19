@@ -194,7 +194,7 @@ const RelInfoDepend: FC<RelInfoDependProps> = ({ project, rel, setRel }) => {
   const [addDepend, setAddDepend] = useState<boolean>(false)
 
   return (
-    <Container>
+    <Fragment>
       <Grid container rowSpacing={2} columnSpacing={10} direction="row">
         {rel.dependencies?.map((dep) => (
           <Grid item key={dep.id}>
@@ -214,8 +214,7 @@ const RelInfoDepend: FC<RelInfoDependProps> = ({ project, rel, setRel }) => {
           Add Dependence
         </Button>
       </Box>
-
-    </Container>
+    </Fragment>
   );
 };
 

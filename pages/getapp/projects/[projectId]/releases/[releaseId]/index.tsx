@@ -7,7 +7,7 @@ import { NextPageWithLayout } from '@/types/types';
 
 import { SS_ProjectsClient } from "@/apis/server-side/ss_projects-client";
 import GA_layout from "@/components/layout/GA-layout";
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { Q_PROJECT, Q_RELEASE } from "@/apis/query-keys";
 import { useRelease } from "@/hooks/releases.query.hook";
@@ -26,9 +26,9 @@ const DetailedRelease: NextPageWithLayout<DetailedReleaseProps> = () => {
 
 
   return (
-    <Fragment>
+    <Container>
       {project && release && <ReleasesInfo project={project} release={release} />}
-    </Fragment>
+    </Container>
   )
 }
 
