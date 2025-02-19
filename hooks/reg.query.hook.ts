@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Q_REGULATIONS, Q_REG_TYPES } from "../apis/query-keys";
+import { Q_REGULATIONS, Q_REGULATIONS_STATUS, Q_REG_TYPES } from "../apis/query-keys";
 import { addRegulation, deleteRegulation, getProjectRegulations, getRegulationsTypes, updateRegulation, updateRegulations } from "@/apis/client-side/projects-actions.api";
-import { CreateRegulationDto, RegulationDto, RegulationTypeDto, UpdateOneOfManyRegulationDto, UpdateRegulationDto } from "@/api/src";
+import { CreateRegulationDto, RegulationDto, RegulationStatusDto, RegulationTypeDto, UpdateOneOfManyRegulationDto, UpdateRegulationDto } from "@/api/src";
+import { getRegulationsStatus } from "@/apis/client-side/regs-actions.api";
 
 export const useRegulationsTypes = () => {
   const { data: regTypes, refetch } = useQuery<RegulationTypeDto[]>({
@@ -17,6 +18,14 @@ export const useReg = (projectName: string) => {
     queryFn: () => getProjectRegulations(projectName),
   })
   return { regulations, refetch }
+}
+
+export const useRegsStatus = (projectId: string, version: string) => {
+  const { data: regsStatus, refetch } = useQuery<RegulationStatusDto[]>({
+    queryKey: [Q_REGULATIONS_STATUS, projectId, version],
+    queryFn: () => getRegulationsStatus(projectId, version),
+  })
+  return { regsStatus, refetch }
 }
 
 export const useAddReg = () => {

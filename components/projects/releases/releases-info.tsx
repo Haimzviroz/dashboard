@@ -12,6 +12,7 @@ import GavelIcon from '@mui/icons-material/Gavel';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import HubIcon from '@mui/icons-material/Hub';
 import RelInfoArts from "./releases-info-arts";
+import RelInfoRegs from "./releases-info-regs";
 
 interface ReleasesInfoProps {
   release: DetailedReleaseDto;
@@ -47,7 +48,7 @@ const ReleasesInfo: FC<ReleasesInfoProps> = ({ release, project }) => {
       </Box>
       <RelInfoSec sectionName={'Release Notes'} icon={DescriptionIcon} info={"Release Note info"} />
       <RelInfoSec sectionName={'Meta data'} icon={InfoIcon} info={"Meta data info"} />
-      <RelInfoSec sectionName={'Regulations'} icon={GavelIcon} info={"Regulations info"} />
+      <RelInfoSec sectionName={'Regulations'} icon={GavelIcon} info={<RelInfoRegs project={project} rel={release} setRel={setRel} />} />
       <RelInfoSec sectionName={'Artifacts'} icon={InventoryIcon} info={<RelInfoArts project={project} rel={release} setRel={setRel} />} />
       <RelInfoSec sectionName={'Dependencies'} icon={HubIcon} info={<RelInfoDepend project={project} rel={release} setRel={setRel} />} />
     </Fragment>
