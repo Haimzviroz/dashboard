@@ -1,8 +1,8 @@
 import React, { FC, useRef } from "react";
 import { Box } from "@mui/material";
 import { RegulationDto } from "@/api/src";
-import { ItemType } from "@/pages/getapp/projects/[projectId]/regulations";
 import { useDrop } from "react-dnd";
+import { ItemType } from "./reg-utils";
 
 interface RegBetItemProps {
   reg: RegulationDto;

@@ -2,12 +2,12 @@ import React, { FC, Fragment, useRef, useState } from "react";
 import { Typography, IconButton, Chip, Stack, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { Edit, Delete, DragIndicator } from "@mui/icons-material";
 import { DetailedProjectDto, RegulationDto } from "@/api/src";
-import { ItemType, TableOf } from "@/pages/getapp/projects/[projectId]/regulations";
 import { useDrag, useDrop } from "react-dnd";
 import RegForm from "./reg-form";
 
 import { useDeleteReg } from "@/hooks/reg.query.hook";
 import O_IconButton from "@/ui/o-icon-button";
+import { ItemType, stringToColor, TableOf } from "./reg-utils";
 
 interface DeleteConfirmationDialogProps {
   open: boolean;
@@ -78,26 +78,6 @@ const RegItem: FC<RegItemProps> = ({ reg, project, index }) => {
     });
   };
 
-  function stringToColor(string: string) {
-    let hash = 0;
-    for (let i = 0; i < string.length; i++) {
-      hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let color = "#";
-    let oppositeColor = "#";
-
-    for (let i = 0; i < 3; i++) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.slice(-2);
-
-      // Invert the color: (255 - value)
-      const invertedValue = 255 - value;
-      oppositeColor += `00${invertedValue.toString(16)}`.slice(-2);
-    }
-
-    return { bgcolor: oppositeColor };
-  }
 
   return (
     <Fragment>
@@ -123,7 +103,7 @@ const RegItem: FC<RegItemProps> = ({ reg, project, index }) => {
                 <Edit />
               </O_IconButton>
               <O_IconButton sx={{ color: "#e53935" }} onClick={() => setConfirmDeleteToggle(true)}>
-                <Delete/>
+                <Delete />
               </O_IconButton>
             </Stack>
           </Fragment>
