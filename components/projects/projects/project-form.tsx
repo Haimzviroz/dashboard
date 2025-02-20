@@ -181,7 +181,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 				const res = await createProject({ name, description, projectType, platforms })
 				router.push(R_PROJECTS + "/" + res.name + "/" + ProNavBarOption.OVERVIEW, undefined, { shallow: true })
 			} else {
-				updateProject.mutate({ projectName: project.name, data: { name, description } }, {
+				updateProject.mutate({ projectName: project.name, data: { name, description, platforms } }, {
 					onSuccess(data) {
 						router.push(R_PROJECTS + "/" + data.name + "/" + ProNavBarOption.SETTINGS)
 					},
