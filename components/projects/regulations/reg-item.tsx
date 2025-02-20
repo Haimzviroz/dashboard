@@ -87,7 +87,7 @@ const RegItem: FC<RegItemProps> = ({ reg, project, index }) => {
             <IconButton ref={drag} sx={{ cursor: "move", color: "#8e8e8e", }}>
               <DragIndicator />
             </IconButton>
-            <Typography variant="body1">{reg.displayName ?? reg.name}</Typography>
+            <Typography variant="body1">{reg.displayName || reg.name}</Typography>
             <Typography variant="body2" color="textSecondary">{reg.description}</Typography>
             <Chip
               label={reg.type.name}
