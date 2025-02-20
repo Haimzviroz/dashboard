@@ -1,6 +1,6 @@
 import { ProjectDto, DetailedReleaseDto, SetReleaseArtifactDto } from "@/api/src";
 import { useAddRelArt } from "@/hooks/arts.query.hook";
-import { Box, Typography, LinearProgress, Button } from "@mui/material";
+import { Box, Typography, LinearProgress, Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { AxiosError } from "axios";
 import { FC, useState, useRef, useEffect, useCallback, Fragment } from "react";
 
@@ -13,6 +13,8 @@ interface FileUploadProps {
 
 const FileUpload: FC<FileUploadProps> = ({ project, rel, deployable, onSuccess }) => {
   const [file, setFile] = useState<File>();
+  const [isInstallFile, setIsInstallFile] = useState<boolean | undefined>(deployable);
+  const [openIsInstallDialog, setOpenIsInstallDialog] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>();
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadErr, setUploadErr] = useState<string>();
@@ -21,10 +23,13 @@ const FileUpload: FC<FileUploadProps> = ({ project, rel, deployable, onSuccess }
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (file && !isUploading) {
+    if (file && isInstallFile === undefined) {
+      setOpenIsInstallDialog(true)
+    }
+    if (file && !isUploading && isInstallFile !== undefined) {
       handleUpload()
     }
-  }, [file])
+  }, [file, isInstallFile])
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
@@ -46,7 +51,7 @@ const FileUpload: FC<FileUploadProps> = ({ project, rel, deployable, onSuccess }
       const data: SetReleaseArtifactDto = {
         artifactName: file?.name,
         type: "file",
-        isInstallationFile: !!deployable,
+        isInstallationFile: isInstallFile,
       };
 
       setProgress(undefined)
@@ -54,10 +59,8 @@ const FileUpload: FC<FileUploadProps> = ({ project, rel, deployable, onSuccess }
       setUploadErr(undefined)
       uploadArt.mutate({ projectName: project.name, version: rel.version, data, file: file, setProgress }, {
         onSuccess: (data: number) => {
-          setIsUploading(false)
-          setProgress(undefined)
-          setFile(undefined)
           onSuccess && onSuccess(data)
+          clearState()
         },
         onError: (err: any) => {
           if (err instanceof AxiosError) {
@@ -75,6 +78,40 @@ const FileUpload: FC<FileUploadProps> = ({ project, rel, deployable, onSuccess }
   const handleClick = () => {
     fileInputRef.current?.click();
   };
+
+  const handleConfirmation = (confirmed: boolean) => {
+    setIsInstallFile(confirmed);
+    setOpenIsInstallDialog(false);
+  };
+
+  const cancelUpload = () => {
+    clearState()
+    setOpenIsInstallDialog(false)
+  }
+
+  const clearState = () => {
+    setIsUploading(false)
+    setProgress(undefined)
+    setFile(undefined)
+    setIsInstallFile(undefined)
+    fileInputRef.current && (fileInputRef.current.value = "");
+  }
+
+
+  const isInstallDialog = () => (
+    <Dialog open={openIsInstallDialog} onClose={() => setOpenIsInstallDialog(false)}>
+      <DialogContent>
+        {file && (
+          <Typography variant="body1">{`The selected file "${file.name}" is an installation file?`}</Typography>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button sx={{ color: "red" }} onClick={() => cancelUpload()}>Cancel</Button>
+        <Button onClick={() => handleConfirmation(true)}>Yes</Button>
+        <Button onClick={() => handleConfirmation(false)}>No</Button>
+      </DialogActions>
+    </Dialog>
+  )
 
 
   return (
@@ -121,6 +158,7 @@ const FileUpload: FC<FileUploadProps> = ({ project, rel, deployable, onSuccess }
           </Fragment>
         }
       </Box >
+      {isInstallDialog()}
     </Fragment >
   );
 };
