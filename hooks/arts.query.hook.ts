@@ -14,11 +14,10 @@ const uploadArt = async (uploadMes: UploadMes) => {
   if (!artRes.uploadUrl) throw new Error("Upload URL not received");
 
   const file = uploadMes.file;
-  const mimeType = file.type || "application/octet-stream"; // Default for unknown file types
-
+  const mimeType = file.type || "application/octet-stream";
   await axios.put(artRes.uploadUrl, file, {
     headers: {
-      "Content-Type": mimeType, // Ensures server handles file correctly
+      "Content-Type": mimeType,
     },
     onUploadProgress: (progressEvent) => {
       if (progressEvent.total) {
@@ -26,6 +25,7 @@ const uploadArt = async (uploadMes: UploadMes) => {
       }
     },
   });
+  return artRes.artifactId
 }
 
 export const useAddRelArt = () => {
@@ -36,7 +36,7 @@ export const useAddRelArt = () => {
       uploadArt(uploadMes),
 
     // Notice the second argument is the variables object that the `mutate` function receives
-    onSuccess: async (data: void, uploadMes: UploadMes) => {
+    onSuccess: async (data: number, uploadMes: UploadMes) => {
       client.refetchQueries({ queryKey: [Q_RELEASE, uploadMes.version] })
     },
     // onError: (error => alert(error))

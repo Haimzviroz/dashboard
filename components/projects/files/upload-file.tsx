@@ -7,9 +7,11 @@ import { FC, useState, useRef, useEffect, useCallback, Fragment } from "react";
 interface FileUploadProps {
   project: ProjectDto,
   rel: DetailedReleaseDto
+  deployable?: boolean
+  onSuccess?: (data?: number) => void
 }
 
-const FileUpload: FC<FileUploadProps> = ({ project, rel }) => {
+const FileUpload: FC<FileUploadProps> = ({ project, rel, deployable, onSuccess }) => {
   const [file, setFile] = useState<File>();
   const [progress, setProgress] = useState<number>();
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -44,17 +46,18 @@ const FileUpload: FC<FileUploadProps> = ({ project, rel }) => {
       const data: SetReleaseArtifactDto = {
         artifactName: file?.name,
         type: "file",
-        isInstallationFile: true,
+        isInstallationFile: !!deployable,
       };
 
       setProgress(undefined)
       setIsUploading(true)
       setUploadErr(undefined)
       uploadArt.mutate({ projectName: project.name, version: rel.version, data, file: file, setProgress }, {
-        onSuccess: () => {
+        onSuccess: (data: number) => {
           setIsUploading(false)
           setProgress(undefined)
           setFile(undefined)
+          onSuccess && onSuccess(data)
         },
         onError: (err: any) => {
           if (err instanceof AxiosError) {

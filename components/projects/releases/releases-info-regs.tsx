@@ -1,10 +1,12 @@
 import { Dispatch, FC, Fragment, ReactNode, SetStateAction, useState } from 'react';
 import { DetailedReleaseDto, ProjectDto, RegulationDto, RegulationStatusDto, SetReleaseDto } from '@/api/src';
-import { Box, Chip, Container, Icon, IconButton, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Checkbox, Chip, Container, Icon, IconButton, LinearProgress, Stack, TextField, Tooltip, Typography } from '@mui/material';
 import React from 'react';
-import { useReg, useRegsStatus } from '@/hooks/reg.query.hook';
+import { useReg, useRegsStatus, useSetRegsStatus } from '@/hooks/reg.query.hook';
 import { stringToColor } from '../regulations/reg-utils';
-import { Edit, CheckCircle, Cancel, HelpOutline, ReportProblemOutlined } from "@mui/icons-material";
+import { Edit, CheckCircle, Cancel, CancelOutlined, HelpOutline, ReportProblemOutlined, Save } from "@mui/icons-material";
+import UploadFile from '../files/upload-file';
+import { useAddRelArt } from '@/hooks/arts.query.hook';
 
 export const TableOf = (body: ReactNode, header = false, index?: number) => (
   <Box
@@ -32,24 +34,105 @@ interface RegItemProps {
 }
 
 const RegItem: FC<RegItemProps> = ({ project, rel, reg, regsStatuses }) => {
-  const [regStatus, setRegStatus] = useState<RegulationStatusDto | undefined>(regsStatuses.find(rs => rs.regulation == reg.name))
+  const [regStatus,] = useState<RegulationStatusDto | undefined>(regsStatuses.find(rs => rs.regulation == reg.name))
+  const [value, setValue] = useState<string | undefined>(regStatus?.value)
+  const [editMode, setEditMode] = useState<boolean>(false)
+
+  const setReg = useSetRegsStatus()
+
+  const boolReg = () => {
+    return <Checkbox
+      onChange={(e) => setValue(e.target.checked.toString())}
+      checked={value == "true"}
+      indeterminate={!editMode && regStatus?.isCompliant === undefined}
+      disabled={!editMode}
+      sx={{
+        p: 0,
+        "&.MuiCheckbox-indeterminate": {
+          color: "gray",
+        },
+        "&.Mui-disabled": {
+          color: regStatus?.isCompliant === undefined ? undefined : "#1976d2"
+        },
+      }}
+    />
+  }
+
+  const thresholdReg = () => {
+    return (editMode
+      ? <TextField
+        value={value}
+        onInput={(e) => setValue((e.target as HTMLInputElement).value)}
+        size={"small"}
+        type="number"
+        inputProps={{
+          min: 1,
+          max: 100,
+        }}
+      />
+      : <Typography variant="body2">{regStatus?.value}</Typography>
+    )
+  }
+
+  const jUnitReg = () => {
+    return (editMode
+      ? <Fragment></Fragment>
+      : <Typography variant="body2">{regStatus?.value}</Typography>
+    )
+  }
+
+  const getValueBody = () => {
+    switch (reg.type.name) {
+      case "JUnit":
+        return jUnitReg()
+      case "Threshold":
+        return thresholdReg()
+      case "Boolean":
+        return boolReg()
+      default:
+        return <Fragment></Fragment>
+    }
+  }
+
+  const onSuccessUploadJUnit = (data?: number) => {
+    handleSave(data)
+    setEditMode(false)
+  }
+
+  const handleClose = () => {
+    setEditMode(false)
+  }
+
+  const handleSave = (val?: number) => {
+    if (val ?? value) {
+      setReg.mutate({
+        projectName: project.name,
+        version: rel.version,
+        regulation: reg.name,
+        data: { value: val?.toString() ?? value ?? "" }
+      })
+      setEditMode(false)
+    }
+  }
 
   return (
     <Fragment>
       {TableOf(
         <Fragment>
-          <Typography variant="body1">{reg.displayName ?? reg.name}</Typography>
+          <Typography variant="body1">{reg.displayName || reg.name}</Typography>
           <Chip
             size='small'
             label={reg.type.name}
             sx={{
-              width: 100,
+              width: 80,
               ...stringToColor(reg.type.name),
               fontWeight: "bold",
             }}
           />
-          <Typography variant="body2">{regStatus?.value}</Typography>
-          <Typography variant="body2">{regStatus?.createdAt && new Date(regStatus?.createdAt).toLocaleDateString()}</Typography>
+          <Stack direction={"row"} justifyContent={"start"}>
+            {getValueBody()}
+          </Stack>
+          <Typography variant="body2">{regStatus?.createdAt ? new Date(regStatus?.createdAt).toLocaleDateString() : "- - -"}</Typography>
           <Stack direction={"row"} justifyContent={"start"}>
             <Typography variant="body2">
               {regStatus?.isCompliant === true ? (
@@ -63,14 +146,26 @@ const RegItem: FC<RegItemProps> = ({ project, rel, reg, regsStatuses }) => {
               )}
             </Typography>
           </Stack>
-          <Stack direction={"row"} justifyContent={"end"}>
-            <IconButton size='small' sx={{ color: "#1e88e5" }} >
-              <Edit />
-            </IconButton>
-          </Stack>
+          {editMode
+            ? <Stack direction={"row"} justifyContent={"end"}>
+              <IconButton sx={{ p: .25 }} onClick={handleClose}>
+                <CancelOutlined fontSize="small" color="error" />
+              </IconButton>
+              <IconButton sx={{ p: .25 }} onClick={() => handleSave()}>
+                <Save fontSize="small" color='success' />
+              </IconButton>
+            </Stack>
+            : <Stack direction={"row"} justifyContent={"end"}>
+              <IconButton size='small' sx={{ color: "#1e88e5" }} onClick={() => setEditMode(true)}>
+                <Edit />
+              </IconButton>
+            </Stack>
+          }
 
         </Fragment>
         , false)}
+      {reg.type.name === "JUnit" && editMode &&
+        <UploadFile project={project} rel={rel} deployable={false} onSuccess={onSuccessUploadJUnit} />}
     </Fragment>
   )
 };
