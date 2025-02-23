@@ -1,22 +1,22 @@
-import { Box, Icon, Stack, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { FC } from "react";
 
 interface StorageCellProps {
-  status: number,
+  status?: number,
   type: "MB" | "GB"
 }
 
 const StorageCell: FC<StorageCellProps> = ({ status, type }) => {
   const convertBytesToGigabytes = () => {
-    return status / 1000 / 1000 / 1000
+    return status && (status / 1000 / 1000 / 1000)
   }
 
   const convertBytesToMegabytes = () => {
-    return status / 1000 / 1000
+    return status && (status / 1000 / 1000)
   }
 
   const getFormatToDisplay = () => {
-    let status: number;
+    let status: number | undefined;
     switch (type) {
       case "GB":
         status = convertBytesToGigabytes()

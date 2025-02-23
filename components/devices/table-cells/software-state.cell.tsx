@@ -5,9 +5,10 @@ import Push from "../../../assets/map-state/device-pending.svg"
 import Delivery from "../../../assets/map-state/device-download.svg"
 import Installed from "../../../assets/map-state/device-updated.svg"
 import { DeviceSoftwareStateEnum } from "@/types/interfaces/getapp";
+import { SoftwareStateDtoStateEnum } from "@/api/src";
 
 interface MapStateCellProps {
-  state: DeviceSoftwareStateEnum
+  state?: SoftwareStateDtoStateEnum
 }
 
 const MapStateCell: FC<MapStateCellProps> = ({ state }) => {

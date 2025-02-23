@@ -1,6 +1,6 @@
-import { useDeviceMetaData, useMutateDeviceMetaData } from "@/hooks/device.query.hook";
-import { Box, Chip, Stack, Typography } from "@mui/material";
-import { Dispatch, FC, Fragment, ReactNode, SetStateAction, useEffect, useState } from "react";
+import { useDeviceMetaData } from "@/hooks/device.query.hook";
+import { Box, Stack, Typography } from "@mui/material";
+import { Dispatch, FC, Fragment, ReactNode, SetStateAction, useEffect } from "react";
 import DeviceInfoItem, { InfoItemName, InfoItemProps } from "./device-info-item";
 import { DeviceMetaData as DMD } from "@/types/interfaces/devices";
 
@@ -12,13 +12,13 @@ import D_Error from '../../assets/devices/devices-error.svg'
 import { NextRouter } from "next/router";
 import { RouterHelpers } from "@/utils/helpers/router.helper";
 import { Map } from "@/types/interfaces";
-import { Software } from "@/types/interfaces/getapp";
 import { AppScopeEnum } from "@/types/enum";
+import { ComponentV2Dto } from "@/api/src";
 
 interface DeviceMetaDataProps {
   router: NextRouter,
   scope: AppScopeEnum
-  cEntity?: Software | Map,
+  cEntity?: ComponentV2Dto | Map,
   activeItem: InfoItemName | undefined,
   setActiveItem: Dispatch<SetStateAction<InfoItemName | undefined>>
   setCurrentDevices: Dispatch<SetStateAction<string[] | undefined>>
@@ -91,7 +91,7 @@ const DeviceMetaData: FC<DeviceMetaDataProps> = ({ router, scope, cEntity, activ
       items.push({
         name: InfoItemName.distItem,
         caption: "פריט נבחר",
-        value: 'versionNumber' in cEntity ? getItemValue(cEntity.name, cEntity.versionNumber) : cEntity.name,
+        value: 'version' in cEntity ? getItemValue(cEntity.projectName, cEntity.version) : cEntity.name,
         icon: <D_Entity />,
         cardSx: { borderColor: "#4169E1", borderWidth: 4 },
         disabled: true

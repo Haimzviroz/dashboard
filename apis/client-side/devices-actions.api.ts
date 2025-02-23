@@ -1,8 +1,9 @@
-import { Device, Group, GroupRes, PushOfferDto } from '@/types/interfaces/devices';
-import { DEVICES, SOFTWARE_META_DATA, DEVICES_PUT, DEVICE_INFO, DEVICE_MAPS, DEVICE_SOFTWARES, GROUP, OFFERED_SOFTWARE, OFFERING_PUSH, MAPS_META_DATA } from '../paths';
-import { clientRequestWithAuth } from './token-client.middleware';
+import { Device, Group, GroupRes } from '@/types/interfaces/devices';
+import { DEVICES, SOFTWARE_META_DATA, DEVICES_PUT, DEVICE_INFO, DEVICE_MAPS, GROUP, OFFERED_SOFTWARE, MAPS_META_DATA } from '../paths';
+import { clientRequestWithAuth, conf } from './token-client.middleware';
 import { Software } from '@/types/interfaces/getapp';
 import Logger from '@/services/logger';
+import { DeviceApiFp, OfferingApiFp, PushOfferingDto } from '@/api/src';
 
 const logger = Logger(__filename)
 
@@ -39,7 +40,8 @@ export const getDeviceWithMap = async (id: string) => {
 }
 
 export const getDeviceWithSoftware = async (id: string) => {
-  return await clientRequestWithAuth(DEVICE_SOFTWARES(id), "get")
+ const fun = await DeviceApiFp(await conf()).deviceControllerGetDeviceSoftwares(id)
+ return (await fun()).data
 }
 
 
@@ -55,8 +57,9 @@ export const getGroup = async (id: number) => {
 }
 
 // Offerings
-export const pushOffer = async (data: PushOfferDto) => {
-  return await clientRequestWithAuth(OFFERING_PUSH, "post", data);
+export const pushOffer = async (data: PushOfferingDto) => {
+  const fun = await OfferingApiFp(await conf()).offeringControllerPushOffering(data)
+  return (await fun()).data
 }
 
 export const getOffering = async (catalogId: string): Promise<Software> => {

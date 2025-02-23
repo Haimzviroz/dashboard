@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Q_DEVICE_MAP, Q_DEVICE_SOFTWARE, Q_DEVICES, Q_SOFTWARE_META_DATA, Q_DIST_ENTITY, Q_MAP, Q_MAP_META_DATA } from "../apis/query-keys";
 import { getSoftwareMetaData, getDeviceWithMap, getDeviceWithSoftware, getDevices, putDeviceName, getMapMetaData } from "@/apis/client-side/devices-actions.api";
-import { Device, DeviceMaps, DeviceSoftWare, DeviceMetaData } from "@/types/interfaces/devices";
+import { Device, DeviceMaps, DeviceMetaData } from "@/types/interfaces/devices";
 import { Map } from "@/types/interfaces";
 import { getMapById } from "@/apis/client-side/getmap-actions.api";
-import { Software } from "@/types/interfaces/getapp";
 import { getSoftwareById } from "@/apis/client-side/software-actions.api";
 import { AppScopeEnum } from "@/types/enum";
+import { ComponentV2Dto, DeviceSoftwareDto } from "@/api/src";
 
 export const useQ_Devices = (stringParams: string) => {
 
@@ -83,7 +83,7 @@ export const useDeviceMap = (id: string) => {
 
 // Device software
 export const useDeviceSoftware = (id: string, options?: any) => {
-  const { data: device, isFetching } = useQuery<DeviceSoftWare>({
+  const { data: device, isFetching } = useQuery<DeviceSoftwareDto>({
     queryKey: [Q_DEVICE_SOFTWARE, id],
     queryFn: () => getDeviceWithSoftware(id),
     ...options
@@ -118,7 +118,7 @@ export const useMapMetaData = (stringParams: string | null = null) => {
 export const useDistEntity = (args?: [string, string | string[]]) => {
   const [type, catalogId] = args ?? [null, ""];
 
-  const { data: dEntity, refetch } = useQuery<Software | Map>({
+  const { data: dEntity, refetch } = useQuery<ComponentV2Dto | Map>({
     queryKey: [Q_DIST_ENTITY, type],
     queryFn: () => {
       switch (type) {

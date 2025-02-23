@@ -4,7 +4,6 @@ import { ColDataGrid, DataGridProps, GridProps, RowDataGrid } from "../data-grid
 import IdCell from "./table-cells/id.cell";
 import { useDeviceSoftware } from "@/hooks/device.query.hook";
 import DataGrid from "../data-grid/data-grid";
-import { useRouter } from "next/router";
 import DateTimeCell from "./table-cells/date.cell";
 import StorageCell from "./table-cells/storage.cell";
 import IsUpdateCell from "./table-cells/is-update.cell";
@@ -96,22 +95,22 @@ const SoftwareTable: FC<SoftwareTableProps> = ({ id, cDevice }) => {
   const getRowData = () => {
     const rows = device?.softwares.filter(s => s.state != DeviceSoftwareStateEnum.UNINSTALLED).map(software => {
       let row: RowDataGrid<SoftwareTableCols> = {
-        id: software.software.catalogId,
+        id: software.software.id,
         cells: {
           [SoftwareTableCols.LABEL]: null,
           [SoftwareTableCols.SELECT]: false,
-          [SoftwareTableCols.ID]: <IdCell id={software.software.catalogId} substring={true} />,
-          [SoftwareTableCols.NAME]: <NameCell name={software.software.name} />,
-          [SoftwareTableCols.VERSION]: <NameCell name={software.software.versionNumber} />,
+          [SoftwareTableCols.ID]: <IdCell id={software.software.id} substring={true} />,
+          [SoftwareTableCols.NAME]: <NameCell name={software.software.projectName} />,
+          [SoftwareTableCols.VERSION]: <NameCell name={software.software.version} />,
           [SoftwareTableCols.DOWNLOAD_DATE]: <DateTimeCell date={software.downloadDate} />,
           [SoftwareTableCols.INSTALL_DATE]: <DateTimeCell date={software.deployDate} />,
-          [SoftwareTableCols.SIZE]: <StorageCell status={software.software.virtualSize} type="MB" />,
+          [SoftwareTableCols.SIZE]: <StorageCell status={software.software.size} type="MB" />,
           [SoftwareTableCols.IS_UPDATED]: <IsUpdateCell status={software.software.latest} />,
           [SoftwareTableCols.STATE]: <SoftwareStateCell state={software.state} />,
           // [SoftwareTableCols.OFFER_BTO]: (!software.software.isLatest && software.offering?.length) ? <Button onClick={() => setOpenOffers(open => !open)}>עדכונים</Button> : null
-          [SoftwareTableCols.OFFER_BTO]: (!software.software.latest) ? <Button onClick={() => setOpenOffers(open => open === software.software.catalogId ? "" : software.software.catalogId)}>עדכונים</Button> : null
+          [SoftwareTableCols.OFFER_BTO]: (!software.software.latest) ? <Button onClick={() => setOpenOffers(open => open === software.software.id ? "" : software.software.id)}>עדכונים</Button> : null
         },
-        isNestedOpen: openOffers === software.software.catalogId,
+        isNestedOpen: openOffers === software.software.id,
         nestedRows: () => software.offering && <OfferedSoftwareTable offerings={software.offering} software={software} device={device} />
       };
       return row;

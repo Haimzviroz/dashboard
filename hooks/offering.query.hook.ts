@@ -1,20 +1,20 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Q_DEVICE_SOFTWARE } from "../apis/query-keys";
 import { getOffering, pushOffer } from "@/apis/client-side/devices-actions.api";
-import { DeviceSoftWare, PushOfferDto } from "@/types/interfaces/devices";
+import { DeviceSoftWare } from "@/types/interfaces/devices";
 import { DeviceSoftwareStateEnum } from "@/types/interfaces/getapp";
+import { PushOfferingDto } from "@/api/src";
 
 export const useMutateDeviceSoftware = () => {
   const client = useQueryClient()
 
   return useMutation({
-    mutationFn: (pushMag: { mes: PushOfferDto, parentCatalogId: string }) => pushOffer(pushMag.mes),
+    mutationFn: (pushMag: { mes: PushOfferingDto, parentCatalogId: string }) => pushOffer(pushMag.mes),
 
     // Notice the second argument is the variables object that the `mutate` function receives
-    onSuccess: async (data: any, pushMag: { mes: PushOfferDto, parentCatalogId: string }) => {
+    onSuccess: async (data: any, pushMag: { mes: PushOfferingDto, parentCatalogId: string }) => {
 
       const offeredSoftware = await getOffering(pushMag.mes.catalogId)
-      console.log({ offeredSoftware });
 
       if (offeredSoftware) {
         pushMag.mes.devices?.forEach(d => {

@@ -1,9 +1,8 @@
 import { AxiosError } from "axios";
 import { GetServerSidePropsContext } from "next";
 import { SS_HttpClient } from "./ss_http-client";
-import { OFFERED_SOFTWARE } from "../paths";
 import Logger from "@/services/logger";
-import { Software } from "@/types/interfaces/getapp";
+import { OfferingApiFp } from "@/api/src";
 
 
 export class SS_SoftwareClient extends SS_HttpClient {
@@ -17,8 +16,8 @@ export class SS_SoftwareClient extends SS_HttpClient {
   async getSoftWareById(catalogId: string) {
     this.logger.info("Req devices meta data")
     try {
-      let software: Software = await (await this.httpConfig.get(OFFERED_SOFTWARE(catalogId), await this.getReqConfig())).data;
-      return software
+      const tokenFun = await OfferingApiFp(await this.getOpenApiConf()).offeringControllerGetOfferingOfComp(catalogId)
+      return (await tokenFun()).data
     } catch (error) {
       return this.errorHandler(error as AxiosError)
     }

@@ -8,9 +8,9 @@ import StorageCell from "./table-cells/storage.cell";
 import IsUpdateCell from "./table-cells/is-update.cell";
 import { Button } from "@mui/material";
 import NameCell from "./table-cells/name.cell";
-import { Software, SoftwareState } from "@/types/interfaces/getapp";
 import { useMutateDeviceSoftware } from "@/hooks/offering.query.hook";
-import { DeviceSoftWare, ItemTypeEnum, PushOfferDto } from "@/types/interfaces/devices";
+import { ItemTypeEnum } from "@/types/interfaces/devices";
+import { ComponentV2Dto, DeviceSoftwareDto, PushOfferingDto, SoftwareStateDto } from "@/api/src";
 
 enum OfferedSoftwareTableCols {
   LABEL = "label",
@@ -25,9 +25,9 @@ enum OfferedSoftwareTableCols {
 }
 
 interface SoftwareTableProps {
-  device: DeviceSoftWare
-  software: SoftwareState
-  offerings: Software[]
+  device: DeviceSoftwareDto
+  software: SoftwareStateDto
+  offerings: ComponentV2Dto[]
 }
 
 const OfferedSoftwareTable: FC<SoftwareTableProps> = ({ offerings, software, device }) => {
@@ -35,8 +35,8 @@ const OfferedSoftwareTable: FC<SoftwareTableProps> = ({ offerings, software, dev
   const mutateOffer = useMutateDeviceSoftware()
 
   const handlePushOfferCmd = (catalogId: string) => {
-    const pushMas: { mes: PushOfferDto, parentCatalogId: string } = {
-      parentCatalogId: software.software.catalogId,
+    const pushMas: { mes: PushOfferingDto, parentCatalogId: string } = {
+      parentCatalogId: software.software.id,
       mes: {
         catalogId,
         devices: [device.id],
@@ -85,17 +85,17 @@ const OfferedSoftwareTable: FC<SoftwareTableProps> = ({ offerings, software, dev
   const getRowData = () => {
     const rows = offerings.map(offer => {
       let row: RowDataGrid<OfferedSoftwareTableCols> = {
-        id: offer.catalogId,
+        id: offer.id,
         cells: {
           [OfferedSoftwareTableCols.LABEL]: null,
           [OfferedSoftwareTableCols.SELECT]: false,
-          [OfferedSoftwareTableCols.ID]: <IdCell id={offer.catalogId} substring={true} />,
-          [OfferedSoftwareTableCols.NAME]: <NameCell name={offer.name} />,
-          [OfferedSoftwareTableCols.VERSION]: <NameCell name={offer.versionNumber} />,
-          [OfferedSoftwareTableCols.UPLOAD_DATE]: <DateTimeCell date={offer.uploadDate} />,
-          [OfferedSoftwareTableCols.SIZE]: <StorageCell status={offer.virtualSize} type="MB" />,
+          [OfferedSoftwareTableCols.ID]: <IdCell id={offer.id} substring={true} />,
+          [OfferedSoftwareTableCols.NAME]: <NameCell name={offer.projectName} />,
+          [OfferedSoftwareTableCols.VERSION]: <NameCell name={offer.version} />,
+          [OfferedSoftwareTableCols.UPLOAD_DATE]: <DateTimeCell date={offer.createdAt} />,
+          [OfferedSoftwareTableCols.SIZE]: <StorageCell status={offer.size} type="MB" />,
           [OfferedSoftwareTableCols.IS_UPDATED]: <IsUpdateCell status={offer.latest} />,
-          [OfferedSoftwareTableCols.PUSH_BTO]: <Button onClick={() => { handlePushOfferCmd(offer.catalogId) }}>עדכן</Button>
+          [OfferedSoftwareTableCols.PUSH_BTO]: <Button onClick={() => { handlePushOfferCmd(offer.id) }}>עדכן</Button>
         },
       };
       return row;

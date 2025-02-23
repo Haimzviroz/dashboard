@@ -1,4 +1,3 @@
-import { Member } from "@/types/interfaces";
 import { Box, Avatar, Stack, Typography, IconButton, Chip } from "@mui/material";
 import { Delete as DeleteIcon, Group as GroupIcon, Edit as EditIcon } from "@mui/icons-material";
 import { MemberResDto } from "@/api/src";
@@ -73,7 +72,7 @@ const TeamMemberItem: React.FC<TeamMemberItemProps> = ({
       <Box display="flex" alignItems="center" gap={1}>
         <Avatar
           // src={`${member.image}`}
-          src={"http://images"}
+          src={""}
           alt={`${member.firstName} ${member.lastName}`}
           sx={{
             width: 48,
