@@ -1366,7 +1366,7 @@ export interface DeviceDto {
      * @type {string}
      * @memberof DeviceDto
      */
-    'id'?: string;
+    'id': string;
     /**
      * 
      * @type {string}
@@ -1457,7 +1457,7 @@ export interface DeviceMapDto {
      * @type {string}
      * @memberof DeviceMapDto
      */
-    'id'?: string;
+    'id': string;
     /**
      * 
      * @type {string}
@@ -1641,7 +1641,7 @@ export interface DeviceSoftwareDto {
      * @type {string}
      * @memberof DeviceSoftwareDto
      */
-    'id'?: string;
+    'id': string;
     /**
      * 
      * @type {string}
@@ -4264,10 +4264,10 @@ export interface ReleaseArtifactDto {
     'artifactName': string;
     /**
      * 
-     * @type {string}
+     * @type {object}
      * @memberof ReleaseArtifactDto
      */
-    'type': ReleaseArtifactDtoTypeEnum;
+    'type': object;
     /**
      * 
      * @type {object}
@@ -4292,14 +4292,21 @@ export interface ReleaseArtifactDto {
      * @memberof ReleaseArtifactDto
      */
     'uploadId': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ReleaseArtifactDto
+     */
+    'status'?: ReleaseArtifactDtoStatusEnum;
 }
 
-export const ReleaseArtifactDtoTypeEnum = {
-    File: 'file',
-    DockerImage: 'docker_image'
+export const ReleaseArtifactDtoStatusEnum = {
+    Uploaded: 'uploaded',
+    Pending: 'pending',
+    Removed: 'removed'
 } as const;
 
-export type ReleaseArtifactDtoTypeEnum = typeof ReleaseArtifactDtoTypeEnum[keyof typeof ReleaseArtifactDtoTypeEnum];
+export type ReleaseArtifactDtoStatusEnum = typeof ReleaseArtifactDtoStatusEnum[keyof typeof ReleaseArtifactDtoStatusEnum];
 
 /**
  * 
@@ -8805,7 +8812,7 @@ export const OfferingApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async offeringControllerGetOfferingOfComp(catalogId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ComponentDto>> {
+        async offeringControllerGetOfferingOfComp(catalogId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ComponentV2Dto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.offeringControllerGetOfferingOfComp(catalogId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['OfferingApi.offeringControllerGetOfferingOfComp']?.[localVarOperationServerIndex]?.url;
@@ -8841,7 +8848,7 @@ export const OfferingApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        offeringControllerGetOfferingOfComp(catalogId: string, options?: RawAxiosRequestConfig): AxiosPromise<ComponentDto> {
+        offeringControllerGetOfferingOfComp(catalogId: string, options?: RawAxiosRequestConfig): AxiosPromise<ComponentV2Dto> {
             return localVarFp.offeringControllerGetOfferingOfComp(catalogId, options).then((request) => request(axios, basePath));
         },
         /**

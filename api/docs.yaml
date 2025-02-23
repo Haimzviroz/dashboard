@@ -582,7 +582,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ComponentDto'
+                $ref: '#/components/schemas/ComponentV2Dto'
       tags: &ref_7
         - Offering
       security: &ref_8
@@ -2479,10 +2479,7 @@ components:
         artifactName:
           type: string
         type:
-          type: string
-          enum:
-            - file
-            - docker_image
+          type: object
         metadata:
           type: object
         isInstallationFile:
@@ -2491,6 +2488,12 @@ components:
           type: string
         uploadId:
           type: number
+        status:
+          type: string
+          enum:
+            - uploaded
+            - pending
+            - removed
       required:
         - id
         - artifactName
@@ -2932,6 +2935,50 @@ components:
           description: The maximum cache capacity in GB
       required:
         - maxCapacityInGB
+    ComponentV2Dto:
+      type: object
+      properties:
+        id:
+          type: string
+        version:
+          type: string
+        projectName:
+          type: string
+        releaseNotes:
+          type: string
+        metadata:
+          type: object
+        status:
+          type: string
+          enum:
+            - draft
+            - in_review
+            - approved
+            - released
+            - archived
+        type:
+          type: string
+          enum:
+            - product
+            - formation
+        size:
+          type: integer
+          format: int64
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - version
+        - projectName
+        - metadata
+        - status
+        - type
+        - createdAt
+        - updatedAt
     PushOfferingDto:
       type: object
       properties:
@@ -4221,50 +4268,6 @@ components:
           $ref: '#/components/schemas/DiscoveryMapDto'
       required:
         - discoveryType
-    ComponentV2Dto:
-      type: object
-      properties:
-        id:
-          type: string
-        version:
-          type: string
-        projectName:
-          type: string
-        releaseNotes:
-          type: string
-        metadata:
-          type: object
-        status:
-          type: string
-          enum:
-            - draft
-            - in_review
-            - approved
-            - released
-            - archived
-        type:
-          type: string
-          enum:
-            - product
-            - formation
-        size:
-          type: integer
-          format: int64
-        createdAt:
-          format: date-time
-          type: string
-        updatedAt:
-          format: date-time
-          type: string
-      required:
-        - id
-        - version
-        - projectName
-        - metadata
-        - status
-        - type
-        - createdAt
-        - updatedAt
     DeviceComponentsOfferingDto:
       type: object
       properties:
@@ -4446,6 +4449,8 @@ components:
           type: array
           items:
             type: string
+      required:
+        - id
     AndroidConfigDto:
       type: object
       properties:
@@ -4643,6 +4648,7 @@ components:
           items:
             $ref: '#/components/schemas/MapStateDto'
       required:
+        - id
         - maps
     SoftwareStateDto:
       type: object
@@ -4718,6 +4724,7 @@ components:
           items:
             $ref: '#/components/schemas/SoftwareStateDto'
       required:
+        - id
         - softwares
     DeviceContentResDto:
       type: object
