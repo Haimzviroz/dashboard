@@ -25,11 +25,8 @@ interface DeviceMetaDataProps {
 }
 
 const DeviceMetaData: FC<DeviceMetaDataProps> = ({ router, scope, cEntity, activeItem, setActiveItem, setCurrentDevices }) => {
-  const stringParams = scope === AppScopeEnum.getapp
-    ? () => RouterHelpers.strParamsByKey(["groups", "software"], router.query)
-    : () => RouterHelpers.strParamsByKey(["groups", "map"], router.query)
 
-  const { metaData } = useDeviceMetaData(stringParams, scope)
+  const { metaData } = useDeviceMetaData(scope, router.query.groups, router.query.software, router.query.map)
 
   useEffect(() => {
     if (activeItem && metaData) {

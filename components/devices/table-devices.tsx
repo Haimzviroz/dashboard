@@ -20,7 +20,7 @@ import { AppScopeEnum } from "@/types/enum";
 import SelectCell from "./table-cells/select.cell";
 import { Map } from "@/types/interfaces";
 import { useGetApp } from "@/providers/getapp.provider";
-import { ComponentV2Dto } from "@/api/src";
+import { ComponentV2Dto, DeviceDto } from "@/api/src";
 
 enum DeviceTableCols {
   SELECT = "selected",
@@ -38,7 +38,7 @@ enum DeviceTableCols {
 }
 
 interface DevicesTableProps {
-  devices: Device[]
+  devices: DeviceDto[]
   setToggle?: Dispatch<SetStateAction<boolean>>
   mode: "page" | "modal",
   scope: AppScopeEnum
@@ -51,7 +51,7 @@ const DevicesTable: FC<DevicesTableProps> = ({ devices, mode, mapId, scope, dEnt
   const { router } = useGetApp()
 
   const [cDevice, setC_Device] = useState<string>(router.asPath.split('#')[1])
-  const [distributeEntity,] = useState<string | undefined>((dEntity as ComponentV2Dto).id || (dEntity as Map).catalogId)
+  const [distributeEntity,] = useState<string | undefined>((dEntity as ComponentV2Dto)?.id || (dEntity as Map)?.catalogId)
   const [selectedDevices, setSelectedDevices] = useState<string[]>([])
 
   const handleSelectAllDevices = (e: React.ChangeEvent<HTMLInputElement>, id?: string) => {

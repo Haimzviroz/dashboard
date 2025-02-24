@@ -6,7 +6,7 @@ import Battery3 from "../../../assets/battery/battery-3.svg"
 import Battery4 from "../../../assets/battery/battery-4.svg"
 
 interface BatteryCellProps {
-  status: number
+  status?: number
 }
 
 const BatteryCell: FC<BatteryCellProps> = ({ status }) => {
@@ -16,16 +16,18 @@ const BatteryCell: FC<BatteryCellProps> = ({ status }) => {
   }
 
   const getBatteryIconByStatus = () => {
-    if (isStatusBetween(status, 0, 25)) {
-      return <Battery1 />
-    } else if (isStatusBetween(status, 26, 50)) {
-      return <Battery2 />
-    } else if (isStatusBetween(status, 51, 75)) {
-      return <Battery3 />
-    } else if (isStatusBetween(status, 76, 100)) {
-      return <Battery4 />
-    } else {
-      return null
+    if (status) {
+      if (isStatusBetween(status, 0, 25)) {
+        return <Battery1 />
+      } else if (isStatusBetween(status, 26, 50)) {
+        return <Battery2 />
+      } else if (isStatusBetween(status, 51, 75)) {
+        return <Battery3 />
+      } else if (isStatusBetween(status, 76, 100)) {
+        return <Battery4 />
+      } else {
+        return null
+      }
     }
   }
 

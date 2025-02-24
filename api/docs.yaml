@@ -282,6 +282,34 @@ paths:
           description: Release artifact deleted.
       tags: *ref_3
       security: *ref_4
+  /api/v1/releases/project/{projectIdentifier}/version/{version}/artifact/download/{fileName}:
+    get:
+      operationId: ReleasesController_downloadArtifact
+      summary: Download Release Artifact
+      description: This service allows downloading a release artifact by file name.
+      parameters:
+        - *ref_2
+        - name: projectIdentifier
+          required: true
+          in: path
+          description: Project identifier (ID or name)
+          schema:
+            type: string
+        - name: version
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: fileName
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Release artifact file.
+      tags: *ref_3
+      security: *ref_4
   /api/v1/releases/project/{projectIdentifier}/version/{version}/regulation-status:
     get:
       operationId: ReleasesController_getVersionRegulationStatuses
@@ -2479,7 +2507,10 @@ components:
         artifactName:
           type: string
         type:
-          type: object
+          type: string
+          enum:
+            - file
+            - docker_image
         metadata:
           type: object
         isInstallationFile:
@@ -2538,6 +2569,11 @@ components:
         compliantRegulationsCount:
           type: number
           description: Total number of compliant regulations
+        latest:
+          type: boolean
+        releasedAt:
+          format: date-time
+          type: string
       required:
         - id
         - version
@@ -2550,6 +2586,7 @@ components:
         - updatedAt
         - requiredRegulationsCount
         - compliantRegulationsCount
+        - latest
     DetailedReleaseDto:
       type: object
       properties:
@@ -2582,6 +2619,11 @@ components:
         compliantRegulationsCount:
           type: number
           description: Total number of compliant regulations
+        latest:
+          type: boolean
+        releasedAt:
+          format: date-time
+          type: string
         artifacts:
           type: array
           items:
@@ -2602,6 +2644,7 @@ components:
         - updatedAt
         - requiredRegulationsCount
         - compliantRegulationsCount
+        - latest
     SetReleaseArtifactDto:
       type: object
       properties:
@@ -2801,7 +2844,7 @@ components:
         itemKey:
           type: string
         artifactType:
-          type: object
+          type: string
         metaData:
           type: string
         url:
@@ -2878,6 +2921,7 @@ components:
             - done
             - error
             - delete
+            - pending
         progress:
           type: number
         size:
@@ -2968,6 +3012,11 @@ components:
           format: date-time
           type: string
         updatedAt:
+          format: date-time
+          type: string
+        latest:
+          type: boolean
+        releasedAt:
           format: date-time
           type: string
       required:
@@ -3169,7 +3218,7 @@ components:
           description: The data items for the current page
           type: array
           items:
-            type: string
+            type: object
         total:
           type: number
           description: The total number of items available

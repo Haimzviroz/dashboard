@@ -26,10 +26,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const httpClient = new SS_DeviceClient(context)
   const softwareClient = new SS_SoftwareClient(context)
   const queryClient = new QueryClient();
-  const strGroupParam: string = RouterHelpers.strParamsByKey("groups", context.query)
-  const strGroupAndSoftwareParam: string = RouterHelpers.strParamsByKey(["groups", "software"], context.query)
-  const [type, catalogId] = RouterHelpers.strArrayByKey(["software"], context.query) ?? [null, ""]; 
-
+  const catalogId = Array.isArray(context.query.software) ? context.query.software[0] : context.query.software ?? ""
 
   try {
 
@@ -39,20 +36,20 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     await Promise.allSettled([
       await queryClient.prefetchQuery({
-        queryKey: [Q_DEVICES, strGroupParam],
-        queryFn: () => httpClient.getAllDevices(strGroupParam)
+        queryKey: [Q_DEVICES, "groups", context.query.groups ?? null],
+        queryFn: () => httpClient.getAllDevices(context.query.groups)
       }),
       await queryClient.prefetchQuery({
         queryKey: [Q_GROUPS],
         queryFn: () => groupList
       }),
       await queryClient.prefetchQuery({
-        queryKey: [Q_SOFTWARE_META_DATA, strGroupAndSoftwareParam],
-        queryFn: () => httpClient.getDevicesSoftwareMetaData(strGroupAndSoftwareParam)
+        queryKey: [Q_SOFTWARE_META_DATA, "groups", context.query.groups ?? null, "software", context.query.software ?? null],
+        queryFn: () => httpClient.getDevicesSoftwareMetaData(context.query.groups, context.query.software)
       }),
       await queryClient.prefetchQuery({
-        queryKey: [Q_DIST_ENTITY, type],
-        queryFn: () => softwareClient.getSoftWareById(Array.isArray(catalogId) ? catalogId[0] : catalogId)
+        queryKey: [Q_DIST_ENTITY, "software"],
+        queryFn: () => softwareClient.getSoftWareById(catalogId)
       })
     ])
     return {

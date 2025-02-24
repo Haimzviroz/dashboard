@@ -1,5 +1,5 @@
-import { Device, Group, GroupRes } from '@/types/interfaces/devices';
-import { DEVICES, SOFTWARE_META_DATA, DEVICES_PUT, DEVICE_INFO, DEVICE_MAPS, GROUP, OFFERED_SOFTWARE, MAPS_META_DATA } from '../paths';
+import { Group, GroupRes } from '@/types/interfaces/devices';
+import { DEVICES_PUT, DEVICE_INFO, DEVICE_MAPS, GROUP, OFFERED_SOFTWARE } from '../paths';
 import { clientRequestWithAuth, conf } from './token-client.middleware';
 import { Software } from '@/types/interfaces/getapp';
 import Logger from '@/services/logger';
@@ -8,9 +8,10 @@ import { DeviceApiFp, OfferingApiFp, PushOfferingDto } from '@/api/src';
 const logger = Logger(__filename)
 
 // Devices
-export const getDevices = async (stringParams?: string | null) => {
-  const urlWithParams = stringParams ? `${DEVICES}?${stringParams}` : DEVICES
-  let devices: Device[] = await clientRequestWithAuth(urlWithParams, "get");
+export const getDevices = async (groups?: string | string[]) => {
+  groups && (groups = Array.isArray(groups) ? groups : [groups])
+  const fun = await DeviceApiFp(await conf()).deviceControllerGetRegisteredDevices(groups as string[])
+  let devices = (await fun()).data
   devices = devices.filter(device => device != null)
   return devices
 }
@@ -19,14 +20,18 @@ export const getDeviceInfo = async (id: string) => {
   return await clientRequestWithAuth(DEVICE_INFO + id, "get")
 }
 
-export const getSoftwareMetaData = async (stringParams?: string | null) => {
-  const urlWithParams = stringParams ? `${SOFTWARE_META_DATA}?${stringParams}` : SOFTWARE_META_DATA
-  return await clientRequestWithAuth(urlWithParams, "get")
+export const getSoftwareMetaData = async (groups?: string | string[], software?: string | string[]) => {
+  groups && (groups = Array.isArray(groups) ? groups : [groups])
+  software && (software = Array.isArray(software) ? software : [software])
+  const fun = await DeviceApiFp(await conf()).deviceControllerGetDevicesSoftwareStatisticInfo(groups as string[], software as string[]);
+  return (await fun()).data
 }
 
-export const getMapMetaData = async (stringParams?: string | null) => {
-  const urlWithParams = stringParams ? `${MAPS_META_DATA}?${stringParams}` : MAPS_META_DATA
-  return await clientRequestWithAuth(urlWithParams, "get")
+export const getMapMetaData = async (groups?: string | string[], map?: string | string[]) => {
+  groups && (groups = Array.isArray(groups) ? groups : [groups])
+  map && (map = Array.isArray(map) ? map : [map])
+  const fun = await DeviceApiFp(await conf()).deviceControllerGetDevicesMapStatisticInfo(groups as string[], map as string[]);
+  return (await fun()).data
 }
 
 export const putDeviceName = async (deviceId: string, name: string) => {
@@ -40,8 +45,8 @@ export const getDeviceWithMap = async (id: string) => {
 }
 
 export const getDeviceWithSoftware = async (id: string) => {
- const fun = await DeviceApiFp(await conf()).deviceControllerGetDeviceSoftwares(id)
- return (await fun()).data
+  const fun = await DeviceApiFp(await conf()).deviceControllerGetDeviceSoftwares(id)
+  return (await fun()).data
 }
 
 

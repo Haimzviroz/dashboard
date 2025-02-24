@@ -571,6 +571,18 @@ export interface ComponentV2Dto {
      * @memberof ComponentV2Dto
      */
     'updatedAt': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ComponentV2Dto
+     */
+    'latest'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ComponentV2Dto
+     */
+    'releasedAt'?: string;
 }
 
 export const ComponentV2DtoStatusEnum = {
@@ -874,10 +886,10 @@ export interface DeliveryItemDto {
     'itemKey': string;
     /**
      * 
-     * @type {object}
+     * @type {string}
      * @memberof DeliveryItemDto
      */
-    'artifactType'?: object;
+    'artifactType'?: string;
     /**
      * 
      * @type {string}
@@ -1268,6 +1280,18 @@ export interface DetailedReleaseDto {
      * @memberof DetailedReleaseDto
      */
     'compliantRegulationsCount': number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DetailedReleaseDto
+     */
+    'latest': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof DetailedReleaseDto
+     */
+    'releasedAt'?: string;
     /**
      * 
      * @type {Array<ReleaseArtifactDto>}
@@ -3509,10 +3533,10 @@ export interface PaginatedProjectDto {
 export interface PaginatedResultDto {
     /**
      * The data items for the current page
-     * @type {Array<string>}
+     * @type {Array<object>}
      * @memberof PaginatedResultDto
      */
-    'data': Array<string>;
+    'data': Array<object>;
     /**
      * The total number of items available
      * @type {number}
@@ -3737,7 +3761,8 @@ export const PrepareDeliveryResDtoStatusEnum = {
     InProgress: 'inProgress',
     Done: 'done',
     Error: 'error',
-    Delete: 'delete'
+    Delete: 'delete',
+    Pending: 'pending'
 } as const;
 
 export type PrepareDeliveryResDtoStatusEnum = typeof PrepareDeliveryResDtoStatusEnum[keyof typeof PrepareDeliveryResDtoStatusEnum];
@@ -4264,10 +4289,10 @@ export interface ReleaseArtifactDto {
     'artifactName': string;
     /**
      * 
-     * @type {object}
+     * @type {string}
      * @memberof ReleaseArtifactDto
      */
-    'type': object;
+    'type': ReleaseArtifactDtoTypeEnum;
     /**
      * 
      * @type {object}
@@ -4300,6 +4325,12 @@ export interface ReleaseArtifactDto {
     'status'?: ReleaseArtifactDtoStatusEnum;
 }
 
+export const ReleaseArtifactDtoTypeEnum = {
+    File: 'file',
+    DockerImage: 'docker_image'
+} as const;
+
+export type ReleaseArtifactDtoTypeEnum = typeof ReleaseArtifactDtoTypeEnum[keyof typeof ReleaseArtifactDtoTypeEnum];
 export const ReleaseArtifactDtoStatusEnum = {
     Uploaded: 'uploaded',
     Pending: 'pending',
@@ -4386,6 +4417,18 @@ export interface ReleaseDto {
      * @memberof ReleaseDto
      */
     'compliantRegulationsCount': number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ReleaseDto
+     */
+    'latest': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ReleaseDto
+     */
+    'releasedAt'?: string;
 }
 
 export const ReleaseDtoStatusEnum = {
@@ -11965,6 +12008,56 @@ export const ReleasesApiAxiosParamCreator = function (configuration?: Configurat
             };
         },
         /**
+         * This service allows downloading a release artifact by file name.
+         * @summary Download Release Artifact
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {string} version 
+         * @param {string} fileName 
+         * @param {string} [xProjectToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        releasesControllerDownloadArtifact: async (projectIdentifier: string, version: string, fileName: string, xProjectToken?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectIdentifier' is not null or undefined
+            assertParamExists('releasesControllerDownloadArtifact', 'projectIdentifier', projectIdentifier)
+            // verify required parameter 'version' is not null or undefined
+            assertParamExists('releasesControllerDownloadArtifact', 'version', version)
+            // verify required parameter 'fileName' is not null or undefined
+            assertParamExists('releasesControllerDownloadArtifact', 'fileName', fileName)
+            const localVarPath = `/api/v1/releases/project/{projectIdentifier}/version/{version}/artifact/download/{fileName}`
+                .replace(`{${"projectIdentifier"}}`, encodeURIComponent(String(projectIdentifier)))
+                .replace(`{${"version"}}`, encodeURIComponent(String(version)))
+                .replace(`{${"fileName"}}`, encodeURIComponent(String(fileName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            if (xProjectToken != null) {
+                localVarHeaderParameter['X-Project-Token'] = String(xProjectToken);
+            }
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 
          * @summary Get Regulation Status by Regulation ID and Version ID
          * @param {string} projectIdentifier Project identifier (ID or name)
@@ -12418,6 +12511,22 @@ export const ReleasesApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * This service allows downloading a release artifact by file name.
+         * @summary Download Release Artifact
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {string} version 
+         * @param {string} fileName 
+         * @param {string} [xProjectToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async releasesControllerDownloadArtifact(projectIdentifier: string, version: string, fileName: string, xProjectToken?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.releasesControllerDownloadArtifact(projectIdentifier, version, fileName, xProjectToken, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ReleasesApi.releasesControllerDownloadArtifact']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * 
          * @summary Get Regulation Status by Regulation ID and Version ID
          * @param {string} projectIdentifier Project identifier (ID or name)
@@ -12591,6 +12700,19 @@ export const ReleasesApiFactory = function (configuration?: Configuration, baseP
             return localVarFp.releasesControllerDeleteReleaseArtifact(projectIdentifier, version, artifactId, xProjectToken, options).then((request) => request(axios, basePath));
         },
         /**
+         * This service allows downloading a release artifact by file name.
+         * @summary Download Release Artifact
+         * @param {string} projectIdentifier Project identifier (ID or name)
+         * @param {string} version 
+         * @param {string} fileName 
+         * @param {string} [xProjectToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        releasesControllerDownloadArtifact(projectIdentifier: string, version: string, fileName: string, xProjectToken?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.releasesControllerDownloadArtifact(projectIdentifier, version, fileName, xProjectToken, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 
          * @summary Get Regulation Status by Regulation ID and Version ID
          * @param {string} projectIdentifier Project identifier (ID or name)
@@ -12743,6 +12865,21 @@ export class ReleasesApi extends BaseAPI {
      */
     public releasesControllerDeleteReleaseArtifact(projectIdentifier: string, version: string, artifactId: number, xProjectToken?: string, options?: RawAxiosRequestConfig) {
         return ReleasesApiFp(this.configuration).releasesControllerDeleteReleaseArtifact(projectIdentifier, version, artifactId, xProjectToken, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * This service allows downloading a release artifact by file name.
+     * @summary Download Release Artifact
+     * @param {string} projectIdentifier Project identifier (ID or name)
+     * @param {string} version 
+     * @param {string} fileName 
+     * @param {string} [xProjectToken] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReleasesApi
+     */
+    public releasesControllerDownloadArtifact(projectIdentifier: string, version: string, fileName: string, xProjectToken?: string, options?: RawAxiosRequestConfig) {
+        return ReleasesApiFp(this.configuration).releasesControllerDownloadArtifact(projectIdentifier, version, fileName, xProjectToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -5,14 +5,14 @@ import Linux from "../../../assets/os/brand-linux.svg"
 import Android from "../../../assets/os/brand-android.svg"
 
 interface OsCellProps {
-  os: string
+  os?: string
 }
 
 const OsCell: FC<OsCellProps> = ({ os }) => {
 
 
   const getOsIcon = () => {
-    switch (os.toLowerCase()) {
+    switch (os?.toLowerCase()) {
       case "linux":
         return <Linux />
       case "windows":
