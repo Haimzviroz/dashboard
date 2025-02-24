@@ -1,12 +1,11 @@
-import { Dispatch, FC, Fragment, ReactNode, SetStateAction, useState } from 'react';
+import { Dispatch, FC, Fragment, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { DetailedReleaseDto, ProjectDto, RegulationDto, RegulationStatusDto, SetReleaseDto } from '@/api/src';
-import { Box, Checkbox, Chip, Container, Icon, IconButton, LinearProgress, Stack, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Checkbox, Chip, IconButton, LinearProgress, Stack, TextField, Tooltip, Typography } from '@mui/material';
 import React from 'react';
 import { useReg, useRegsStatus, useSetRegsStatus } from '@/hooks/reg.query.hook';
 import { stringToColor } from '../regulations/reg-utils';
 import { Edit, CheckCircle, Cancel, CancelOutlined, HelpOutline, ReportProblemOutlined, Save } from "@mui/icons-material";
 import UploadFile from '../files/upload-file';
-import { useAddRelArt } from '@/hooks/arts.query.hook';
 
 export const TableOf = (body: ReactNode, header = false, index?: number) => (
   <Box
@@ -34,16 +33,22 @@ interface RegItemProps {
 }
 
 const RegItem: FC<RegItemProps> = ({ project, rel, reg, regsStatuses }) => {
-  const [regStatus,] = useState<RegulationStatusDto | undefined>(regsStatuses.find(rs => rs.regulation == reg.name))
+  const [regStatus,setRegStatus] = useState<RegulationStatusDto | undefined>(regsStatuses.find(rs => rs.regulation == reg.name))
   const [value, setValue] = useState<string | undefined>(regStatus?.value)
   const [editMode, setEditMode] = useState<boolean>(false)
+
+  useEffect(() => {
+    const regStatus = regsStatuses.find(rs => rs.regulation == reg.name)
+    setRegStatus(regStatus)
+    setValue(regStatus?.value)
+  }, [regsStatuses])
 
   const setReg = useSetRegsStatus()
 
   const boolReg = () => {
     return <Checkbox
       onChange={(e) => setValue(e.target.checked.toString())}
-      checked={value == "true"}
+      checked={value === "true"}
       indeterminate={!editMode && regStatus?.isCompliant === undefined}
       disabled={!editMode}
       sx={{
@@ -191,7 +196,7 @@ const RelInfoRegs: FC<RelInfoRegsProps> = ({ project, rel, setRel }) => {
     </Fragment>
   );
 
-  if (!regulations || !regsStatus) return <LinearProgress />
+  if (!regulations || !regsStatus) return <LinearProgress />  
 
   return (
     <Fragment>
