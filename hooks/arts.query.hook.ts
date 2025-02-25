@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SetReleaseArtifactDto } from "@/api/src";
-import { RemoveRelArt, uploadRelArt } from "@/apis/client-side/arts-actions.api";
+import { removeRelArt, uploadRelArt } from "@/apis/client-side/arts-actions.api";
 import { Q_RELEASE } from "@/apis/query-keys";
 import { Dispatch, SetStateAction } from 'react';
 import axios from "axios";
@@ -17,7 +17,7 @@ const uploadArt = async (uploadMes: UploadMes) => {
   const mimeType = file.type || "application/octet-stream";
   await axios.put(artRes.uploadUrl, file, {
     headers: {
-      "Content-Type": mimeType,
+      // "Content-Type": mimeType,
     },
     onUploadProgress: (progressEvent) => {
       if (progressEvent.total) {
@@ -48,7 +48,7 @@ export const useRmRelArt = () => {
 
   return useMutation({
     mutationFn: (removeMes: RemoveMes) =>
-      RemoveRelArt(removeMes.projectName, removeMes.version, removeMes.artifactId),
+      removeRelArt(removeMes.projectName, removeMes.version, removeMes.artifactId),
 
     // Notice the second argument is the variables object that the `mutate` function receives
     onSuccess: async (data: void, removeMes: RemoveMes) => {

@@ -1,15 +1,15 @@
 import { Dispatch, FC, Fragment, SetStateAction, useState } from 'react';
-import { DetailedReleaseDto, PrepareDeliveryReqDto, ProjectDto, ReleaseArtifactDto, SetReleaseDto } from '@/api/src';
-import { Alert, Box, Button, Chip, Container, Divider, IconButton, ListItem, ListItemIcon, ListItemText, Snackbar, Stack, Typography } from '@mui/material';
+import { DetailedReleaseDto, ProjectDto, ReleaseArtifactDto, SetReleaseDto } from '@/api/src';
+import { Alert, Box, Button, Chip, Divider, IconButton, ListItem, ListItemIcon, ListItemText, Snackbar, Stack, Typography } from '@mui/material';
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/RemoveCircleOutline';
 import { Description } from '@mui/icons-material';
 import { CloudDownload, ContentCopy, Layers } from '@mui/icons-material';
-import { prepareDelivery } from '@/apis/client-side/delivery-actions.api';
 import { useRmRelArt } from '@/hooks/arts.query.hook';
-import axios from 'axios';
 import FileUpload from '../files/upload-file';
+import { downloadArt } from '@/apis/client-side/arts-actions.api';
+import { BASE_PATHS } from '@/apis/paths';
 
 
 interface ArtItemProps {
@@ -24,43 +24,14 @@ const ArtItem: FC<ArtItemProps> = ({ project, rel, art }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleDownload = async () => {
-    try {
-      const data: PrepareDeliveryReqDto = {
-        catalogId: rel.id,
-        deviceId: 'Dashboard',
-        itemType: 'software'
-      }
+    const reqArgs = await downloadArt(project.name, rel.version, art.artifactName);
 
-      const prepareRes = await prepareDelivery(data)
-      if (prepareRes.status === 'error') {
-        throw new Error(prepareRes.error?.message)
-      }
-
-      if (prepareRes.artifacts?.length) {
-        const relatedArt = prepareRes.artifacts.find(a => a.id === art.id)
-        if (relatedArt) {
-          axios.get(relatedArt.url, {
-            responseType: "blob", // Ensures correct binary data
-          }).then(response => {
-            const mimeType = response.headers["content-type"] || "application/octet-stream";
-            const blob = new Blob([response.data], { type: mimeType });
-            const downloadUrl = URL.createObjectURL(blob);
-
-            const link = document.createElement("a");
-            link.href = downloadUrl;
-            link.download = art.artifactName || "GetApp-artifact";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(downloadUrl); // Clean up memory
-          }).catch(error => {
-            console.error("Download failed:", error);
-          });
-        }
-      }
-    } catch (error: any) {
-      console.error(`Failed to download artifact, ${error.toString()}`)
-    }
+    const link = document.createElement("a");
+    link.href = BASE_PATHS + reqArgs.url;
+    link.download = art.artifactName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
   };
 

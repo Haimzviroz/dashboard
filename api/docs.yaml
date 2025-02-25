@@ -306,8 +306,8 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: Release artifact file.
+        '302':
+          description: Redirects to a URL
       tags: *ref_3
       security: *ref_4
   /api/v1/releases/project/{projectIdentifier}/version/{version}/regulation-status:

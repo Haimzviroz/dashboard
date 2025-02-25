@@ -1,5 +1,6 @@
 import { conf } from './token-client.middleware';
 import {
+  ReleasesApiAxiosParamCreator,
   ReleasesApiFp,
   SetReleaseArtifactDto,
   SetReleaseArtifactResDto
@@ -10,7 +11,12 @@ export const uploadRelArt = async (projectName: string, version: string, data: S
   return (await res()).data
 }
 
-export const RemoveRelArt = async (projectName: string, version: string, artifactId: number): Promise<void> => {
+export const removeRelArt = async (projectName: string, version: string, artifactId: number): Promise<void> => {
   const res = await ReleasesApiFp(await conf()).releasesControllerDeleteReleaseArtifact(projectName, version, artifactId)
   return (await res()).data
+}
+
+export const downloadArt = async (projectName: string, version: string, fileName: string) => {
+  const res = await ReleasesApiAxiosParamCreator(await conf()).releasesControllerDownloadArtifact(projectName, version, fileName)
+  return res
 }
