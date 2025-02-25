@@ -1,5 +1,5 @@
 import { ProjectDto, DetailedReleaseDto, SetReleaseArtifactDto } from "@/api/src";
-import { useAddRelArt } from "@/hooks/arts.query.hook";
+import { useAddFileArt } from "@/hooks/arts.query.hook";
 import { Box, Typography, LinearProgress, Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { AxiosError } from "axios";
 import { FC, useState, useRef, useEffect, useCallback, Fragment } from "react";
@@ -19,7 +19,7 @@ const FileUpload: FC<FileUploadProps> = ({ project, rel, deployable, onSuccess }
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadErr, setUploadErr] = useState<string>();
   const [isDragging, setIsDragging] = useState(false);
-  const uploadArt = useAddRelArt();
+  const uploadArt = useAddFileArt();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
