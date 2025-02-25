@@ -59,6 +59,13 @@ const ProjectItem: FC<ProjectItemProps> = ({ project, router }) => {
           <Typography variant="body2">
             <b>Teams:</b> {project.numMembers} members
           </Typography>
+          {project.summary?.latestRelease &&
+            <Typography variant="body2">
+              <b>Release Version:</b> {project.summary?.latestRelease?.version}
+            </Typography>}
+          {project.summary?.upcomingRelease && <Typography variant="body2">
+            <b>Upcoming Version:</b> {`${project.summary?.upcomingRelease?.version} - reg: ${project.summary.upcomingRelease.compliantRegulationsCount}/${project.summary.upcomingRelease.requiredRegulationsCount}`}
+          </Typography>}
           <Button
             size="small"
             variant="outlined"
