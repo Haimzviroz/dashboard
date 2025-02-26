@@ -3,6 +3,7 @@ import { NextPageWithLayout } from '@/types/types';
 import { Box, Chip, IconButton, LinearProgress, Stack, Tooltip, Typography } from "@mui/material";
 import { OpenInNew, Delete } from "@mui/icons-material";
 import Distribute from "../../../assets/projects/distribute.svg"
+import DistributeDisabled from "../../../assets/projects/distribute-disabled.svg"
 import { DetailedReleaseDto, ProjectDto, ReleaseDto, ReleaseDtoStatusEnum } from "@/api/src";
 import { useGetApp } from '@/providers/getapp.provider';
 import { R_APP_DEVICES } from '@/apis/routes';
@@ -64,15 +65,23 @@ const RelShortInfo: NextPageWithLayout<RelShortInfoProps> = ({ type, release, pr
         </Stack>
         <Box>
           <Tooltip title="Distribute version" arrow>
-            <IconButton onClick={() => router.push(R_APP_DEVICES + "?software=" + release.id)}>
-              <Distribute />
+            <IconButton
+              onClick={() => router.push(R_APP_DEVICES + "?software=" + release.id)}
+              disabled={release.status !== 'released'}
+              size='small'
+            >
+              {release.status !== 'released' ? <DistributeDisabled /> : <Distribute />}
             </IconButton>
           </Tooltip>
-          {type === "item" && <IconButton aria-label="Edit version"
-            onClick={() => router.push(`${router.asPath}/${release.version}`)}>
-            <OpenInNew />
-          </IconButton>}
+          {type === "item" &&
+            <IconButton
+              aria-label="Edit version"
+              size='small'
+              onClick={() => router.push(`${router.asPath}/${release.version}`)}>
+              <OpenInNew />
+            </IconButton>}
           <IconButton color="error" aria-label="Delete version"
+            size='small'
             onClick={() => deleteRelease.mutate({ projectName: project.name, version: release.version })}>
             <Delete />
           </IconButton>

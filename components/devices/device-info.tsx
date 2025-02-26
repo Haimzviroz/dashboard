@@ -1,5 +1,5 @@
 import { useDeviceMetaData } from "@/hooks/device.query.hook";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { Dispatch, FC, Fragment, ReactNode, SetStateAction, useEffect } from "react";
 import DeviceInfoItem, { InfoItemName, InfoItemProps } from "./device-info-item";
 import { DeviceMetaData as DMD } from "@/types/interfaces/devices";
@@ -10,7 +10,6 @@ import D_Data from '../../assets/devices/devices-data.svg'
 import D_Updated from '../../assets/devices/devices-updated.svg'
 import D_Error from '../../assets/devices/devices-error.svg'
 import { NextRouter } from "next/router";
-import { RouterHelpers } from "@/utils/helpers/router.helper";
 import { Map } from "@/types/interfaces";
 import { AppScopeEnum } from "@/types/enum";
 import { ComponentV2Dto } from "@/api/src";
@@ -73,8 +72,8 @@ const DeviceMetaData: FC<DeviceMetaDataProps> = ({ router, scope, cEntity, activ
   }
 
   const getItemValue = (name: string, version: string): ReactNode => {
-    return <Box >
-      <Typography variant="h3" marginY={.5} align={"center"} fontWeight={700} fontSize={26}>{name}</Typography>
+    return <Box height={55}>
+      <Typography variant="h3" marginY={.5} align={"center"} fontWeight={700} fontSize={22}>{name}</Typography>
       <Typography variant="h6" color="textSecondary" align="center">
         גירסה: {version}
       </Typography>
@@ -91,6 +90,7 @@ const DeviceMetaData: FC<DeviceMetaDataProps> = ({ router, scope, cEntity, activ
         value: 'version' in cEntity ? getItemValue(cEntity.projectName, cEntity.version) : cEntity.name,
         icon: <D_Entity />,
         cardSx: { borderColor: "#4169E1", borderWidth: 4 },
+        careConSx: { pb: 0 },
         disabled: true
       })
     }
@@ -106,11 +106,12 @@ const DeviceMetaData: FC<DeviceMetaDataProps> = ({ router, scope, cEntity, activ
   }
 
   return (<Fragment>
-    <Stack direction={"row"} gap={2} justifyContent={"center"} pb={3}>
+    <Grid container rowSpacing={2} columnSpacing={2} direction="row" mb={2} justifyContent="center">
+      {/* <Grid container direction={"row"} gap={2} justifyContent={"center"} pb={3}> */}
       {getCardInfo()?.map(c =>
         <DeviceInfoItem key={c.caption} item={c} activeItem={activeItem} setActive={setActiveItem}></DeviceInfoItem>
       )}
-    </Stack>
+    </Grid>
   </Fragment>);
 }
 
