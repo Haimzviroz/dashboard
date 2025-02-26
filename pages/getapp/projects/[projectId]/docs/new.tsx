@@ -15,6 +15,7 @@ import DocForm from '@/components/projects/docs/doc-form';
 import { useProject } from '@/hooks/project.query.hook';
 import O_IconButton from '@/ui/o-icon-button';
 import NoteAdd from '@mui/icons-material/NoteAddOutlined';
+import { Close } from '@mui/icons-material';
 
 
 interface ProjectFormProps {
@@ -24,11 +25,17 @@ const ProjectDocs: NextPageWithLayout<ProjectFormProps> = () => {
 	const { router } = useGetApp()
 	const { project } = useProject(router.query.projectId as string)
 
-	const formRef = useRef<{ getHandlers: () => { handleSubmit: () => void } }>()
+	const formRef = useRef<{ getHandlers: () => { handleSubmit: () => void, handleClose: () => void } }>()
 
 	return (
 		<Fragment>
 			<Stack direction={"row-reverse"} alignItems={"center"} gap={1}>
+				<O_IconButton onClick={() => {
+					formRef.current &&
+						formRef.current.getHandlers().handleClose()
+				}}>
+					<Close color="error" />
+				</O_IconButton>
 				<O_IconButton onClick={() => {
 					formRef.current &&
 						formRef.current.getHandlers().handleSubmit()

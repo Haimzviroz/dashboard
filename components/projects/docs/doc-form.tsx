@@ -3,6 +3,7 @@ import { Typography, Box, MenuItem, TextField } from "@mui/material";
 import { DetailedProjectDto, DocDto } from "@/api/src";
 import { useAddDoc, useUpdateDoc } from "@/hooks/docs.query.hook";
 import MdDocsEditor from "./md-editor";
+import { useGetApp } from "@/providers/getapp.provider";
 
 interface RegFormProps {
   project: DetailedProjectDto;
@@ -12,19 +13,21 @@ interface RegFormProps {
 
 const DocForm = forwardRef(({ project, doc }: RegFormProps, ref) => {
 
+  const { router } = useGetApp()
+
   useImperativeHandle(ref, () => ({
     getHandlers() {
-      return { handleSubmit }
+      return { handleSubmit, handleClose }
     }
   }));
 
   const [content, setContent] = useState(doc?.readme ?? "");
 
-  const [formData, setFormData] = useState<Omit<DocDto, "id" | "createdAt" | "updatedAt" | "isUrl"> & { type?: "URL" | "Markdown", isUrl: boolean | undefined }>({
+  const [formData, setFormData] = useState<Omit<DocDto, "id" | "createdAt" | "updatedAt" | "isUrl"> & { type: "URL" | "Markdown" | "", isUrl: boolean | undefined }>({
     name: doc?.name ?? "",
     isUrl: doc?.isUrl ?? undefined,
     docUrl: doc?.docUrl ?? "",
-    type: doc ? doc.isUrl ? "URL" : "Markdown" : undefined
+    type: doc ? doc.isUrl ? "URL" : "Markdown" : ""
   });
 
   const getNoError = () => ({
@@ -74,16 +77,7 @@ const DocForm = forwardRef(({ project, doc }: RegFormProps, ref) => {
   };
 
   const handleClose = () => {
-    // if (!doc) {
-    //   setFormData({
-    //     name: "",
-    //     isUrl: undefined,
-    //     docUrl: "",
-    //     type: undefined
-    //   });
-    // }
-    // setContent("")
-    setErrors(getNoError())
+    router.push(router.asPath.replace(/\/new$/, ``), undefined, { shallow: true });
   };
 
   const handleSubmit = () => {
@@ -97,9 +91,10 @@ const DocForm = forwardRef(({ project, doc }: RegFormProps, ref) => {
     if (doc) {
       updateDoc.mutate({ projectName: project.name, docId: doc.id, data })
     } else {
-      addDoc.mutate({ projectName: project.name, data })
+      addDoc.mutate({ projectName: project.name, data }, {
+        onSuccess: () => handleClose()
+      })
     }
-    // handleClose()
   };
 
   return (

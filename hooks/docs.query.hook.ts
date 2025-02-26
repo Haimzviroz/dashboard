@@ -55,7 +55,7 @@ export const useUpdateDoc = () => {
   })
 }
 
-export const useDeleteReg = () => {
+export const useDeleteDoc = () => {
   const client = useQueryClient()
 
   return useMutation({

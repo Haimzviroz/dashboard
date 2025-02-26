@@ -8,7 +8,8 @@ import { DetailedReleaseDto, ProjectDto, ReleaseDto, ReleaseDtoStatusEnum } from
 import { useGetApp } from '@/providers/getapp.provider';
 import { R_APP_DEVICES } from '@/apis/routes';
 import { useDeleteRelease } from '@/hooks/releases.query.hook';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
+import ConfirmDialog from '@/components/utils/dialog/confirm';
 
 interface RelShortInfoProps {
   type: "page" | "item"
@@ -20,6 +21,8 @@ const RelShortInfo: NextPageWithLayout<RelShortInfoProps> = ({ type, release, pr
 
   const { router } = useGetApp()
   const deleteRelease = useDeleteRelease()
+  const [openDelDialog, setOpenDelDialog] = useState(false);
+
 
   const materialStatusColors: Record<ReleaseDtoStatusEnum, string> = {
     [ReleaseDtoStatusEnum.Draft]: '#E0E0E0', // Light gray
@@ -31,6 +34,13 @@ const RelShortInfo: NextPageWithLayout<RelShortInfoProps> = ({ type, release, pr
 
   const getChipColor = (status: ReleaseDtoStatusEnum): string => materialStatusColors[status] || '#9E9E9E';
 
+  const handleDelete = () => {
+    setOpenDelDialog(true)
+  }
+
+  const onDelete = () => {
+    deleteRelease.mutate({ projectName: project.name, version: release.version })
+  }
 
   return (
     <Fragment>
@@ -56,11 +66,11 @@ const RelShortInfo: NextPageWithLayout<RelShortInfoProps> = ({ type, release, pr
             <Typography variant="body2" color="text.secondary">
               <b>Updated On: </b> {release.updatedAt ? new Date(release.updatedAt).toLocaleDateString() : "N/A"}
             </Typography>
-            {/* {release.releasedOn && (
+            {release.releasedAt && (
               <Typography variant="body2" color="text.secondary">
-                Released On: {new Date(release.releasedOn).toLocaleDateString()}
+                Released On: {new Date(release.releasedAt).toLocaleDateString()}
               </Typography>
-            )} */}
+            )}
           </Stack>
         </Stack>
         <Box>
@@ -82,7 +92,7 @@ const RelShortInfo: NextPageWithLayout<RelShortInfoProps> = ({ type, release, pr
             </IconButton>}
           <IconButton color="error" aria-label="Delete version"
             size='small'
-            onClick={() => deleteRelease.mutate({ projectName: project.name, version: release.version })}>
+            onClick={handleDelete}>
             <Delete />
           </IconButton>
         </Box>
@@ -111,6 +121,12 @@ const RelShortInfo: NextPageWithLayout<RelShortInfoProps> = ({ type, release, pr
           {release.compliantRegulationsCount}/{release.requiredRegulationsCount} regulations compliant
         </Typography>
       </Box>}
+      {openDelDialog && <ConfirmDialog
+        open={openDelDialog}
+        setOpen={setOpenDelDialog}
+        mes={`Are you sure you want to delete ${release.name ? "'" + release.name + "'" : ""} version '${release.version}'?`}
+        onConfirm={onDelete}
+      />}
     </Fragment>
   )
 }
