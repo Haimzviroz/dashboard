@@ -49,7 +49,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       }),
       await queryClient.prefetchQuery({
         queryKey: [Q_DIST_ENTITY, "software"],
-        queryFn: () => softwareClient.getSoftWareById(catalogId)
+        queryFn: catalogId ? () => softwareClient.getSoftWareById(catalogId) : async () => Promise.resolve()
       })
     ])
     return {
