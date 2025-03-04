@@ -177,10 +177,18 @@ const MemberForm: FC<MemberFormProps> = ({ project, setUserToggle, member }) => 
           fullWidth
           margin="normal"
         >
-          {Object.keys(MemberResDtoRoleEnum).map((role) => (
-            <MenuItem key={role} value={MemberResDtoRoleEnum[role as keyof typeof MemberResDtoRoleEnum]} sx={{ width: "100%" }} >
-              {role}
-            </MenuItem>
+          {Object.values(MemberResDtoRoleEnum).map((roleOption) => (
+            roleOption === "project-owner" ? (
+              // Render "project-owner" but hide it visually
+              <MenuItem key={roleOption} value={roleOption} sx={{ display: 'none' }}>
+                {roleOption}
+              </MenuItem>
+            ) : (
+              // Render other options as normal
+              <MenuItem key={roleOption} value={roleOption} sx={{ width: "100%" }}>
+                {roleOption}
+              </MenuItem>
+            )
           ))}
         </TextField>
 

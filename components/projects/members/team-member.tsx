@@ -100,7 +100,12 @@ const TeamMemberItem: React.FC<TeamMemberItemProps> = ({
         <IconButton onClick={onEdit} aria-label="edit">
           <EditIcon />
         </IconButton>
-        <IconButton onClick={onDelete} color="error" aria-label="delete">
+        <IconButton
+          onClick={onDelete}
+          color="error"
+          aria-label="delete"
+          disabled={member.role === "project-owner"}
+        >
           <DeleteIcon />
         </IconButton>
       </Box>
