@@ -39,7 +39,11 @@ const RelShortInfo: NextPageWithLayout<RelShortInfoProps> = ({ type, release, pr
   }
 
   const onDelete = () => {
-    deleteRelease.mutate({ projectName: project.name, version: release.version })
+    deleteRelease.mutate({ projectName: project.name, version: release.version }, {
+      onSuccess: () => {        
+        router.push(router.asPath.replace(/\/[\w-]*\d+\.\d+\.\d+[\w-]*$/, ""), undefined, { shallow: true });
+      }
+    })
   }
 
   return (
