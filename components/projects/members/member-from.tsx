@@ -23,7 +23,7 @@ interface MemberFormProps {
 
 const MemberForm: FC<MemberFormProps> = ({ project, setUserToggle, member }) => {
   const [email, setEmail] = useState(member?.email || "");
-  const [role, setRole] = useState<AddMemberToProjectDtoRoleEnum | MemberResDtoRoleEnum | undefined>(member?.role);
+  const [role, setRole] = useState<AddMemberToProjectDtoRoleEnum | MemberResDtoRoleEnum | "">(member?.role ?? "");
   const [loading, setLoading] = useState(false);
   const [suggestedUsers, setSuggestedUsers] = useState<MemberResDto[]>([]);
 
@@ -59,9 +59,18 @@ const MemberForm: FC<MemberFormProps> = ({ project, setUserToggle, member }) => 
     }
   };
 
+  const isValidEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
   const handleSubmit = async () => {
     if (!email || !role) {
       alert("Email and role are required!");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      alert("Please enter a valid email address!");
       return;
     }
 
@@ -72,7 +81,7 @@ const MemberForm: FC<MemberFormProps> = ({ project, setUserToggle, member }) => 
     }
 
     setEmail("");
-    setRole(undefined);
+    setRole("");
     setSuggestedUsers([]);
     setUserToggle(false)
   };
@@ -87,10 +96,11 @@ const MemberForm: FC<MemberFormProps> = ({ project, setUserToggle, member }) => 
         {/* Email Field with Suggestions */}
         <Autocomplete
           disabled={member ? true : false}
+          freeSolo
           fullWidth
-          value={member ? member : null} // Ensure the email is displayed
+          value={member ? member : null}
           options={suggestedUsers}
-          getOptionLabel={(option) => option.email}
+          getOptionLabel={(option) => typeof option === "string" ? option : option.email}
           isOptionEqualToValue={(option, value) => option.email === value.email}
           noOptionsText="No matching users"
           loading={loading}

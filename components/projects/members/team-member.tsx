@@ -87,7 +87,7 @@ const TeamMemberItem: React.FC<TeamMemberItemProps> = ({
         <Box>
           <Stack direction={"row"} gap={1}>
             <Typography variant="body1" fontWeight="bold">
-              {`${member.firstName} ${member.lastName}`}
+              {member.firstName && member.lastName ? `${member.firstName} ${member.lastName}` : member.email}
             </Typography>
             {member.status && StatusLabel(member.status)}
           </Stack>
