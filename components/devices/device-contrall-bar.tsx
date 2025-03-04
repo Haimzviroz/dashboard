@@ -24,9 +24,14 @@ const DeviceControlBar: FC<DeviceControlBarProps> = ({ selectedDevices, devices,
   const { showToast } = useToast();
 
   const distribute = async (to: "d" | "g") => {
+
+    const getSelectedDevices = () => {
+      return selectedDevices.some(d => d == "all") ? devices.map(d => d.id) : selectedDevices
+    }
+
     const pushDto: PushOfferingDto = {
       catalogId: distributeEntity ?? "",
-      devices: to == "d" ? selectedDevices : [],
+      devices: to == "d" ? getSelectedDevices() : [],
       groups: to == "g" ? selectedGroup : [],
       itemType: (() => {
         switch (scope) {
