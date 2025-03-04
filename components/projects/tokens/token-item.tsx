@@ -8,6 +8,8 @@ import {
   Snackbar,
   Chip,
   Stack,
+  Tooltip,
+  TextField,
 } from "@mui/material";
 import { DetailedProjectDto, ProjectTokenDto } from "@/api/src";
 import { useDeleteToken, useUpdateToken } from "@/hooks/token.query.hook";
@@ -20,6 +22,7 @@ interface TokenProps {
 
 const Token: FC<TokenProps> = ({ token, project }) => {
   const [isExpired,] = useState(token.expirationDate ? new Date(token.expirationDate) < new Date() : false)
+  const [showToken, setShowToken] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const updateToken = useUpdateToken()
   const deleteToken = useDeleteToken()
@@ -77,6 +80,22 @@ const Token: FC<TokenProps> = ({ token, project }) => {
             />
 
           </Stack>
+          {showToken && (
+            <Box my={2}>
+              <TextField
+                multiline
+                value={token.token}
+                variant="outlined"
+                fullWidth
+                minRows={3}
+                InputProps={{
+                  style: {
+                    fontSize: "10px",
+                  },
+                }}
+              />
+            </Box>
+          )}
 
           <Stack direction={"row"} justifyContent={"space-between"}>
             <Box
@@ -97,22 +116,27 @@ const Token: FC<TokenProps> = ({ token, project }) => {
             </Box>
 
             <Box display="flex" alignItems="center" gap={2}>
+              {token.isActive && !isExpired && (
+                <Tooltip title={`Click to copy, Double-click to ${showToken ? "hide" : "show"}`}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => handleCopyToClipboard(token.token)}
+                    onDoubleClick={() => setShowToken(!showToken)}
+                    sx={{
+                      textTransform: "none",
+                      fontWeight: "bold",
+                      borderColor: "rgba(0, 0, 0, 0.2)",
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.04)", // Gentle hover color
+                      },
+                    }}
+                  >
+                    Copy / Show
+                  </Button>
+                </Tooltip>
+              )}
 
-              {token.isActive && !isExpired && <Button
-                variant="outlined"
-                color="primary"
-                onClick={() => handleCopyToClipboard(token.token)}
-                sx={{
-                  textTransform: "none",
-                  fontWeight: "bold",
-                  borderColor: "rgba(0, 0, 0, 0.2)",
-                  "&:hover": {
-                    backgroundColor: "rgba(0, 0, 0, 0.04)", // Gentle hover color
-                  },
-                }}
-              >
-                Copy
-              </Button>}
               <Button
                 variant="outlined"
                 color={token.isActive ? "error" : "primary"}
