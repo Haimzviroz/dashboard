@@ -3,7 +3,7 @@ import { FC, Fragment, useState } from "react"
 import { Platform, Formations, Release } from '@/types/interfaces';
 
 import s from '../../styles/project-info.module.css';
-import { useGetApp } from "@/hooks";
+import { useGetApp } from "@/providers/getapp.provider";
 import { R_APP_DEVICES } from "@/apis/routes";
 
 interface PlatformReleaseProps {

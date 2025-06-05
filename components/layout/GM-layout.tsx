@@ -7,7 +7,7 @@ import LoginPage from "../main/page";
 import { HydrationBoundary, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import TLS_MuiProvider from "@/providers/rtl-mui.provider";
 import TeamMuiProvider from "@/providers/team-mui.provider";
-import GetAppProvider from "@/storage/getmap.storage";
+import GetAppProvider from "@/providers/getapp.provider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AppScopeEnum } from "@/types/enum";
 import { R_GET_MAP } from "@/apis/routes";

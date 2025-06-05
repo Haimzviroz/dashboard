@@ -7,7 +7,7 @@ import O_IconButton from "@/ui/o-icon-button";
 import TopBar from "./top.side-bar";
 import GroupBar from "./groups.side-bar";
 import SearchBar from "./search.side-bar";
-import { useGetApp } from "@/hooks";
+import { useGetApp } from "@/providers/getapp.provider";
 import { GroupRes } from "@/types/interfaces/devices";
 import { AppScopeEnum } from "@/types/enum";
 

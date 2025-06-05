@@ -4,15 +4,16 @@ import SearchBar from "../utils/bars/search.bar";
 import SortBar from "../utils/bars/sort.bar";
 import FilterBar from "../utils/bars/filter.bar";
 import DownloadFile from "../../assets/download-file.svg"
-import { useGetApp } from "@/hooks";
 import { pushOffer } from "@/apis/client-side/devices-actions.api";
-import { Device, ItemTypeEnum, PushOfferDto } from '@/types/interfaces/devices';
+import { ItemTypeEnum } from '@/types/interfaces/devices';
 import { AppScopeEnum } from "@/types/enum";
 import { useToast } from "@/providers/toast.provider";
+import { useGetApp } from "@/providers/getapp.provider";
+import { DeviceDto, PushOfferingDto } from "@/api/src";
 
 interface DeviceControlBarProps {
   selectedDevices: string[]
-  devices: Device[]
+  devices: DeviceDto[]
   scope: AppScopeEnum,
   distributeEntity: string | undefined
 }
@@ -23,9 +24,14 @@ const DeviceControlBar: FC<DeviceControlBarProps> = ({ selectedDevices, devices,
   const { showToast } = useToast();
 
   const distribute = async (to: "d" | "g") => {
-    const pushDto: PushOfferDto = {
+
+    const getSelectedDevices = () => {
+      return selectedDevices.some(d => d == "all") ? devices.map(d => d.id) : selectedDevices
+    }
+
+    const pushDto: PushOfferingDto = {
       catalogId: distributeEntity ?? "",
-      devices: to == "d" ? selectedDevices : [],
+      devices: to == "d" ? getSelectedDevices() : [],
       groups: to == "g" ? selectedGroup : [],
       itemType: (() => {
         switch (scope) {

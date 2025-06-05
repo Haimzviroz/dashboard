@@ -4,10 +4,10 @@ import Check from "../../../assets/is-updated/circle-check-filled.svg"
 import ReReq from "../../../assets/is-updated/in-progress.svg"
 
 interface IsUpdateCellProps {
-  status: boolean
+  status?: boolean
 }
 
-const IsUpdateCell: FC<IsUpdateCellProps> = ({ status }) => {
+const IsUpdateCell: FC<IsUpdateCellProps> = ({ status = false }) => {
 
   const getIsUpdateIconByStatus = () => {
     if (status) {

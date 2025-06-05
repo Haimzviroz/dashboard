@@ -1,4 +1,4 @@
-import { useGetApp } from "@/hooks";
+import { useGetApp } from "@/providers/getapp.provider";
 import { Box, SxProps, styled } from "@mui/material";
 import { FC, Fragment } from "react";
 

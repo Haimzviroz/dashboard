@@ -1,14 +1,16 @@
 import axios, { AxiosError, AxiosHeaders, AxiosInstance, AxiosRequestConfig } from "axios";
-import { LOGIN, REFRESH } from "../paths";
+import { BASE_PATHS, LOGIN, REFRESH } from "../paths";
 import { GetServerSidePropsContext } from "next";
 import { SS_HttpConfig } from "./ss_client-config";
 import { Auth } from "@/types/interfaces";
 import Logger from "@/services/logger";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { Configuration } from "@/api/src";
 
 interface GetReqConfigOptions {
   withTokens?: boolean
+  basePath?: string
 }
 
 
@@ -117,7 +119,33 @@ export class SS_HttpClient {
         })
       }
     }
-    return { headers }
+
+    return {
+      headers,
+      baseURL: options?.basePath || undefined
+    }
+  }
+
+  async getAccessToken(options?: GetReqConfigOptions): Promise<string> {
+    const session = await getServerSession(this.ctx.req, this.ctx.res, authOptions)
+    const tokens: Auth = { accessToken: session?.token.accessToken ?? "", refreshToken: session?.token.refreshToken ?? "" }
+
+    // Need first to "set cookie" before set "this vars" due the conditions of set cookies    
+    this.setTokensToCookiesHeader(tokens)
+    this.setTokens(tokens)
+
+    let headers: any = {
+      Authorization: `bearer ${this.accessToken}`,
+    }
+    if (options?.withTokens) {
+      headers = {
+        ...headers, token: JSON.stringify({
+          accessToken: this.accessToken,
+          refreshToken: this.refreshToken
+        })
+      }
+    }
+    return tokens.accessToken
   }
 
 
@@ -176,5 +204,9 @@ export class SS_HttpClient {
       this.logger.error(data ?? error.toString(), "Unknown error")
       throw data ?? error.toString()
     }
+  }
+
+  async getOpenApiConf() {
+    return new Configuration({ basePath: BASE_PATHS, accessToken: await this.getAccessToken() })
   }
 }

@@ -1,5 +1,5 @@
 body {
-  direction: rtl;
+  /* direction: rtl; */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 1.4rem;
   margin: 0;
@@ -56,12 +56,12 @@ label {
   display: inline-block;
 }
 
-ul{
+ul {
   padding: 0;
   margin: 0;
 }
 
-li{
+li {
   list-style-type: none;
   width: 150px;
 }
@@ -80,4 +80,40 @@ li{
   background-color: rgb(200, 197, 197);
   min-width: 50px;
   text-align: center;
+}
+
+.release-card:first-child {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.w-md-editor-toolbar {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.w-md-editor-toolbar li {
+  width: 30px;
+}
+
+.w-md-editor-toolbar-divider {
+  width: 1px !important;
+}
+
+.w-md-editor {
+  min-height: calc(100vh - 330px) !important;
+}
+
+.hide-mode .w-md-editor {
+  min-height: 100px !important;
+  max-height: 100px !important;
+}
+
+.hide-mode .w-md-editor-preview {
+  overflow: hidden;
+}
+
+.show-mode .w-md-editor-bar {
+  z-index: -1;
 }

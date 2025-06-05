@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Icon, Stack, SxProps, Typography } from "@mui/material";
+import { Box, Card, CardContent, Grid, Icon, Stack, SxProps, Typography } from "@mui/material";
 import { Dispatch, FC, ReactNode, SetStateAction } from "react";
 
 export enum InfoItemName {
@@ -15,7 +15,8 @@ export interface InfoItemProps {
   caption: string
   value: number | string | ReactNode,
   icon: ReactNode,
-  cardSx?: SxProps,
+  cardSx? : SxProps,
+  careConSx?: SxProps,
   disabled?: boolean
 }
 
@@ -35,29 +36,31 @@ const DeviceInfoItem: FC<DeviceInfoItemProps> = ({ item, activeItem, setActive }
   }
 
   return (
-    <Card
-      variant="outlined"
-      sx={{ borderRadius: 2, minWidth: 200, ...item.cardSx }}>
-      <Box onClick={() => !item.disabled ? onClickItem() : () => { }}>
-        <CardContent sx={{ padding: 1 }}>
-          <Stack direction={"row"} gap={2}>
-            <Icon>
-              {item.icon}
-            </Icon>
-            <Typography variant="body1">{item.caption}</Typography>
-          </Stack>
-        </CardContent>
-        <CardContent sx={{ paddingY: 0 }}>
-          {typeof item.value === "string" || typeof item.value === "number" ? (
-            <Typography variant="h3" align="center" fontWeight={700} fontSize={typeof item.value === "number" ? 48 : 26}>
-              {item.value}
-            </Typography>
-          ) : (
-            item.value
-          )}
-        </CardContent>
-      </Box>
-    </Card>
+    <Grid item>
+      <Card
+        variant="outlined"
+        sx={{ borderRadius: 2, minWidth: 200, ...item.cardSx }}>
+        <Box onClick={() => !item.disabled ? onClickItem() : () => { }}>
+          <CardContent sx={{ padding: 1, ...item.careConSx }}>
+            <Stack direction={"row"} gap={2}>
+              <Icon>
+                {item.icon}
+              </Icon>
+              <Typography variant="body1">{item.caption}</Typography>
+            </Stack>
+          </CardContent>
+          <CardContent sx={{ paddingY: 0 }}>
+            {typeof item.value === "string" || typeof item.value === "number" ? (
+              <Typography variant="h3" align="center" fontWeight={700} fontSize={typeof item.value === "number" ? 48 : 26}>
+                {item.value}
+              </Typography>
+            ) : (
+              item.value
+            )}
+          </CardContent>
+        </Box>
+      </Card>
+    </Grid>
   );
 }
 

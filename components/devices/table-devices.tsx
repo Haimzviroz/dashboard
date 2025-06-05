@@ -1,9 +1,8 @@
-import { Box, Button, Typography } from "@mui/material";
-import { Dispatch, FC, Fragment, SetStateAction, useEffect, useState } from "react"
+import { Box, Button } from "@mui/material";
+import { Dispatch, FC, Fragment, SetStateAction, useState } from "react"
 import { Device } from "@/types/interfaces/devices";
 import { ColDataGrid, DataGridProps, GridProps, RowDataGrid } from "../data-grid/data-grid.interfaces"
 
-import { useRouter } from "next/router";
 import IdCell from "./table-cells/id.cell";
 import LabelCell from "./table-cells/label.cell";
 import MapTable from "./table-map";
@@ -18,10 +17,10 @@ import DeviceControlBar from "./device-contrall-bar";
 import MutNameCell from "./table-cells/nut-name.cell";
 import SoftwareTable from "./table-software";
 import { AppScopeEnum } from "@/types/enum";
-import { useGetApp } from "@/hooks";
 import SelectCell from "./table-cells/select.cell";
 import { Map } from "@/types/interfaces";
-import { Software } from "@/types/interfaces/getapp";
+import { useGetApp } from "@/providers/getapp.provider";
+import { ComponentV2Dto, DeviceDto } from "@/api/src";
 
 enum DeviceTableCols {
   SELECT = "selected",
@@ -39,20 +38,20 @@ enum DeviceTableCols {
 }
 
 interface DevicesTableProps {
-  devices: Device[]
+  devices: DeviceDto[]
   setToggle?: Dispatch<SetStateAction<boolean>>
   mode: "page" | "modal",
   scope: AppScopeEnum
   mapId?: string,
-  dEntity?: Software | Map
+  dEntity?: ComponentV2Dto | Map
 }
 
-const DevicesTable: FC<DevicesTableProps> = ({ devices, mode, mapId, scope, dEntity }) => {
+const DevicesTable: FC<DevicesTableProps> = ({ devices, mode, mapId, scope, dEntity }) => {  
 
   const { router } = useGetApp()
 
   const [cDevice, setC_Device] = useState<string>(router.asPath.split('#')[1])
-  const [distributeEntity,] = useState<string | undefined>(dEntity?.catalogId)
+  const [distributeEntity,] = useState<string | undefined>((dEntity as ComponentV2Dto)?.id || (dEntity as Map)?.catalogId)
   const [selectedDevices, setSelectedDevices] = useState<string[]>([])
 
   const handleSelectAllDevices = (e: React.ChangeEvent<HTMLInputElement>, id?: string) => {

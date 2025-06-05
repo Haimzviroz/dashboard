@@ -1,0 +1,144 @@
+import React, { FC, useState } from "react";
+import {
+  Box,
+  Typography,
+  Stack,
+  Button,
+  Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import { Group as GroupIcon } from "@mui/icons-material";
+import AddIcon from '@mui/icons-material/Add';
+import MemberForm from "./member-from";
+import { useRemoveMember } from "@/hooks/project-member.query.hook";
+import TeamMemberItem from "./team-member";
+import { DetailedProjectDto, MemberResDto } from "@/api/src";
+
+
+interface DeleteConfirmationDialogProps {
+  open: boolean;
+  projectName: string;
+  memberName: string;
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
+const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
+  open,
+  projectName,
+  memberName,
+  onClose,
+  onConfirm,
+}) => (
+  <Dialog open={open} onClose={onClose}>
+    <DialogTitle>Confirm Delete</DialogTitle>
+    <DialogContent>
+      <DialogContentText>
+        Are you sure you want to remove <strong>{memberName}</strong> from <strong>{projectName}</strong>?
+      </DialogContentText>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={onClose} color="primary">
+        Cancel
+      </Button>
+      <Button onClick={onConfirm} color="error">
+        Remove
+      </Button>
+    </DialogActions>
+  </Dialog>
+);
+
+interface TeamMembersProps {
+  project: DetailedProjectDto;
+}
+
+const TeamMembers: FC<TeamMembersProps> = ({ project }) => {
+  const [addUserToggle, setUserToggle] = useState<boolean>(false);
+  const [confirmDeleteToggle, setConfirmDeleteToggle] = useState<boolean>(false);
+  const [selectedMember, setSelectedMember] = useState<MemberResDto>();
+
+  const rmMember = useRemoveMember();
+
+  const handleRemove = () => {
+    if (selectedMember) {
+      rmMember.mutate({
+        projectName: project.name,
+        memberId: selectedMember?.id,
+      });
+      setConfirmDeleteToggle(false);
+      setSelectedMember(undefined)
+    }
+  };
+
+  return (
+    <Card sx={{padding: 2 }}>
+      {/* Header */}
+      <Box display="flex" alignItems="center" marginBottom={2} gap={1}>
+        <GroupIcon />
+        <Typography variant="h6" fontWeight="bold">
+          Team Members
+        </Typography>
+      </Box>
+
+      {/* Members List */}
+      <Stack spacing={2}>
+        {project.members?.map((member) => (
+          <TeamMemberItem
+            key={member.id}
+            member={member}
+            onEdit={() => {
+              setSelectedMember(member);
+              setUserToggle(true)
+            }}
+            onDelete={() => {
+              setSelectedMember(member);
+              setConfirmDeleteToggle(true);
+            }}
+          />
+        ))}
+      </Stack>
+
+      {/* Add Member Button */}
+      <Box marginTop={2}>
+        <Button
+          variant="text"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={() => setUserToggle(true)}
+          sx={{ textTransform: "none", gap: 1 }}
+        >
+          Add Team Member
+        </Button>
+      </Box>
+
+      {/* Modals */}
+      <Dialog open={addUserToggle} onClose={() => {
+        setUserToggle(false)
+        setSelectedMember(undefined)
+      }}
+        PaperProps={{ sx: { minWidth: 480, "& .MuiCard-root": { minWidth: 420 } } }}
+      >
+        <MemberForm project={project} setUserToggle={setUserToggle} member={selectedMember} />
+      </Dialog>
+
+      <DeleteConfirmationDialog
+        open={confirmDeleteToggle}
+        projectName={project.name}
+        memberName={
+          `${project.members?.find((m) => m.id === selectedMember?.id)?.firstName || ""} ${project.members?.find((m) => m.id === selectedMember?.id)?.lastName || ""}`
+        }
+        onClose={() => {
+          setConfirmDeleteToggle(false)
+          setSelectedMember(undefined)
+        }}
+        onConfirm={handleRemove}
+      />
+    </Card>
+  );
+};
+
+export default TeamMembers;

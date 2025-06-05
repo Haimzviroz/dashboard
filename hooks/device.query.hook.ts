@@ -1,18 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Q_DEVICE_MAP, Q_DEVICE_SOFTWARE, Q_DEVICES, Q_SOFTWARE_META_DATA, Q_DIST_ENTITY, Q_MAP, Q_MAP_META_DATA } from "../apis/query-keys";
 import { getSoftwareMetaData, getDeviceWithMap, getDeviceWithSoftware, getDevices, putDeviceName, getMapMetaData } from "@/apis/client-side/devices-actions.api";
-import { Device, DeviceMaps, DeviceSoftWare, DeviceMetaData } from "@/types/interfaces/devices";
+import { Device, DeviceMaps, DeviceMetaData } from "@/types/interfaces/devices";
 import { Map } from "@/types/interfaces";
 import { getMapById } from "@/apis/client-side/getmap-actions.api";
-import { Software } from "@/types/interfaces/getapp";
 import { getSoftwareById } from "@/apis/client-side/software-actions.api";
 import { AppScopeEnum } from "@/types/enum";
+import { ComponentV2Dto, DeviceDto, DeviceSoftwareDto } from "@/api/src";
 
-export const useQ_Devices = (stringParams: string) => {
-
-  const { data: devices, refetch } = useQuery<Device[]>({
-    queryKey: [Q_DEVICES, stringParams],
-    queryFn: () => getDevices(stringParams),
+export const useQ_Devices = (groups?: string | string[]) => {
+  const { data: devices, refetch } = useQuery<DeviceDto[]>({
+    queryKey: [Q_DEVICES, "groups", groups],
+    queryFn: () => getDevices(groups),
   })
   return { devices, refetch }
 }
@@ -83,7 +82,7 @@ export const useDeviceMap = (id: string) => {
 
 // Device software
 export const useDeviceSoftware = (id: string, options?: any) => {
-  const { data: device, isFetching } = useQuery<DeviceSoftWare>({
+  const { data: device, isFetching } = useQuery<DeviceSoftwareDto>({
     queryKey: [Q_DEVICE_SOFTWARE, id],
     queryFn: () => getDeviceWithSoftware(id),
     ...options
@@ -93,39 +92,38 @@ export const useDeviceSoftware = (id: string, options?: any) => {
 
 
 // Device meta data
-export const useDeviceMetaData = (stringParams: string | (() => string) | null = null, scope: AppScopeEnum) => {
-  const params = typeof stringParams == "function" ? stringParams() : stringParams
-  return scope == AppScopeEnum.getapp? useSoftwareMetaData(params) : useMapMetaData(params)
+export const useDeviceMetaData = (scope: AppScopeEnum, groups?: string | string[], software?: string | string[], map?: string | string[] ) => {
+  return scope == AppScopeEnum.getapp ? useSoftwareMetaData(groups, software) : useMapMetaData(groups, map)
 }
 
-export const useSoftwareMetaData = (stringParams: string | null = null) => {
+export const useSoftwareMetaData = (groups?: string | string[], software?: string | string[]) => {
   const { data: metaData, refetch } = useQuery<DeviceMetaData>({
-    queryKey: [Q_SOFTWARE_META_DATA, stringParams],
-    queryFn: () => getSoftwareMetaData(stringParams)
+    queryKey: [Q_SOFTWARE_META_DATA, "groups", groups ?? null, "software", software ?? null],
+    queryFn: () => getSoftwareMetaData(groups, software)
   })
   return { metaData, refetch }
 }
 
-export const useMapMetaData = (stringParams: string | null = null) => {
+export const useMapMetaData = (groups?: string | string[], map?: string | string[]) => {
   const { data: metaData, refetch } = useQuery<DeviceMetaData>({
-    queryKey: [Q_MAP_META_DATA, stringParams],
-    queryFn: () => getMapMetaData(stringParams)
+    queryKey: [Q_MAP_META_DATA, "groups", groups ?? null, "map", map ?? null],
+    queryFn: () => getMapMetaData(groups, map)
   })
   return { metaData, refetch }
 }
 
 
-export const useDistEntity = (args?: [string, string | string[]]) => {
+export const useDistEntity = (args?: [string, string | string[] | undefined]) => {
   const [type, catalogId] = args ?? [null, ""];
 
-  const { data: dEntity, refetch } = useQuery<Software | Map>({
+  const { data: dEntity, refetch } = useQuery<ComponentV2Dto | Map>({
     queryKey: [Q_DIST_ENTITY, type],
     queryFn: () => {
       switch (type) {
         case "map":
-          return getMapById(Array.isArray(catalogId) ? catalogId[0] : catalogId)
+          return getMapById(Array.isArray(catalogId) ? catalogId[0] : catalogId ?? "")
         case "software":
-          return getSoftwareById(Array.isArray(catalogId) ? catalogId[0] : catalogId)
+          return getSoftwareById(Array.isArray(catalogId) ? catalogId[0] : catalogId ?? "")
         default:
           return Promise.resolve(null)
       }

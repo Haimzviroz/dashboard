@@ -1,25 +1,27 @@
-import axios, { Method, AxiosError } from 'axios';
+import axios, { Method, AxiosError, AxiosRequestConfig } from 'axios';
 import { clientGetRefreshToken } from './login.api';
 import { BASE_PATHS } from '../paths';
 import { getSession, signIn } from 'next-auth/react';
 import { jwtDecode } from 'jwt-decode';
 import Logger from '@/services/logger';
+import { Configuration } from '@/api/src';
 
 const logger = Logger(__filename)
 
-const clientRequestWithAuth = async (url: string, method: Method, data?: any) => {
+const clientRequestWithAuth = async (url: string, method: Method, data?: any, options?: AxiosRequestConfig) => {
   logger.info(`Http req to path ${url}`)
   const token = await getValidAccessToken()
 
   try {
     const response = await axios({
       method,
-      url: `${BASE_PATHS}${url}`,
+      url: `${url}`,
       data,
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token?.accessToken}`,
-      }
+      },
+      baseURL: options?.baseURL ?? `${BASE_PATHS}/api/v1/`
     });
     return response.data;
   } catch (error: any) {
@@ -99,9 +101,12 @@ const getValidAccessToken = async () => {
   return { accessToken }
 }
 
+const conf = async () => new Configuration({ basePath: BASE_PATHS, accessToken: (await getValidAccessToken()).accessToken })
+
 
 export {
   clientRequestWithAuth,
   setCookie,
-  getCookie
+  getCookie,
+  conf
 };

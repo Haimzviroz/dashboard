@@ -1,6 +1,6 @@
-import { useDeviceMetaData, useMutateDeviceMetaData } from "@/hooks/device.query.hook";
-import { Box, Chip, Stack, Typography } from "@mui/material";
-import { Dispatch, FC, Fragment, ReactNode, SetStateAction, useEffect, useState } from "react";
+import { useDeviceMetaData } from "@/hooks/device.query.hook";
+import { Box, Grid, Typography } from "@mui/material";
+import { Dispatch, FC, Fragment, ReactNode, SetStateAction, useEffect } from "react";
 import DeviceInfoItem, { InfoItemName, InfoItemProps } from "./device-info-item";
 import { DeviceMetaData as DMD } from "@/types/interfaces/devices";
 
@@ -10,26 +10,22 @@ import D_Data from '../../assets/devices/devices-data.svg'
 import D_Updated from '../../assets/devices/devices-updated.svg'
 import D_Error from '../../assets/devices/devices-error.svg'
 import { NextRouter } from "next/router";
-import { RouterHelpers } from "@/utils/helpers/router.helper";
 import { Map } from "@/types/interfaces";
-import { Software } from "@/types/interfaces/getapp";
 import { AppScopeEnum } from "@/types/enum";
+import { ComponentV2Dto } from "@/api/src";
 
 interface DeviceMetaDataProps {
   router: NextRouter,
   scope: AppScopeEnum
-  cEntity?: Software | Map,
+  cEntity?: ComponentV2Dto | Map,
   activeItem: InfoItemName | undefined,
   setActiveItem: Dispatch<SetStateAction<InfoItemName | undefined>>
   setCurrentDevices: Dispatch<SetStateAction<string[] | undefined>>
 }
 
 const DeviceMetaData: FC<DeviceMetaDataProps> = ({ router, scope, cEntity, activeItem, setActiveItem, setCurrentDevices }) => {
-  const stringParams = scope === AppScopeEnum.getapp
-    ? () => RouterHelpers.strParamsByKey(["groups", "software"], router.query)
-    : () => RouterHelpers.strParamsByKey(["groups", "map"], router.query)
 
-  const { metaData } = useDeviceMetaData(stringParams, scope)
+  const { metaData } = useDeviceMetaData(scope, router.query.groups, router.query.software, router.query.map)
 
   useEffect(() => {
     if (activeItem && metaData) {
@@ -76,8 +72,8 @@ const DeviceMetaData: FC<DeviceMetaDataProps> = ({ router, scope, cEntity, activ
   }
 
   const getItemValue = (name: string, version: string): ReactNode => {
-    return <Box >
-      <Typography variant="h3" marginY={.5} align={"center"} fontWeight={700} fontSize={26}>{name}</Typography>
+    return <Box height={55}>
+      <Typography variant="h3" marginY={.5} align={"center"} fontWeight={700} fontSize={22}>{name}</Typography>
       <Typography variant="h6" color="textSecondary" align="center">
         גירסה: {version}
       </Typography>
@@ -91,9 +87,10 @@ const DeviceMetaData: FC<DeviceMetaDataProps> = ({ router, scope, cEntity, activ
       items.push({
         name: InfoItemName.distItem,
         caption: "פריט נבחר",
-        value: 'versionNumber' in cEntity ? getItemValue(cEntity.name, cEntity.versionNumber) : cEntity.name,
+        value: 'version' in cEntity ? getItemValue(cEntity.projectName, cEntity.version) : cEntity.name,
         icon: <D_Entity />,
         cardSx: { borderColor: "#4169E1", borderWidth: 4 },
+        careConSx: { pb: 0 },
         disabled: true
       })
     }
@@ -109,11 +106,12 @@ const DeviceMetaData: FC<DeviceMetaDataProps> = ({ router, scope, cEntity, activ
   }
 
   return (<Fragment>
-    <Stack direction={"row"} gap={2} justifyContent={"center"} pb={3}>
+    <Grid container rowSpacing={2} columnSpacing={2} direction="row" mb={2} justifyContent="center">
+      {/* <Grid container direction={"row"} gap={2} justifyContent={"center"} pb={3}> */}
       {getCardInfo()?.map(c =>
         <DeviceInfoItem key={c.caption} item={c} activeItem={activeItem} setActive={setActiveItem}></DeviceInfoItem>
       )}
-    </Stack>
+    </Grid>
   </Fragment>);
 }
 

@@ -1,12 +1,11 @@
 import { NextPageWithLayout } from "@/types/types";
 import DevicesTable from "@/components/devices/table-devices";
 import BodyBox from "@/components/body/body-box";
-import { useDeviceMetaData, useDistEntity, useQ_Devices } from "@/hooks/device.query.hook";
+import { useDistEntity, useQ_Devices } from "@/hooks/device.query.hook";
 import { Box, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import DeviceMetaData from "@/components/devices/device-info";
 import { AppScopeEnum } from "@/types/enum";
-import { RouterHelpers } from "@/utils/helpers/router.helper";
 import { useState } from "react";
 import { InfoItemName } from "../devices/device-info-item";
 
@@ -17,8 +16,8 @@ interface DevicesProps {
 const DevicesPage: NextPageWithLayout<DevicesProps> = ({ scope }) => {
   const router = useRouter()
 
-  const devices = useQ_Devices(RouterHelpers.strParamsByKey("groups", router.query))
-  const distEntity = useDistEntity(RouterHelpers.strArrayByKey(["software", "map"], router.query))
+  const devices = useQ_Devices(router.query.groups)
+  const distEntity = useDistEntity(router.query.software ? ["software", router.query.software] : router.query.maps ? ["map", router.query.maps] : undefined)
 
   const [currentDevices, setCurrentDevices] = useState<string[]>()
   const [activeItem, setActiveItem] = useState<InfoItemName | undefined>()

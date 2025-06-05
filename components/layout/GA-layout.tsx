@@ -1,12 +1,10 @@
 import { FC, Fragment, ReactElement } from "react";
 import GetAppLogo from "../header/logo";
 import SideBar from "../side-bar/side-bar";
-import { Box, styled } from "@mui/material";
+import { Box } from "@mui/material";
 import ErrorPage from "../../pages/error";
 import LoginPage from "../main/page";
-import NavBar from "../header/navigation";
-import GlobalProvider from "@/storage/global.storage";
-import GetAppProvider from "@/storage/getmap.storage";
+import GetAppProvider from "@/providers/getapp.provider";
 import TLS_MuiProvider from "@/providers/rtl-mui.provider";
 import TeamMuiProvider from "@/providers/team-mui.provider";
 import { AppScopeEnum } from "@/types/enum";
