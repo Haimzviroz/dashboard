@@ -1,78 +1,109 @@
-import { Box, Divider, Icon, Stack, Typography } from "@mui/material"
-import { FC, Fragment } from "react"
-import { Group } from "@/types/interfaces/devices";
-import ArrowLeft from "../../assets/arrows/arrow-narrow-left.svg";
-import NoGroups from "../../assets/groups/no-groups.svg";
-import NoDevices from "../../assets/groups/no-devices.svg";
-import GroupItemMng from "./group-item-mng";
-import DvcItemMng from "./device-item-mng";
-import { useQ_Devices } from "@/hooks/device.query.hook";
-import { useGroup } from "@/hooks/group.query.hook";
-import { GroupResponseDto } from "@/api/src";
+import { FC } from "react"
+import { Box, Typography, Stack, Paper, Divider, Icon } from "@mui/material"
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
+import { Group } from "@/types/interfaces/devices"
+import GroupItemMng from "./group-item-mng"
+import DvcItemMng from "./device-item-mng"
+import NoGroups from "../../assets/groups/no-groups.svg"
+import NoDevices from "../../assets/groups/no-devices.svg"
+import { useQ_Devices } from "@/hooks/device.query.hook"
+import { useGroup } from "@/hooks/group.query.hook"
+import { GroupResponseDto } from "@/api/src"
 
 interface UnitGroupMngProps {
-  group: Group,
+  group: Group
   groupsData?: GroupResponseDto
-  // selectedGroup: Group | undefined
-  // setSelectedGroup: Dispatch<SetStateAction<Group | undefined>>
 }
+
+const NoItemsMessage: FC<{ icon: JSX.Element; message: string }> = ({ icon, message }) => (
+  <Box p={3}>
+    <Stack alignItems="center" spacing={1}>
+      <Icon sx={{ width: 120, height: 90, alignSelf: "center" }}>{icon}</Icon>
+      <Typography variant="caption" sx={{ fontWeight: 600 }}>
+        {message}
+      </Typography>
+    </Stack>
+  </Box>
+)
 
 const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData }) => {
   const device = useQ_Devices()
   const qGroup = useGroup(group.id)
 
+  const parentGroup = group.parent ? groupsData?.groups[group.parent] : null
+  const relatedGroups = group.groups?.map(gid => groupsData?.groups[gid]).filter(Boolean) || []
+  const relatedDevices =
+    device.devices && qGroup.group?.devices
+      ? qGroup.group.devices
+        .map(did => device.devices?.find(d => d.id === did))
+        .filter(Boolean)
+      : []
+
   return (
-    <Box sx={{ flexGrow: 1, m: 0, textAlign: "left" }}>
-      <Typography variant="h3" sx={{ fontWeight: 600, px: 3, py: 3 }}>{group.name}</Typography>
-      <Stack direction={"row"} justifyContent={"space-evenly"} mb={5}>
-        <GroupItemMng group={group} groupsData={groupsData}></GroupItemMng>
-        {group.parent && groupsData?.groups[group.parent] &&
-          <Fragment>
-            <Box sx={{ alignSelf: "center" }}>
-              <ArrowLeft></ArrowLeft>
-            </Box>
-            <GroupItemMng group={groupsData?.groups[group.parent]} groupsData={groupsData} type="parent"></GroupItemMng>
-          </Fragment>}
-      </Stack>
-      <Typography variant="h6" sx={{ fontWeight: 600, px: 3, py: 3 }}>קבוצות קשורות</Typography>
-      <Divider />
-      <Stack direction={"row"} gap={2} px={3} justifyContent={"center"}>
+    <Box sx={{ flexGrow: 1, textAlign: "center", px: 2, py: 4 }}>
+      <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+        {group.name}
+      </Typography>
 
-        {group.groups
-          ? group.groups?.map(g =>
-            groupsData?.groups[g] ? (
-              <GroupItemMng key={g} group={groupsData.groups[g]} />
-            ) : null
-          )
-          : <Box p={2}>
-            <Stack direction={"column"} justifyContent={"center"}>
-              <Icon sx={{ width: 72, height: 72, alignSelf: "center" }}>
-                <NoGroups></NoGroups>
-              </Icon>
-              <Typography variant="caption" sx={{ fontWeight: 600, alignSelf: "center" }}>לא קיימת קבוצות קשורות</Typography>
-            </Stack>
-          </Box>}
-      </Stack>
-      <Typography variant="h6" sx={{ fontWeight: 600, px: 3, py: 3 }}>אמצעים קשורים</Typography>
-      <Divider />
-      <Stack direction={"row"} gap={2} px={3} justifyContent={"center"}>
+      {parentGroup && (
+        <Stack spacing={0.5} alignItems="center" mt={1}>
+          <ArrowDownwardIcon
+            sx={{
+              fontSize: 28,
+              color: "text.secondary",
+              transform: "rotate(180deg)", // rotate to point up
+            }}
+          />
+          <Paper
+            variant="outlined"
+            sx={{
+              px: 2,
+              py: 1,
+              backgroundColor: "grey.100",
+              textAlign: "center",
+              width: "fit-content",
+              mx: "auto",
+            }}
+          >
+            <Typography variant="caption" color="text.secondary" fontWeight="bold" display="block">
+              תחת:
+            </Typography>
+            <Typography variant="body2" color="text.primary" fontWeight="medium">
+              {parentGroup.name}
+            </Typography>
+          </Paper>
+        </Stack>
+      )}
 
-        {device.devices && qGroup.group?.devices ? qGroup.group.devices.map(d => {
-          const dvc = device.devices?.find(dvc => dvc.id == d)
-          return dvc ? <DvcItemMng device={dvc} /> : null
-        })
-          : <Box p={2}>
-            <Stack direction={"column"} justifyContent={"center"}>
-              <Icon sx={{ width: 120, height: 120, alignSelf: "center" }}>
-                <NoDevices></NoDevices>
-              </Icon>
-              <Typography variant="caption" sx={{ fontWeight: 600, alignSelf: "center" }}>לא קיימים אמצעיים קשורים</Typography>
-            </Stack>
-          </Box>}
+      <Divider sx={{ my: 3 }} />
+
+      {/* Related Groups */}
+      <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+        קבוצות קשורות
+      </Typography>
+      <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
+        {relatedGroups.length > 0 ? (
+          relatedGroups.map(g => <GroupItemMng key={g!.id} group={g!} />)
+        ) : (
+          <NoItemsMessage icon={<NoGroups />} message="לא קיימות קבוצות קשורות" />
+        )}
       </Stack>
 
+      <Divider sx={{ my: 4 }} />
+
+      {/* Related Devices */}
+      <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+        אמצעים קשורים
+      </Typography>
+      <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
+        {relatedDevices.length > 0 ? (
+          relatedDevices.map(dvc => <DvcItemMng key={dvc!.id} device={dvc!} />)
+        ) : (
+          <NoItemsMessage icon={<NoDevices />} message="לא קיימים אמצעים קשורים" />
+        )}
+      </Stack>
     </Box>
   )
 }
 
-export default UnitGroupMng;
+export default UnitGroupMng
