@@ -10,6 +10,7 @@ import TeamMuiProvider from "@/providers/team-mui.provider";
 import { AppScopeEnum } from "@/types/enum";
 import BodyBox from "../body/body-box";
 import { R_GET_APP } from "@/apis/routes";
+import { useGroups } from "@/hooks/group.query.hook";
 
 interface GA_layoutProps {
 	page: ReactElement;
@@ -20,6 +21,8 @@ const GA_layout: FC<GA_layoutProps> = ({ page, children }) => {
 	if (page.props.error) return <ErrorPage {...page.props.error}></ErrorPage>;
 	if (page.props.tokenError) return <LoginPage routePath={R_GET_APP} {...page.props} />;
 
+	const { groups } = useGroups()
+
 	return (
 		<Fragment>
 			<TLS_MuiProvider>
@@ -28,7 +31,7 @@ const GA_layout: FC<GA_layoutProps> = ({ page, children }) => {
 						<GetAppLogo scope={AppScopeEnum.getapp} />
 						<Box sx={{ display: "flex" }}>
 							<SideBar
-								groupList={page.props.groupList}
+								groupList={page.props.groupList || groups}
 								scope={AppScopeEnum.getapp}
 							/>
 							<BodyBox>{children ?? page}</BodyBox>

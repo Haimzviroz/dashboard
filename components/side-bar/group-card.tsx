@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
-import { ListItem, ListItemButton, ListItemIcon, ListItemText, SxProps } from "@mui/material";
+import { ListItem, ListItemIcon, ListItemText, SxProps } from "@mui/material";
 
 import GroupIcon from "../../assets/side-bar/group.svg";
 import ArrowDown from "../../assets/arrows/single-arrow-down.svg";
@@ -20,7 +20,7 @@ const sListItemIcon: SxProps = {
   margin: .5
 }
 
-const GroupCard: FC<GroupCardProps> = ({ group, isCollapse, setIsCollapse }) => {
+const GroupCard: FC<GroupCardProps> = ({ group, isCollapse, setIsCollapse }) => {  
 
   const [isSelected, setIsSelected] = useState(false)
 

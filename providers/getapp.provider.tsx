@@ -2,7 +2,7 @@ import { createContext, FC, useEffect, useState, useRef, useContext } from "reac
 import { DashNavBarOption, ProNavBarOption, SideBarOption } from "@/types/enum";
 import { Activate, GetAppProviderProps } from "@/types/interfaces";
 import { useRouter } from "next/router";
-import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS, R_GET_APP } from "@/apis/routes";
+import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS, R_GET_APP, R_GROUPS, R_APP_GROUP, R_MAP_GROUP } from "@/apis/routes";
 import { Group } from "@/types/interfaces/devices";
 import { useGroups } from "@/hooks/group.query.hook";
 import { RouterHelpers } from "@/utils/helpers/router.helper";
@@ -77,6 +77,7 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 		if (router.pathname.startsWith(R_MAPS)) return SideBarOption.MAP;
 		if (router.pathname.startsWith(R_APP_DEVICES) || router.pathname.startsWith(R_MAP_DEVICES)) return SideBarOption.DEVICES;
 		if (router.pathname.startsWith(R_PROJECTS)) return SideBarOption.APPS;
+		if (router.pathname.startsWith(R_APP_GROUP) || router.pathname.startsWith(R_MAP_GROUP)) return SideBarOption.GROUPS;
 	}
 
 	const getProNavBarActivated = () => {

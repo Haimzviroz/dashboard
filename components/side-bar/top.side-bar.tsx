@@ -9,11 +9,14 @@ import Map from "../../assets/side-bar/map2.svg";
 import MapActive from "../../assets/side-bar/map2-active.svg";
 import Computer from "../../assets/side-bar/computer.svg";
 import ComputerActive from "../../assets/side-bar/computer-active.svg";
+import GroupManage from "../../assets/side-bar/group-manage.svg";
+import GroupManageActive from "../../assets/side-bar/group-manage-active.svg";
+
 
 import { AppScopeEnum, SideBarOption } from "@/types/enum";
 import { useGetApp } from "@/providers/getapp.provider";
 import Router from "next/router";
-import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS } from "@/apis/routes";
+import { R_APP_DEVICES, R_MAP_DEVICES, R_MAPS, R_PROJECTS, R_APP_GROUP, R_MAP_GROUP } from "@/apis/routes";
 
 interface SideBarItem {
   key: SideBarOption,
@@ -68,6 +71,23 @@ const Items: SideBarItem[] = [
     activeIcon: ComputerActive,
     route: R_MAP_DEVICES,
     scope: AppScopeEnum.getmap
+  },
+  {
+    key: SideBarOption.GROUPS,
+    name: "ניהול קבוצות",
+    icon: GroupManage,
+    activeIcon: GroupManageActive,
+    route: R_APP_GROUP,
+    scope: AppScopeEnum.getapp
+  },
+  {
+    key: SideBarOption.GROUPS,
+    name: "ניהול קבוצות",
+    icon: GroupManage,
+    activeIcon: GroupManageActive,
+    route: R_MAP_GROUP,
+    scope: AppScopeEnum.getmap
+
   }
 ]
 

@@ -18,4 +18,5 @@ export enum SideBarOption {
   MAP = "map",
   DEVICES = "devices",
   APPS = "apps",
+  GROUPS = "groups"
 }

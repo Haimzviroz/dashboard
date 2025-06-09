@@ -1,5 +1,5 @@
-import { Divider, Drawer, List, ListItem, ListItemIcon, SxProps, Theme } from "@mui/material"
-import { FC, Fragment, useState } from "react"
+import { Drawer, List, ListItem, ListItemIcon, SxProps, Theme } from "@mui/material"
+import { FC, Fragment } from "react"
 
 import LeftArrow from "../../assets/side-bar/double-arrow-left.svg";
 import RightArrow from "../../assets/side-bar/double-arrow-right.svg";
@@ -35,8 +35,6 @@ const SideBar: FC<SideBarProps> = ({ groupList, scope }) => {
       width: sideBarCollapse ? "200px" : "55px",
     }
   });
-
-
 
   return (
     <Fragment>
