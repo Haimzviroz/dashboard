@@ -44,9 +44,9 @@ export interface AddMemberToProjectDto {
 }
 
 export const AddMemberToProjectDtoRoleEnum = {
-    Owner: 'project-owner',
-    Admin: 'project-admin',
-    Member: 'project-member'
+    ProjectOwner: 'project-owner',
+    ProjectAdmin: 'project-admin',
+    ProjectMember: 'project-member'
 } as const;
 
 export type AddMemberToProjectDtoRoleEnum = typeof AddMemberToProjectDtoRoleEnum[keyof typeof AddMemberToProjectDtoRoleEnum];
@@ -540,7 +540,7 @@ export interface ComponentV2Dto {
      * @type {object}
      * @memberof ComponentV2Dto
      */
-    'metadata': object;
+    'metadata'?: object;
     /**
      * 
      * @type {string}
@@ -877,7 +877,7 @@ export interface DeliveryItemDto {
      * @type {number}
      * @memberof DeliveryItemDto
      */
-    'id': number;
+    'id'?: number;
     /**
      * 
      * @type {string}
@@ -2187,9 +2187,9 @@ export interface EditProjectMemberDto {
 }
 
 export const EditProjectMemberDtoRoleEnum = {
-    Owner: 'project-owner',
-    Admin: 'project-admin',
-    Member: 'project-member'
+    ProjectOwner: 'project-owner',
+    ProjectAdmin: 'project-admin',
+    ProjectMember: 'project-member'
 } as const;
 
 export type EditProjectMemberDtoRoleEnum = typeof EditProjectMemberDtoRoleEnum[keyof typeof EditProjectMemberDtoRoleEnum];
@@ -2287,6 +2287,25 @@ export interface GeoLocationDto {
      * @memberof GeoLocationDto
      */
     'alt'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface GroupResponseDto
+ */
+export interface GroupResponseDto {
+    /**
+     * Array of group IDs (as strings) that are root nodes
+     * @type {Array<string>}
+     * @memberof GroupResponseDto
+     */
+    'roots': Array<string>;
+    /**
+     * Map of group ID (as string) to ChildGroupDto
+     * @type {{ [key: string]: ChildGroupDto; }}
+     * @memberof GroupResponseDto
+     */
+    'groups': { [key: string]: ChildGroupDto; };
 }
 /**
  * 
@@ -3019,6 +3038,19 @@ export interface MapMetadatatDto {
 /**
  * 
  * @export
+ * @interface MapOfferingConfig
+ */
+export interface MapOfferingConfig {
+    /**
+     * 
+     * @type {number}
+     * @memberof MapOfferingConfig
+     */
+    'exportMaxResolutionDeg'?: number;
+}
+/**
+ * 
+ * @export
  * @interface MapProductResDto
  */
 export interface MapProductResDto {
@@ -3039,6 +3071,30 @@ export interface MapProductResDto {
      * @type {string}
      * @memberof MapProductResDto
      */
+    'catalogId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MapProductResDto
+     */
+    'countries'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MapProductResDto
+     */
+    'cities'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof MapProductResDto
+     */
+    'resolutionMeter'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof MapProductResDto
+     */
     'productName'?: string;
     /**
      * 
@@ -3052,18 +3108,6 @@ export interface MapProductResDto {
      * @memberof MapProductResDto
      */
     'productType'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof MapProductResDto
-     */
-    'productSubType'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof MapProductResDto
-     */
-    'description'?: string;
     /**
      * 
      * @type {string}
@@ -3088,12 +3132,6 @@ export interface MapProductResDto {
      * @memberof MapProductResDto
      */
     'footprint': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MapProductResDto
-     */
-    'transparency'?: string;
     /**
      * 
      * @type {string}
@@ -3187,6 +3225,24 @@ export interface MapStateDto {
      * @memberof MapStateDto
      */
     'state'?: MapStateDtoStateEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof MapStateDto
+     */
+    'error'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MapStateDto
+     */
+    'downloadDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MapStateDto
+     */
+    'deployDate'?: string;
 }
 
 export const MapStateDtoStateEnum = {
@@ -3277,9 +3333,9 @@ export interface MemberResDto {
 }
 
 export const MemberResDtoRoleEnum = {
-    Owner: 'project-owner',
-    Admin: 'project-admin',
-    Member: 'project-member'
+    ProjectOwner: 'project-owner',
+    ProjectAdmin: 'project-admin',
+    ProjectMember: 'project-member'
 } as const;
 
 export type MemberResDtoRoleEnum = typeof MemberResDtoRoleEnum[keyof typeof MemberResDtoRoleEnum];
@@ -3386,6 +3442,18 @@ export interface OfferingMapProductsResDto {
     'products'?: Array<MapProductResDto>;
     /**
      * 
+     * @type {MapOfferingConfig}
+     * @memberof OfferingMapProductsResDto
+     */
+    'configs'?: MapOfferingConfig;
+    /**
+     * 
+     * @type {string}
+     * @memberof OfferingMapProductsResDto
+     */
+    'method': OfferingMapProductsResDtoMethodEnum;
+    /**
+     * 
      * @type {string}
      * @memberof OfferingMapProductsResDto
      */
@@ -3398,6 +3466,12 @@ export interface OfferingMapProductsResDto {
     'error'?: ErrorDto;
 }
 
+export const OfferingMapProductsResDtoMethodEnum = {
+    Single: 'single',
+    PolygonParts: 'polygonParts'
+} as const;
+
+export type OfferingMapProductsResDtoMethodEnum = typeof OfferingMapProductsResDtoMethodEnum[keyof typeof OfferingMapProductsResDtoMethodEnum];
 export const OfferingMapProductsResDtoStatusEnum = {
     Success: 'Success',
     Error: 'Error'
@@ -3425,6 +3499,18 @@ export interface OfferingMapResDto {
     'products'?: Array<MapProductResDto>;
     /**
      * 
+     * @type {MapOfferingConfig}
+     * @memberof OfferingMapResDto
+     */
+    'configs'?: MapOfferingConfig;
+    /**
+     * 
+     * @type {string}
+     * @memberof OfferingMapResDto
+     */
+    'method': OfferingMapResDtoMethodEnum;
+    /**
+     * 
      * @type {string}
      * @memberof OfferingMapResDto
      */
@@ -3437,6 +3523,12 @@ export interface OfferingMapResDto {
     'error'?: ErrorDto;
 }
 
+export const OfferingMapResDtoMethodEnum = {
+    Single: 'single',
+    PolygonParts: 'polygonParts'
+} as const;
+
+export type OfferingMapResDtoMethodEnum = typeof OfferingMapResDtoMethodEnum[keyof typeof OfferingMapResDtoMethodEnum];
 export const OfferingMapResDtoStatusEnum = {
     Success: 'Success',
     Error: 'Error'
@@ -3869,9 +3961,9 @@ export interface ProjectMemberContextDto {
 }
 
 export const ProjectMemberContextDtoRoleEnum = {
-    Owner: 'project-owner',
-    Admin: 'project-admin',
-    Member: 'project-member'
+    ProjectOwner: 'project-owner',
+    ProjectAdmin: 'project-admin',
+    ProjectMember: 'project-member'
 } as const;
 
 export type ProjectMemberContextDtoRoleEnum = typeof ProjectMemberContextDtoRoleEnum[keyof typeof ProjectMemberContextDtoRoleEnum];
@@ -4323,6 +4415,12 @@ export interface ReleaseArtifactDto {
      * @memberof ReleaseArtifactDto
      */
     'status'?: ReleaseArtifactDtoStatusEnum;
+    /**
+     * 
+     * @type {number}
+     * @memberof ReleaseArtifactDto
+     */
+    'size'?: number;
 }
 
 export const ReleaseArtifactDtoTypeEnum = {
@@ -4696,13 +4794,13 @@ export interface SoftwareStateDto {
      * @type {string}
      * @memberof SoftwareStateDto
      */
-    'downloadDate': string;
+    'downloadDate'?: string;
     /**
      * 
      * @type {string}
      * @memberof SoftwareStateDto
      */
-    'deployDate': string;
+    'deployDate'?: string;
     /**
      * 
      * @type {Array<ComponentV2Dto>}
@@ -5172,6 +5270,78 @@ export interface WindowsConfigDto {
      * @memberof WindowsConfigDto
      */
     'layers'?: Array<LayersConfigDto>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof WindowsConfigDto
+     */
+    'getAppServerUrls'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof WindowsConfigDto
+     */
+    'mapsStoragePath'?: string;
+    /**
+     * How many seconds to wait between checking the import and prepare status
+     * @type {number}
+     * @memberof WindowsConfigDto
+     */
+    'queryStatusIntervalSec'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof WindowsConfigDto
+     */
+    'networkAvailabilityUrl'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof WindowsConfigDto
+     */
+    'periodicDiscoveryIntervalMins'?: number;
+    /**
+     * Interval for background network status checks in minutes. Used when maps are in the import process.
+     * @type {number}
+     * @memberof WindowsConfigDto
+     */
+    'networkStatusIntervalMins'?: number;
+    /**
+     * Maximum allowed interval (in hours) for inventory updates before triggering an error.
+     * @type {number}
+     * @memberof WindowsConfigDto
+     */
+    'maxInventoryMissedIntervalHours'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof WindowsConfigDto
+     */
+    'mapInventoryMaxSizeMB'?: number;
+    /**
+     * Maximum time (in seconds) to wait for a response when checking if a TCP connection is valid. If no response is received within this time, an error is returned.
+     * @type {number}
+     * @memberof WindowsConfigDto
+     */
+    'tcpStreamTimeoutSec'?: number;
+    /**
+     * Maximum retention time for Matomo data in hours. Data older than this will be cleaned up.
+     * @type {number}
+     * @memberof WindowsConfigDto
+     */
+    'matomoMaxRetentionHour'?: number;
+    /**
+     * Maximum buffer size in megabytes. If the buffer limit is reached, the oldest entries will be discarded to free up space.
+     * @type {number}
+     * @memberof WindowsConfigDto
+     */
+    'matomoMaxBufferSizeMB'?: number;
+    /**
+     * The password that allows a technician to modify configurations directly on the device. Must be between 4 and 20 characters.
+     * @type {string}
+     * @memberof WindowsConfigDto
+     */
+    'technicianPassword'?: string;
 }
 
 /**
@@ -5226,7 +5396,7 @@ export const DeliveryApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deliveryControllerGetMapConfig: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deliveryControllerGetCacheConfig: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/v1/delivery/cache/config`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5339,9 +5509,9 @@ export const DeliveryApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deliveryControllerSetMapConfig: async (cacheConfigDto: CacheConfigDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deliveryControllerSetCacheConfig: async (cacheConfigDto: CacheConfigDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'cacheConfigDto' is not null or undefined
-            assertParamExists('deliveryControllerSetMapConfig', 'cacheConfigDto', cacheConfigDto)
+            assertParamExists('deliveryControllerSetCacheConfig', 'cacheConfigDto', cacheConfigDto)
             const localVarPath = `/api/v1/delivery/cache/config`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5441,10 +5611,10 @@ export const DeliveryApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deliveryControllerGetMapConfig(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CacheConfigResDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deliveryControllerGetMapConfig(options);
+        async deliveryControllerGetCacheConfig(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CacheConfigResDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deliveryControllerGetCacheConfig(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DeliveryApi.deliveryControllerGetMapConfig']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['DeliveryApi.deliveryControllerGetCacheConfig']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -5480,10 +5650,10 @@ export const DeliveryApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deliveryControllerSetMapConfig(cacheConfigDto: CacheConfigDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deliveryControllerSetMapConfig(cacheConfigDto, options);
+        async deliveryControllerSetCacheConfig(cacheConfigDto: CacheConfigDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deliveryControllerSetCacheConfig(cacheConfigDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DeliveryApi.deliveryControllerSetMapConfig']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['DeliveryApi.deliveryControllerSetCacheConfig']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -5525,8 +5695,8 @@ export const DeliveryApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deliveryControllerGetMapConfig(options?: RawAxiosRequestConfig): AxiosPromise<CacheConfigResDto> {
-            return localVarFp.deliveryControllerGetMapConfig(options).then((request) => request(axios, basePath));
+        deliveryControllerGetCacheConfig(options?: RawAxiosRequestConfig): AxiosPromise<CacheConfigResDto> {
+            return localVarFp.deliveryControllerGetCacheConfig(options).then((request) => request(axios, basePath));
         },
         /**
          * Get status of prepared delivery
@@ -5555,8 +5725,8 @@ export const DeliveryApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deliveryControllerSetMapConfig(cacheConfigDto: CacheConfigDto, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.deliveryControllerSetMapConfig(cacheConfigDto, options).then((request) => request(axios, basePath));
+        deliveryControllerSetCacheConfig(cacheConfigDto: CacheConfigDto, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deliveryControllerSetCacheConfig(cacheConfigDto, options).then((request) => request(axios, basePath));
         },
         /**
          * This service message allows the consumer to report the delivery status
@@ -5597,8 +5767,8 @@ export class DeliveryApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DeliveryApi
      */
-    public deliveryControllerGetMapConfig(options?: RawAxiosRequestConfig) {
-        return DeliveryApiFp(this.configuration).deliveryControllerGetMapConfig(options).then((request) => request(this.axios, this.basePath));
+    public deliveryControllerGetCacheConfig(options?: RawAxiosRequestConfig) {
+        return DeliveryApiFp(this.configuration).deliveryControllerGetCacheConfig(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5633,8 +5803,8 @@ export class DeliveryApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DeliveryApi
      */
-    public deliveryControllerSetMapConfig(cacheConfigDto: CacheConfigDto, options?: RawAxiosRequestConfig) {
-        return DeliveryApiFp(this.configuration).deliveryControllerSetMapConfig(cacheConfigDto, options).then((request) => request(this.axios, this.basePath));
+    public deliveryControllerSetCacheConfig(cacheConfigDto: CacheConfigDto, options?: RawAxiosRequestConfig) {
+        return DeliveryApiFp(this.configuration).deliveryControllerSetCacheConfig(cacheConfigDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7577,7 +7747,7 @@ export const DeviceGroupApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async groupControllerGetGroups(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChildGroupDto>> {
+        async groupControllerGetGroups(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GroupResponseDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.groupControllerGetGroups(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DeviceGroupApi.groupControllerGetGroups']?.[localVarOperationServerIndex]?.url;
@@ -7642,7 +7812,7 @@ export const DeviceGroupApiFactory = function (configuration?: Configuration, ba
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        groupControllerGetGroups(options?: RawAxiosRequestConfig): AxiosPromise<ChildGroupDto> {
+        groupControllerGetGroups(options?: RawAxiosRequestConfig): AxiosPromise<GroupResponseDto> {
             return localVarFp.groupControllerGetGroups(options).then((request) => request(axios, basePath));
         },
         /**

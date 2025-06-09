@@ -562,7 +562,7 @@ paths:
       security: *ref_6
   /api/v1/delivery/cache/config:
     get:
-      operationId: DeliveryController_getMapConfig
+      operationId: DeliveryController_getCacheConfig
       summary: Get Delivery Cache Configurations
       description: This service message returns an object of delivery cache configurations.
       parameters: []
@@ -576,7 +576,7 @@ paths:
       tags: *ref_5
       security: *ref_6
     put:
-      operationId: DeliveryController_setMapConfig
+      operationId: DeliveryController_setCacheConfig
       summary: Set Delivery Cache Configurations
       description: This service message sets an object of delivery cache configurations.
       parameters: []
@@ -2000,13 +2000,11 @@ paths:
       parameters: []
       responses:
         '200':
-          description: >-
-            return type is not documented well, needs to be `Record<number,
-            ChildGroupDto>`
+          description: Returns root group IDs and a mapping of all groups by ID
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChildGroupDto'
+                $ref: '#/components/schemas/GroupResponseDto'
       tags: *ref_15
       security: *ref_16
   /api/v1/group/{groupId}:
@@ -2525,6 +2523,9 @@ components:
             - uploaded
             - pending
             - removed
+        size:
+          type: integer
+          format: int64
       required:
         - id
         - artifactName
@@ -2840,7 +2841,7 @@ components:
         catalogId:
           type: string
         id:
-          type: number
+          type: integer
         itemKey:
           type: string
         artifactType:
@@ -2855,7 +2856,6 @@ components:
           $ref: '#/components/schemas/HashDto'
       required:
         - catalogId
-        - id
         - itemKey
         - url
     ErrorDto:
@@ -3023,7 +3023,6 @@ components:
         - id
         - version
         - projectName
-        - metadata
         - status
         - type
         - createdAt
@@ -3210,7 +3209,7 @@ components:
         invitedProjects:
           type: array
           items:
-            $ref: '#/components/schemas/ProjectDto'
+            type: string
     PaginatedResultDto:
       type: object
       properties:
@@ -3686,15 +3685,19 @@ components:
           type: string
         productId:
           type: string
+        catalogId:
+          type: string
+        countries:
+          type: string
+        cities:
+          type: string
+        resolutionMeter:
+          type: number
         productName:
           type: string
         productVersion:
           type: number
         productType:
-          type: string
-        productSubType:
-          type: number
-        description:
           type: string
         imagingTimeBeginUTC:
           format: date-time
@@ -3706,8 +3709,6 @@ components:
           type: number
         footprint:
           type: string
-        transparency:
-          type: string
         region:
           type: string
         ingestionDate:
@@ -3717,6 +3718,11 @@ components:
         - id
         - productId
         - footprint
+    mapOfferingConfig:
+      type: object
+      properties:
+        exportMaxResolutionDeg:
+          type: number
     OfferingMapProductsResDto:
       type: object
       properties:
@@ -3724,14 +3730,23 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MapProductResDto'
-        status:
+        configs:
+          $ref: '#/components/schemas/mapOfferingConfig'
+        method:
           type: string
           enum: &ref_24
+            - single
+            - polygonParts
+          default: polygonParts
+        status:
+          type: string
+          enum: &ref_25
             - Success
             - Error
         error:
           $ref: '#/components/schemas/ErrorDto'
       required:
+        - method
         - status
     MapProperties:
       type: object
@@ -3801,10 +3816,14 @@ components:
           default: 0
         size:
           type: integer
+          format: int64
           default: 0
+          minimum: 0
         area:
           type: integer
+          format: int64
           default: 0
+          minimum: 0
         footprint:
           type: string
         zoomLevel:
@@ -4342,12 +4361,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MapProductResDto'
-        status:
+        configs:
+          $ref: '#/components/schemas/mapOfferingConfig'
+        method:
           type: string
           enum: *ref_24
+          default: polygonParts
+        status:
+          type: string
+          enum: *ref_25
         error:
           $ref: '#/components/schemas/ErrorDto'
       required:
+        - method
         - status
     DeviceDiscoverResDto:
       type: object
@@ -4411,6 +4437,22 @@ components:
           type: string
       required:
         - id
+    GroupResponseDto:
+      type: object
+      properties:
+        roots:
+          description: Array of group IDs (as strings) that are root nodes
+          type: array
+          items:
+            type: string
+        groups:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ChildGroupDto'
+          description: Map of group ID (as string) to ChildGroupDto
+      required:
+        - roots
+        - groups
     SetChildInGroupDto:
       type: object
       properties:
@@ -4630,6 +4672,56 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/LayersConfigDto'
+        getAppServerUrls:
+          type: array
+          items:
+            type: string
+        mapsStoragePath:
+          type: string
+        queryStatusIntervalSec:
+          type: integer
+          description: >-
+            How many seconds to wait between checking the import and prepare
+            status
+        networkAvailabilityUrl:
+          type: string
+        periodicDiscoveryIntervalMins:
+          type: integer
+        networkStatusIntervalMins:
+          type: integer
+          description: >-
+            Interval for background network status checks in minutes. Used when
+            maps are in the import process.
+        maxInventoryMissedIntervalHours:
+          type: integer
+          description: >-
+            Maximum allowed interval (in hours) for inventory updates before
+            triggering an error.
+        mapInventoryMaxSizeMB:
+          type: integer
+        tcpStreamTimeoutSec:
+          type: integer
+          description: >-
+            Maximum time (in seconds) to wait for a response when checking if a
+            TCP connection is valid. If no response is received within this
+            time, an error is returned.
+        matomoMaxRetentionHour:
+          type: integer
+          description: >-
+            Maximum retention time for Matomo data in hours. Data older than
+            this will be cleaned up.
+        matomoMaxBufferSizeMB:
+          type: integer
+          description: >-
+            Maximum buffer size in megabytes. If the buffer limit is reached,
+            the oldest entries will be discarded to free up space.
+        technicianPassword:
+          type: string
+          description: >-
+            The password that allows a technician to modify configurations
+            directly on the device. Must be between 4 and 20 characters.
+          minLength: 4
+          maxLength: 20
       required:
         - group
     DevicePutDto:
@@ -4655,6 +4747,14 @@ components:
             - deleted
             - installed
             - uninstalled
+        error:
+          type: string
+        downloadDate:
+          format: date-time
+          type: string
+        deployDate:
+          format: date-time
+          type: string
     DeviceMapDto:
       type: object
       properties:
@@ -4728,8 +4828,6 @@ components:
           type: string
       required:
         - software
-        - downloadDate
-        - deployDate
         - offering
     DeviceSoftwareDto:
       type: object
