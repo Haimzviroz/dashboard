@@ -6,6 +6,8 @@ import { useState } from "react";
 import UnitGroupMng from "../groups/group-mng-unit";
 import SelectGroup from "../../assets/groups/select-group.svg"
 import { Group } from "@/types/interfaces/devices";
+import DeviceList from "../groups/device-list";
+import { useQ_Devices } from "@/hooks/device.query.hook";
 
 interface DevicesProps {
   // scope: AppScopeEnum
@@ -13,6 +15,7 @@ interface DevicesProps {
 
 const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
   const { groups: groupsData } = useGroups()
+  const { devices } = useQ_Devices()
   const [selectedGroup, setSelectedGroup] = useState<Group>()
   const [isOpenGroupList, setIsOpenGroupList] = useState<boolean>()
   const [expanded, setExpanded] = useState<string>()
@@ -56,7 +59,7 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
             <Typography variant="h5" sx={{ fontWeight: 600, py: 2, px: 1 }}>בחר אמצעי</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            {groupsData && <GroupList groups={Object.values(groupsData.groups)} selectedGroup={selectedGroup} setSelectedGroup={setSelectedGroup} />}
+            {devices && <DeviceList devices={devices} />}
           </AccordionDetails>
         </Accordion>
       </Box>
