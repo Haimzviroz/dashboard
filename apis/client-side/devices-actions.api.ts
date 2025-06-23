@@ -3,7 +3,7 @@ import { DEVICES_PUT, DEVICE_INFO, DEVICE_MAPS, GROUP, OFFERED_SOFTWARE } from '
 import { clientRequestWithAuth, conf } from './token-client.middleware';
 import { Software } from '@/types/interfaces/getapp';
 import Logger from '@/services/logger';
-import { DeviceApiFp, DeviceGroupApiFp, OfferingApiFp, PushOfferingDto } from '@/api/src';
+import { DeviceApiFp, CatalogOfferingApiFp, PushOfferingDto, OrganizationGroupsApiFp } from '@/api/src';
 
 const logger = Logger(__filename)
 
@@ -52,18 +52,18 @@ export const getDeviceWithSoftware = async (id: string) => {
 
 // Groups
 export const getGroups = async () => {
-  const fun = await DeviceGroupApiFp(await conf()).groupControllerGetGroups();
+  const fun = await OrganizationGroupsApiFp(await conf()).groupControllerGetGroups();
   return (await fun()).data
 }
 
 export const getGroup = async (id: number) => {
-  const fun = await DeviceGroupApiFp(await conf()).groupControllerGetGroupById(id.toString());
+  const fun = await OrganizationGroupsApiFp(await conf()).groupControllerGetGroupById(id.toString());
   return (await fun()).data
 }
 
 // Offerings
 export const pushOffer = async (data: PushOfferingDto) => {
-  const fun = await OfferingApiFp(await conf()).offeringControllerPushOffering(data)
+  const fun = await CatalogOfferingApiFp(await conf()).offeringControllerPushOffering(data)
   return (await fun()).data
 }
 

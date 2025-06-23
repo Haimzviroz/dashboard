@@ -18,10 +18,10 @@ interface GA_layoutProps {
 }
 
 const GA_layout: FC<GA_layoutProps> = ({ page, children }) => {
+	const { groups } = useGroups()
 	if (page.props.error) return <ErrorPage {...page.props.error}></ErrorPage>;
 	if (page.props.tokenError) return <LoginPage routePath={R_GET_APP} {...page.props} />;
 
-	const { groups } = useGroups()
 
 	return (
 		<Fragment>

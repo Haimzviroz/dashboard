@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { BASE_PATHS, PROJECT, PROJECT_RELEASES } from "../paths";
 import { GetServerSidePropsContext } from "next";
 import { SS_HttpClient } from "./ss_http-client";
-import { ProjectApiFp, ReleasesApiFp } from "@/api/src";
+import { ProjectApiFp, CatalogUploadApiFp } from "@/api/src";
 
 export class SS_ProjectsClient extends SS_HttpClient {
 
@@ -39,7 +39,7 @@ export class SS_ProjectsClient extends SS_HttpClient {
 
   async getProjectReleases(projectId: string) {
     try {
-      const tokenFun = await ReleasesApiFp(await this.getOpenApiConf()).releasesControllerGetReleases(projectId)
+      const tokenFun = await CatalogUploadApiFp(await this.getOpenApiConf()).releasesControllerGetReleases(projectId)
       return (await tokenFun()).data
     } catch (error) {
       return this.errorHandler(error as AxiosError)
@@ -48,7 +48,7 @@ export class SS_ProjectsClient extends SS_HttpClient {
 
   async getDetailedRelease(projectId: string, version: string) {
     try {
-      const tokenFun = await ReleasesApiFp(await this.getOpenApiConf()).releasesControllerGetRelease(projectId, version)
+      const tokenFun = await CatalogUploadApiFp(await this.getOpenApiConf()).releasesControllerGetRelease(projectId, version)
       return (await tokenFun()).data
     } catch (error) {
       return this.errorHandler(error as AxiosError)
