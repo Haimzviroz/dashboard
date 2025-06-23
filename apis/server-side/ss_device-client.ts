@@ -4,7 +4,7 @@ import { SS_HttpClient } from "./ss_http-client";
 import { MAPS_META_DATA } from "../paths";
 import { DeviceMetaData } from "@/types/interfaces/devices";
 import Logger from "@/services/logger";
-import { DeviceApiFp, DeviceGroupApiFp } from "@/api/src";
+import { DeviceApiFp, OrganizationGroupsApiFp,  } from "@/api/src";
 
 
 export class SS_DeviceClient extends SS_HttpClient {
@@ -54,7 +54,7 @@ export class SS_DeviceClient extends SS_HttpClient {
   async getGroups() {
     this.logger.info("Req all root groups")
     try {
-      const fun = await DeviceGroupApiFp(await this.getOpenApiConf()).groupControllerGetGroups();
+      const fun = await OrganizationGroupsApiFp(await this.getOpenApiConf()).groupControllerGetGroups();
       return (await fun()).data
     } catch (error) {
       return this.errorHandler(error as AxiosError)
