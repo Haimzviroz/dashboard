@@ -80,7 +80,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 	const [description, setDescription] = useState(project?.description || "");
 
 	const [loading, setLoading] = useState(false);
-	const [suggestedPlats, setSuggestedPlats] = useState<string[]>([]);
+	// const [suggestedPlats, setSuggestedPlats] = useState<string[]>([]);
 
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [openDialog, setOpenDialog] = useState(false);
@@ -143,14 +143,14 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 	};
 
 	const handlePlatInputChange = async (value: string) => {
-		const transformedValue = value.split(" ").join("-").toLowerCase();
-		setInputPlat(transformedValue);
-		if (value && value.length >= 2) {
-			const plats = await fetchPlats(value);
-			plats && setSuggestedPlats(plats)
-		} else {
-			setSuggestedPlats([]);
-		}
+		// const transformedValue = value.split(" ").join("-").toLowerCase();
+		// setInputPlat(transformedValue);
+		// if (value && value.length >= 2) {
+		// 	const plats = await fetchPlats(value);
+		// 	plats && setSuggestedPlats(plats)
+		// } else {
+		// 	setSuggestedPlats([]);
+		// }
 	};
 
 	const handleError = (error: any) => {
@@ -244,7 +244,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 				}}
 			/>
 
-			<Autocomplete
+			{/* <Autocomplete
 				multiple={projectType === "product"}
 				freeSolo
 				options={suggestedPlats}
@@ -255,7 +255,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 				onInputChange={(event, newInputValue) => handlePlatInputChange(newInputValue)}
 				renderTags={(value, getTagProps) => {
 					return value.map((option, index) => (
-						// eslint-disable-next-line
+						// eslint-disable-next-line 
 						<Chip label={option} {...getTagProps({ index })} />
 					));
 				}}
@@ -277,7 +277,7 @@ const ProjectForm: FC<ProjectFormProps> = ({ project, projectType }) => {
 						}}
 					/>
 				)}
-			/>
+			/>*/}
 
 
 			<TextField

@@ -3,7 +3,7 @@ import { DEVICES_PUT, DEVICE_INFO, DEVICE_MAPS, GROUP, OFFERED_SOFTWARE } from '
 import { clientRequestWithAuth, conf } from './token-client.middleware';
 import { Software } from '@/types/interfaces/getapp';
 import Logger from '@/services/logger';
-import { DeviceApiFp, OfferingApiFp, PushOfferingDto } from '@/api/src';
+import { DeviceApiFp, CatalogOfferingApiFp, PushOfferingDto } from '@/api/src';
 
 const logger = Logger(__filename)
 
@@ -63,7 +63,7 @@ export const getGroup = async (id: number) => {
 
 // Offerings
 export const pushOffer = async (data: PushOfferingDto) => {
-  const fun = await OfferingApiFp(await conf()).offeringControllerPushOffering(data)
+  const fun = await CatalogOfferingApiFp(await conf()).offeringControllerPushOffering(data)
   return (await fun()).data
 }
 

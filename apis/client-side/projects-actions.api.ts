@@ -17,14 +17,16 @@ import {
   ProjectMemberPreferencesDto,
   ProjectTokenDto,
   ReleaseDto,
-  ReleasesApiFp,
+  CatalogUploadApiFp,
   SetReleaseDto,
   UpdateDocDto,
   UpdateOneOfManyRegulationDto,
   UpdateProjectTokenDto,
   UpdateRegulationDto,
   UsersApiFactory,
-  UserSearchDto
+  UserSearchDto,
+  PlatformsApiFp,
+  PlatformDto
 } from '@/api/src';
 
 export const getUsers = async (params: UserSearchDto): Promise<MemberResDto[]> => {
@@ -32,8 +34,8 @@ export const getUsers = async (params: UserSearchDto): Promise<MemberResDto[]> =
   return res.data
 }
 
-export const getPlats = async (params: string): Promise<string[]> => {
-  const fun = await ProjectApiFp(await conf()).projectManagementControllerGetPlatforms(params)
+export const getPlats = async (params: string): Promise<PlatformDto[]> => {
+  const fun = await PlatformsApiFp(await conf()).hierarchyControllerGetPlatforms(params)
   return (await fun()).data
 }
 
@@ -116,22 +118,22 @@ export const deleteToken = async (projectId: string, tokenId: number,): Promise<
 }
 
 export const getReleases = async (projectId: string): Promise<ReleaseDto[]> => {
-  const fun = await ReleasesApiFp(await conf()).releasesControllerGetReleases(projectId)
+  const fun = await CatalogUploadApiFp(await conf()).releasesControllerGetReleases(projectId)
   return (await fun()).data
 }
 
 export const setRelease = async (projectId: string, data: SetReleaseDto,): Promise<DetailedReleaseDto> => {
-  const fun = await ReleasesApiFp(await conf()).releasesControllerSetRelease(projectId, data)
+  const fun = await CatalogUploadApiFp(await conf()).releasesControllerSetRelease(projectId, data)
   return (await fun()).data
 }
 
 export const getRelease = async (projectId: string, version: string,): Promise<DetailedReleaseDto> => {
-  const fun = await ReleasesApiFp(await conf()).releasesControllerGetRelease(projectId, version)
+  const fun = await CatalogUploadApiFp(await conf()).releasesControllerGetRelease(projectId, version)
   return (await fun()).data
 }
 
 export const deleteRelease = async (projectId: string, version: string): Promise<void> => {
-  const fun = await ReleasesApiFp(await conf()).releasesControllerDeleteRelease(projectId, version)
+  const fun = await CatalogUploadApiFp(await conf()).releasesControllerDeleteRelease(projectId, version)
   return (await fun()).data
 }
 
