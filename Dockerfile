@@ -22,6 +22,7 @@ RUN apk update && apk --no-cache add ca-certificates bash curl
 RUN mkdir -p /usr/local/share/ca-certificates/
 
 COPY --chown=${uid}:${uid} package.json package.json
+COPY --chown=${uid}:${uid} package-lock.json package-lock.json
 RUN npm i
 
 COPY --chown=${uid}:${uid} . .
