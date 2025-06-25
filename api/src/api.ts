@@ -1669,6 +1669,30 @@ export interface DeviceDto {
      * @memberof DeviceDto
      */
     'formations'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceDto
+     */
+    'platformName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceDto
+     */
+    'deviceTypeName'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DeviceDto
+     */
+    'devices'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceDto
+     */
+    'deviceParentId'?: string;
 }
 /**
  * 
@@ -1756,10 +1780,95 @@ export interface DeviceMapDto {
     'formations'?: Array<string>;
     /**
      * 
+     * @type {string}
+     * @memberof DeviceMapDto
+     */
+    'platformName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceMapDto
+     */
+    'deviceTypeName'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DeviceMapDto
+     */
+    'devices'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceMapDto
+     */
+    'deviceParentId'?: string;
+    /**
+     * 
      * @type {Array<MapStateDto>}
      * @memberof DeviceMapDto
      */
     'maps': Array<MapStateDto>;
+}
+/**
+ * 
+ * @export
+ * @interface DeviceOrgDto
+ */
+export interface DeviceOrgDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceOrgDto
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceOrgDto
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceOrgDto
+     */
+    'groupName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceOrgDto
+     */
+    'platformName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceOrgDto
+     */
+    'deviceTypeName'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof DeviceOrgDto
+     */
+    'groupId'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DeviceOrgDto
+     */
+    'uid'?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DeviceOrgDto
+     */
+    'devices'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceOrgDto
+     */
+    'deviceParentId'?: string;
 }
 /**
  * 
@@ -1810,7 +1919,7 @@ export interface DeviceResDto {
      * @type {string}
      * @memberof DeviceResDto
      */
-    'ID'?: string;
+    'ID': string;
     /**
      * 
      * @type {string}
@@ -1932,6 +2041,30 @@ export interface DeviceSoftwareDto {
      * @memberof DeviceSoftwareDto
      */
     'formations'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceSoftwareDto
+     */
+    'platformName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceSoftwareDto
+     */
+    'deviceTypeName'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DeviceSoftwareDto
+     */
+    'devices'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeviceSoftwareDto
+     */
+    'deviceParentId'?: string;
     /**
      * 
      * @type {Array<SoftwareStateDto>}
@@ -2585,7 +2718,7 @@ export type EditProjectMemberDtoRoleEnum = typeof EditProjectMemberDtoRoleEnum[k
  */
 export interface ErrorDto {
     /**
-     * `APP.unknown`: General Error code not listed in the enum <br /> `DELIVERY.unknown`: Error code not listed in the enum <br /> `DELIVERY.notFound`: No found the delivery with given catalog id <br /> `DELIVERY.download`: Download of delivery item failed <br /> `DELIVERY.downloadNotAvailable`: Delivery item not yet available for download <br /> `DELIVERY.notExist`: The Package not exist in storage <br /> `DELIVERY.invalid`: Package of given catalog id is invalid, maybe expired or some else <br /> `DELIVERY.notVerified`: Package of given catalog id is not verified, the package can be in valid <br /> `DELIVERY.packageTooLarge`:  Package of given catalog id is too large, no space in cache<br /> `DELIVERY.unableClearCache`:  Some issue occurs when trying to clear cache <br /> `MAP.unknown`: Error code not listed in the enum <br /> `MAP.notFound`: No found the map with given id <br /> `MAP.bBoxIsInvalid`: BBox is probably invalid <br /> `MAP.bBoxNotInAnyPolygon`: The given BBox in not contains in any polygon <br /> `MAP.exportMapFailed`: Some error occurs when import map <br /> `MAP.requestInProgress`: Delivery was already requested and in processing! <br /> `MAP.areaTooLarge`: Area too large to distribute, reduce request size and try again <br /> `MAP.areaTooSmall`: Area too small to distribute, increase request size and try again . 
+     * `APP.unknown`: General Error code not listed in the enum.<br/>`DELIVERY.unknown`: Error code not listed in the enum.<br/>`DELIVERY.notFound`: Delivery with given catalog id not found.<br/>`DELIVERY.download`: Download of delivery item failed.<br/>`DELIVERY.downloadNotAvailable`: Delivery item not yet available for download.<br/>`DELIVERY.notExist`: The package does not exist in storage.<br/>`DELIVERY.invalid`: Package of given catalog id is invalid, maybe expired or otherwise.<br/>`DELIVERY.notVerified`: Package of given catalog id is not verified, the package may be invalid.<br/>`DELIVERY.packageTooLarge`: Package of given catalog id is too large, no space in cache.<br/>`DELIVERY.unableClearCache`: Issue occurred when trying to clear cache.<br/>`MAP.unknown`: Error code not listed in the enum.<br/>`MAP.notFound`: Map with given id not found.<br/>`MAP.bBoxIsInvalid`: BBox is invalid.<br/>`MAP.bBoxNotInAnyPolygon`: The given BBox is not contained in any polygon.<br/>`MAP.getRecordsFailed`: Failed to get records.<br/>`MAP.exportMapFailed`: Error occurred when exporting map.<br/>`MAP.requestInProgress`: Delivery was already requested and is processing.<br/>`MAP.areaTooLarge`: Area too large to distribute, reduce request size and try again.<br/>`MAP.areaTooSmall`: Area too small to distribute, increase request size and try again.<br/>`DEVICE.notFound`: Device with given id not found.<br/>`GROUP_NOT_FOUND`: Group with the given id was not found.<br/>`GROUP_NOT_ALLOWED_TO_ADD`: Not allowed to add to the group, see message for cause.
      * @type {string}
      * @memberof ErrorDto
      */
@@ -2617,7 +2750,10 @@ export const ErrorDtoErrorCodeEnum = {
     MapExportMapFailed: 'MAP.exportMapFailed',
     MapRequestInProgress: 'MAP.requestInProgress',
     MapAreaTooLarge: 'MAP.areaTooLarge',
-    MapAreaTooSmall: 'MAP.areaTooSmall'
+    MapAreaTooSmall: 'MAP.areaTooSmall',
+    DeviceNotFound: 'DEVICE.notFound',
+    GroupNotFound: 'GROUP.notFound',
+    GroupNotAllowedToAdd: 'GROUP.notAllowedToAdd'
 } as const;
 
 export type ErrorDtoErrorCodeEnum = typeof ErrorDtoErrorCodeEnum[keyof typeof ErrorDtoErrorCodeEnum];
@@ -6147,15 +6283,15 @@ export const CatalogOfferingApiAxiosParamCreator = function (configuration?: Con
         /**
          * This service message allows retrieval of the offering of a specific device type by device type ID.
          * @summary Get Offering of Device Type
-         * @param {number} deviceTypeId ID of the device type
+         * @param {string} deviceTypeIdentifier Device type identifier (ID or name)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        offeringControllerGetOfferingForDeviceType: async (deviceTypeId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'deviceTypeId' is not null or undefined
-            assertParamExists('offeringControllerGetOfferingForDeviceType', 'deviceTypeId', deviceTypeId)
-            const localVarPath = `/api/v1/catalog/offering/device-type/{deviceTypeId}`
-                .replace(`{${"deviceTypeId"}}`, encodeURIComponent(String(deviceTypeId)));
+        offeringControllerGetOfferingForDeviceType: async (deviceTypeIdentifier: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deviceTypeIdentifier' is not null or undefined
+            assertParamExists('offeringControllerGetOfferingForDeviceType', 'deviceTypeIdentifier', deviceTypeIdentifier)
+            const localVarPath = `/api/v1/catalog/offering/device-type/{deviceTypeIdentifier}`
+                .replace(`{${"deviceTypeIdentifier"}}`, encodeURIComponent(String(deviceTypeIdentifier)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6185,15 +6321,15 @@ export const CatalogOfferingApiAxiosParamCreator = function (configuration?: Con
         /**
          * This service message allows retrieval of the offering of a specific platform by platform ID.
          * @summary Get Offering of Platform
-         * @param {number} platformId ID of the platform
+         * @param {string} platformIdentifier Platform identifier (ID or name)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        offeringControllerGetOfferingForPlatform: async (platformId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'platformId' is not null or undefined
-            assertParamExists('offeringControllerGetOfferingForPlatform', 'platformId', platformId)
-            const localVarPath = `/api/v1/catalog/offering/platform/{platformId}`
-                .replace(`{${"platformId"}}`, encodeURIComponent(String(platformId)));
+        offeringControllerGetOfferingForPlatform: async (platformIdentifier: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'platformIdentifier' is not null or undefined
+            assertParamExists('offeringControllerGetOfferingForPlatform', 'platformIdentifier', platformIdentifier)
+            const localVarPath = `/api/v1/catalog/offering/platform/{platformIdentifier}`
+                .replace(`{${"platformIdentifier"}}`, encodeURIComponent(String(platformIdentifier)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6311,12 +6447,12 @@ export const CatalogOfferingApiFp = function(configuration?: Configuration) {
         /**
          * This service message allows retrieval of the offering of a specific device type by device type ID.
          * @summary Get Offering of Device Type
-         * @param {number} deviceTypeId ID of the device type
+         * @param {string} deviceTypeIdentifier Device type identifier (ID or name)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async offeringControllerGetOfferingForDeviceType(deviceTypeId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeviceTypeOfferingDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.offeringControllerGetOfferingForDeviceType(deviceTypeId, options);
+        async offeringControllerGetOfferingForDeviceType(deviceTypeIdentifier: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeviceTypeOfferingDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.offeringControllerGetOfferingForDeviceType(deviceTypeIdentifier, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CatalogOfferingApi.offeringControllerGetOfferingForDeviceType']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -6324,12 +6460,12 @@ export const CatalogOfferingApiFp = function(configuration?: Configuration) {
         /**
          * This service message allows retrieval of the offering of a specific platform by platform ID.
          * @summary Get Offering of Platform
-         * @param {number} platformId ID of the platform
+         * @param {string} platformIdentifier Platform identifier (ID or name)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async offeringControllerGetOfferingForPlatform(platformId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PlatformOfferingDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.offeringControllerGetOfferingForPlatform(platformId, options);
+        async offeringControllerGetOfferingForPlatform(platformIdentifier: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PlatformOfferingDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.offeringControllerGetOfferingForPlatform(platformIdentifier, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['CatalogOfferingApi.offeringControllerGetOfferingForPlatform']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -6373,22 +6509,22 @@ export const CatalogOfferingApiFactory = function (configuration?: Configuration
         /**
          * This service message allows retrieval of the offering of a specific device type by device type ID.
          * @summary Get Offering of Device Type
-         * @param {number} deviceTypeId ID of the device type
+         * @param {string} deviceTypeIdentifier Device type identifier (ID or name)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        offeringControllerGetOfferingForDeviceType(deviceTypeId: number, options?: RawAxiosRequestConfig): AxiosPromise<DeviceTypeOfferingDto> {
-            return localVarFp.offeringControllerGetOfferingForDeviceType(deviceTypeId, options).then((request) => request(axios, basePath));
+        offeringControllerGetOfferingForDeviceType(deviceTypeIdentifier: string, options?: RawAxiosRequestConfig): AxiosPromise<DeviceTypeOfferingDto> {
+            return localVarFp.offeringControllerGetOfferingForDeviceType(deviceTypeIdentifier, options).then((request) => request(axios, basePath));
         },
         /**
          * This service message allows retrieval of the offering of a specific platform by platform ID.
          * @summary Get Offering of Platform
-         * @param {number} platformId ID of the platform
+         * @param {string} platformIdentifier Platform identifier (ID or name)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        offeringControllerGetOfferingForPlatform(platformId: number, options?: RawAxiosRequestConfig): AxiosPromise<PlatformOfferingDto> {
-            return localVarFp.offeringControllerGetOfferingForPlatform(platformId, options).then((request) => request(axios, basePath));
+        offeringControllerGetOfferingForPlatform(platformIdentifier: string, options?: RawAxiosRequestConfig): AxiosPromise<PlatformOfferingDto> {
+            return localVarFp.offeringControllerGetOfferingForPlatform(platformIdentifier, options).then((request) => request(axios, basePath));
         },
         /**
          * This service message allows retrieval of the offering of a specific project by project identifier.
@@ -6423,25 +6559,25 @@ export class CatalogOfferingApi extends BaseAPI {
     /**
      * This service message allows retrieval of the offering of a specific device type by device type ID.
      * @summary Get Offering of Device Type
-     * @param {number} deviceTypeId ID of the device type
+     * @param {string} deviceTypeIdentifier Device type identifier (ID or name)
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CatalogOfferingApi
      */
-    public offeringControllerGetOfferingForDeviceType(deviceTypeId: number, options?: RawAxiosRequestConfig) {
-        return CatalogOfferingApiFp(this.configuration).offeringControllerGetOfferingForDeviceType(deviceTypeId, options).then((request) => request(this.axios, this.basePath));
+    public offeringControllerGetOfferingForDeviceType(deviceTypeIdentifier: string, options?: RawAxiosRequestConfig) {
+        return CatalogOfferingApiFp(this.configuration).offeringControllerGetOfferingForDeviceType(deviceTypeIdentifier, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * This service message allows retrieval of the offering of a specific platform by platform ID.
      * @summary Get Offering of Platform
-     * @param {number} platformId ID of the platform
+     * @param {string} platformIdentifier Platform identifier (ID or name)
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CatalogOfferingApi
      */
-    public offeringControllerGetOfferingForPlatform(platformId: number, options?: RawAxiosRequestConfig) {
-        return CatalogOfferingApiFp(this.configuration).offeringControllerGetOfferingForPlatform(platformId, options).then((request) => request(this.axios, this.basePath));
+    public offeringControllerGetOfferingForPlatform(platformIdentifier: string, options?: RawAxiosRequestConfig) {
+        return CatalogOfferingApiFp(this.configuration).offeringControllerGetOfferingForPlatform(platformIdentifier, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -8300,6 +8436,44 @@ export const DeviceApiAxiosParamCreator = function (configuration?: Configuratio
             };
         },
         /**
+         * This service message allow to get device meta data and properties
+         * @summary Get Device meta data
+         * @param {string} deviceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deviceControllerGetDeviceDetails: async (deviceId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deviceId' is not null or undefined
+            assertParamExists('deviceControllerGetDeviceDetails', 'deviceId', deviceId)
+            const localVarPath = `/api/v1/device/{deviceId}`
+                .replace(`{${"deviceId"}}`, encodeURIComponent(String(deviceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * This service message allows retrieval of all registered maps on the given device.
          * @summary Get Device Maps
          * @param {string} deviceId 
@@ -8664,6 +8838,19 @@ export const DeviceApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * This service message allow to get device meta data and properties
+         * @summary Get Device meta data
+         * @param {string} deviceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deviceControllerGetDeviceDetails(deviceId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeviceDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deviceControllerGetDeviceDetails(deviceId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DeviceApi.deviceControllerGetDeviceDetails']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * This service message allows retrieval of all registered maps on the given device.
          * @summary Get Device Maps
          * @param {string} deviceId 
@@ -8802,6 +8989,16 @@ export const DeviceApiFactory = function (configuration?: Configuration, basePat
             return localVarFp.deviceControllerGetDeviceContentInstalled(deviceId, options).then((request) => request(axios, basePath));
         },
         /**
+         * This service message allow to get device meta data and properties
+         * @summary Get Device meta data
+         * @param {string} deviceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deviceControllerGetDeviceDetails(deviceId: string, options?: RawAxiosRequestConfig): AxiosPromise<DeviceDto> {
+            return localVarFp.deviceControllerGetDeviceDetails(deviceId, options).then((request) => request(axios, basePath));
+        },
+        /**
          * This service message allows retrieval of all registered maps on the given device.
          * @summary Get Device Maps
          * @param {string} deviceId 
@@ -8917,6 +9114,18 @@ export class DeviceApi extends BaseAPI {
      */
     public deviceControllerGetDeviceContentInstalled(deviceId: string, options?: RawAxiosRequestConfig) {
         return DeviceApiFp(this.configuration).deviceControllerGetDeviceContentInstalled(deviceId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * This service message allow to get device meta data and properties
+     * @summary Get Device meta data
+     * @param {string} deviceId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DeviceApi
+     */
+    public deviceControllerGetDeviceDetails(deviceId: string, options?: RawAxiosRequestConfig) {
+        return DeviceApiFp(this.configuration).deviceControllerGetDeviceDetails(deviceId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11804,7 +12013,7 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
         },
         /**
          * 
-         * @summary Get groups of the given id and its children groups and devices
+         * @summary Retrieve a group by its ID, including all its child groups and associated devices
          * @param {string} groupId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -11842,12 +12051,50 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
         },
         /**
          * 
-         * @summary Get root groups and its children groups and devices
+         * @summary Get all root groups with their child groups
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         groupControllerGetGroups: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/v1/org/groups`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get device org group data
+         * @param {string} deviceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        groupControllerGetOrgDeviceData: async (deviceId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deviceId' is not null or undefined
+            assertParamExists('groupControllerGetOrgDeviceData', 'deviceId', deviceId)
+            const localVarPath = `/api/v1/org/groups/devices/{deviceId}`
+                .replace(`{${"deviceId"}}`, encodeURIComponent(String(deviceId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -11952,7 +12199,7 @@ export const OrganizationGroupsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Get groups of the given id and its children groups and devices
+         * @summary Retrieve a group by its ID, including all its child groups and associated devices
          * @param {string} groupId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -11965,7 +12212,7 @@ export const OrganizationGroupsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Get root groups and its children groups and devices
+         * @summary Get all root groups with their child groups
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -11973,6 +12220,19 @@ export const OrganizationGroupsApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.groupControllerGetGroups(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['OrganizationGroupsApi.groupControllerGetGroups']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Get device org group data
+         * @param {string} deviceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async groupControllerGetOrgDeviceData(deviceId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeviceOrgDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.groupControllerGetOrgDeviceData(deviceId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['OrganizationGroupsApi.groupControllerGetOrgDeviceData']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -12020,7 +12280,7 @@ export const OrganizationGroupsApiFactory = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Get groups of the given id and its children groups and devices
+         * @summary Retrieve a group by its ID, including all its child groups and associated devices
          * @param {string} groupId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12030,12 +12290,22 @@ export const OrganizationGroupsApiFactory = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Get root groups and its children groups and devices
+         * @summary Get all root groups with their child groups
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         groupControllerGetGroups(options?: RawAxiosRequestConfig): AxiosPromise<GroupResponseDto> {
             return localVarFp.groupControllerGetGroups(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get device org group data
+         * @param {string} deviceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        groupControllerGetOrgDeviceData(deviceId: string, options?: RawAxiosRequestConfig): AxiosPromise<DeviceOrgDto> {
+            return localVarFp.groupControllerGetOrgDeviceData(deviceId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12083,7 +12353,7 @@ export class OrganizationGroupsApi extends BaseAPI {
 
     /**
      * 
-     * @summary Get groups of the given id and its children groups and devices
+     * @summary Retrieve a group by its ID, including all its child groups and associated devices
      * @param {string} groupId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -12095,13 +12365,25 @@ export class OrganizationGroupsApi extends BaseAPI {
 
     /**
      * 
-     * @summary Get root groups and its children groups and devices
+     * @summary Get all root groups with their child groups
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationGroupsApi
      */
     public groupControllerGetGroups(options?: RawAxiosRequestConfig) {
         return OrganizationGroupsApiFp(this.configuration).groupControllerGetGroups(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get device org group data
+     * @param {string} deviceId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationGroupsApi
+     */
+    public groupControllerGetOrgDeviceData(deviceId: string, options?: RawAxiosRequestConfig) {
+        return OrganizationGroupsApiFp(this.configuration).groupControllerGetOrgDeviceData(deviceId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
