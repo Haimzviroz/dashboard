@@ -547,6 +547,28 @@ paths:
                 $ref: '#/components/schemas/ProjectRefOfferingDto'
       tags: *ref_5
       security: *ref_6
+  /api/v1/catalog/offering/component/{catalogId}:
+    get:
+      operationId: OfferingController_getOfferingOfComp
+      summary: Get Offering of Component
+      description: >-
+        This service message allows retrieval of the offering of a specific
+        component by catalog ID.
+      parameters:
+        - name: catalogId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComponentV2Dto'
+      tags: *ref_5
+      security: *ref_6
   /api/v1/catalog/offering/push:
     post:
       operationId: OfferingController_pushOffering
@@ -4827,6 +4849,7 @@ components:
             - offering
             - push
             - delivery
+            - downloaded
             - deleted
             - deploy
             - installed
@@ -4860,7 +4883,7 @@ components:
         snapshotDate:
           type: string
           description: Timestamp when the discovery snapshot was taken
-          example: 2025-06-25T11:16:39.631Z
+          example: 2025-06-29T16:09:22.253Z
         deviceType:
           type: string
           description: >-
@@ -5225,6 +5248,7 @@ components:
             - offering
             - push
             - delivery
+            - downloaded
             - deleted
             - deploy
             - installed

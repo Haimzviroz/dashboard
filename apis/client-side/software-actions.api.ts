@@ -6,6 +6,6 @@ const logger = Logger(__filename)
 
 export const getSoftwareById = async (catalogId: string) => {
   logger.info(`Req software with id ${catalogId}`)
-  const tokenFun = await CatalogOfferingApiFp(await conf()).offeringControllerGetOfferingForProject(catalogId)
+  const tokenFun = await CatalogOfferingApiFp(await conf()).offeringControllerGetOfferingOfComp(catalogId)
   return (await tokenFun()).data
 }

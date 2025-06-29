@@ -497,6 +497,7 @@ export const ComponentStateDtoStateEnum = {
     Offering: 'offering',
     Push: 'push',
     Delivery: 'delivery',
+    Downloaded: 'downloaded',
     Deleted: 'deleted',
     Deploy: 'deploy',
     Installed: 'installed',
@@ -5543,6 +5544,7 @@ export const SoftwareStateDtoStateEnum = {
     Offering: 'offering',
     Push: 'push',
     Delivery: 'delivery',
+    Downloaded: 'downloaded',
     Deleted: 'deleted',
     Deploy: 'deploy',
     Installed: 'installed',
@@ -6395,6 +6397,44 @@ export const CatalogOfferingApiAxiosParamCreator = function (configuration?: Con
             };
         },
         /**
+         * This service message allows retrieval of the offering of a specific component by catalog ID.
+         * @summary Get Offering of Component
+         * @param {string} catalogId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        offeringControllerGetOfferingOfComp: async (catalogId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'catalogId' is not null or undefined
+            assertParamExists('offeringControllerGetOfferingOfComp', 'catalogId', catalogId)
+            const localVarPath = `/api/v1/catalog/offering/component/{catalogId}`
+                .replace(`{${"catalogId"}}`, encodeURIComponent(String(catalogId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * This service message allows to push component or map by `catalog ID`, to devices or groups of devices
          * @summary Push offering of component or map
          * @param {PushOfferingDto} pushOfferingDto 
@@ -6484,6 +6524,19 @@ export const CatalogOfferingApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * This service message allows retrieval of the offering of a specific component by catalog ID.
+         * @summary Get Offering of Component
+         * @param {string} catalogId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async offeringControllerGetOfferingOfComp(catalogId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ComponentV2Dto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.offeringControllerGetOfferingOfComp(catalogId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CatalogOfferingApi.offeringControllerGetOfferingOfComp']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * This service message allows to push component or map by `catalog ID`, to devices or groups of devices
          * @summary Push offering of component or map
          * @param {PushOfferingDto} pushOfferingDto 
@@ -6535,6 +6588,16 @@ export const CatalogOfferingApiFactory = function (configuration?: Configuration
          */
         offeringControllerGetOfferingForProject(projectIdentifier: string, options?: RawAxiosRequestConfig): AxiosPromise<ProjectRefOfferingDto> {
             return localVarFp.offeringControllerGetOfferingForProject(projectIdentifier, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * This service message allows retrieval of the offering of a specific component by catalog ID.
+         * @summary Get Offering of Component
+         * @param {string} catalogId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        offeringControllerGetOfferingOfComp(catalogId: string, options?: RawAxiosRequestConfig): AxiosPromise<ComponentV2Dto> {
+            return localVarFp.offeringControllerGetOfferingOfComp(catalogId, options).then((request) => request(axios, basePath));
         },
         /**
          * This service message allows to push component or map by `catalog ID`, to devices or groups of devices
@@ -6590,6 +6653,18 @@ export class CatalogOfferingApi extends BaseAPI {
      */
     public offeringControllerGetOfferingForProject(projectIdentifier: string, options?: RawAxiosRequestConfig) {
         return CatalogOfferingApiFp(this.configuration).offeringControllerGetOfferingForProject(projectIdentifier, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * This service message allows retrieval of the offering of a specific component by catalog ID.
+     * @summary Get Offering of Component
+     * @param {string} catalogId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CatalogOfferingApi
+     */
+    public offeringControllerGetOfferingOfComp(catalogId: string, options?: RawAxiosRequestConfig) {
+        return CatalogOfferingApiFp(this.configuration).offeringControllerGetOfferingOfComp(catalogId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
