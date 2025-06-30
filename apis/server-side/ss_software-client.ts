@@ -16,7 +16,7 @@ export class SS_SoftwareClient extends SS_HttpClient {
   async getSoftWareById(catalogId: string) {
     this.logger.info("Req devices meta data")
     try {
-      const fun = await CatalogOfferingApiFp(await this.getOpenApiConf()).offeringControllerGetOfferingForProject(catalogId)
+      const fun = await CatalogOfferingApiFp(await this.getOpenApiConf()).offeringControllerGetOfferingOfComp(catalogId)
       return (await fun()).data
     } catch (error) {
       return this.errorHandler(error as AxiosError)
