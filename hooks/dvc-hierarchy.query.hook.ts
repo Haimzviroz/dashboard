@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Q_PLATFORMS, Q_DEVICE_TYPES, Q_PLATFORM_HIERARCHY } from "@/apis/query-keys";
-import { getPlatforms, getDeviceTypes, createDeviceType, updateDeviceType, deleteDeviceType, createPlatform, updatePlatform, deletePlatform, getPlatformHierarchy, assignDeviceTypeToPlatform, removeDeviceTypeFromPlatform } from "@/apis/client-side/hierarchy-actions.api";
+import { Q_PLATFORMS, Q_DEVICE_TYPES, Q_PLATFORM_HIERARCHY, Q_DEVICE_TYPE_HIERARCHY } from "@/apis/query-keys";
+import { getPlatforms, getDeviceTypes, createDeviceType, updateDeviceType, deleteDeviceType, createPlatform, updatePlatform, deletePlatform, getPlatformHierarchy, assignDeviceTypeToPlatform, removeDeviceTypeFromPlatform, getDeviceTypeHierarchy, assignProjectToDeviceType, removeProjectFromDeviceType } from "@/apis/client-side/hierarchy-actions.api";
 import { CreateDeviceTypeDto, UpdateDeviceTypeDto } from "@/api/src";
 
 export const usePlatforms = () => {
@@ -95,6 +95,38 @@ export const useRemoveDeviceTypeFromPlatform = (platformId: number) => {
   return useMutation({
     mutationFn: async ({ platformId, deviceTypeId }: { platformId: number; deviceTypeId: number }) => removeDeviceTypeFromPlatform(platformId, deviceTypeId),
     onSuccess: () => client.invalidateQueries({ queryKey: [Q_PLATFORM_HIERARCHY, platformId] }),
+    onError: (error) => alert(error),
+  });
+};
+
+export const useDeviceTypeHierarchy = (deviceTypeId: number) => {
+  return useQuery({
+    queryKey: [Q_DEVICE_TYPE_HIERARCHY, deviceTypeId],
+    queryFn: () => getDeviceTypeHierarchy(deviceTypeId),
+    enabled: !!deviceTypeId,
+  });
+};
+
+export const useAssignProjectToDeviceType = () => {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ deviceTypeId, projectId }: { deviceTypeId: number; projectId: string }) =>
+      assignProjectToDeviceType(deviceTypeId, projectId),
+    onSuccess: (_data, variables) => {
+      client.invalidateQueries({ queryKey: [Q_DEVICE_TYPE_HIERARCHY, variables.deviceTypeId] });
+    },
+    onError: (error) => alert(error),
+  });
+};
+
+export const useRemoveProjectFromDeviceType = () => {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ deviceTypeId, projectId }: { deviceTypeId: number; projectId: string }) =>
+      removeProjectFromDeviceType(deviceTypeId, projectId),
+    onSuccess: (_data, variables) => {
+      client.invalidateQueries({ queryKey: [Q_DEVICE_TYPE_HIERARCHY, variables.deviceTypeId] });
+    },
     onError: (error) => alert(error),
   });
 };

@@ -31,5 +31,6 @@ export const Q_DOC = "doc"
 export const Q_PLATFORMS = "platforms"
 export const Q_DEVICE_TYPES = "device_types"
 export const Q_PLATFORM_HIERARCHY = 'platformHierarchy'
+export const Q_DEVICE_TYPE_HIERARCHY = 'deviceTypeHierarchy'
 
 

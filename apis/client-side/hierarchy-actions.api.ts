@@ -56,3 +56,18 @@ export const removeDeviceTypeFromPlatform = async (platformId: number, deviceTyp
   const fun = await DeviceHierarchyApiFp(await conf()).hierarchyControllerRemoveDeviceTypeFromPlatform(platformId, deviceTypeId);
   return (await fun()).data;
 };
+
+export const getDeviceTypeHierarchy = async (deviceTypeId: number) => {
+  const fun = await DeviceHierarchyApiFp(await conf()).hierarchyControllerGetDeviceTypeHierarchy(deviceTypeId);
+  return (await fun()).data;
+};
+
+export const assignProjectToDeviceType = async (deviceTypeId: number, projectIdentifier: string) => {
+  const fun = await DeviceHierarchyApiFp(await conf()).hierarchyControllerAddProjectToDeviceType(deviceTypeId, projectIdentifier);
+  return (await fun()).data;
+};
+
+export const removeProjectFromDeviceType = async (deviceTypeId: number, projectIdentifier: string) => {
+  const fun = await DeviceHierarchyApiFp(await conf()).hierarchyControllerRemoveProjectFromDeviceType(deviceTypeId, projectIdentifier);
+  return (await fun()).data;
+};

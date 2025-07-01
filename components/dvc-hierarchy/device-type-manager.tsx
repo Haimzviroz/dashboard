@@ -4,6 +4,7 @@ import { Add, Edit, Delete } from '@mui/icons-material';
 import EntityDialog from './entity-dialog';
 import { useCreateDeviceType, useUpdateDeviceType, useDeleteDeviceType } from '@/hooks/dvc-hierarchy.query.hook';
 import { DeviceTypeDto } from '@/api/src';
+import DeviceTypeHierarchyCard from './device-type-hierarchy-card';
 
 interface DeviceTypeManagerProps {
   deviceTypes: DeviceTypeDto[];
@@ -62,26 +63,26 @@ const DeviceTypeManager: React.FC<DeviceTypeManagerProps> = ({ deviceTypes }) =>
       <Grid container spacing={2}>
         {deviceTypes.map((deviceType) => (
           <Grid item xs={12} key={deviceType.id}>
-            <Paper variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="flex-start">
-                <Box>
-                  <Typography variant="subtitle1" fontWeight={500}>{deviceType.name}</Typography>
-                  <Typography variant="body2" color="text.secondary">{deviceType.description}</Typography>
-                </Box>
-                <Stack direction="row" spacing={1}>
-                  <Tooltip title="Edit Device Type">
-                    <IconButton size="small" onClick={() => openDialog('edit', deviceType)}>
-                      <Edit fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Delete Device Type">
-                    <IconButton size="small" onClick={() => handleDelete(deviceType.id)}>
-                      <Delete fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
-              </Box>
-            </Paper>
+            <DeviceTypeHierarchyCard 
+              deviceType={deviceType} 
+              projects={[]}
+              cardSx={{
+                background: 'linear-gradient(90deg, #f5f7fa 0%, #c3cfe2 100%)',
+                border: '2px solid #90caf9',
+                boxShadow: '0 2px 8px 0 rgba(33,150,243,0.08)',
+                borderRadius: 3,
+                p: 2,
+                mb: 2
+              }}
+              headerSx={{
+                background: '#e3f2fd',
+                borderRadius: 2,
+                px: 2,
+                py: 1,
+                mb: 1
+              }}
+              iconColor="#1976d2"
+            />
           </Grid>
         ))}
       </Grid>
