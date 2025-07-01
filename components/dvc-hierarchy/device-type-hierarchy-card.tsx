@@ -5,7 +5,8 @@ import EntityDialog from './entity-dialog';
 import { useDeviceTypeHierarchy, useUpdateDeviceType, useDeleteDeviceType, useAssignProjectToDeviceType, useRemoveProjectFromDeviceType } from '@/hooks/dvc-hierarchy.query.hook';
 import { getProjects } from '@/apis/client-side/projects-actions.api';
 import AssignProjectDialog from './assign-project-dialog';
-import { DeviceTypeDto, DeviceTypeHierarchyDto, ProjectDto, ProjectRefDto } from '@/api/src';
+import { DeviceTypeDto, ProjectDto, ProjectRefDto } from '@/api/src';
+import ProjectDetailsPopover from './project-details-popover';
 
 interface DeviceTypeHierarchyCardProps {
   deviceType: DeviceTypeDto;
@@ -110,19 +111,23 @@ const DeviceTypeHierarchyCard: React.FC<DeviceTypeHierarchyCardProps> = ({ devic
         <Grid container spacing={1}>
           {deviceTypeNode.projects.map((proj: ProjectRefDto) => (
             <Grid item key={proj.projectId} xs={12} sm={6} md={4}>
-              <Paper variant="outlined" sx={{ p: 1, borderRadius: 2, height: '100%' }}>
-                <Box display="flex" justifyContent="space-between" alignItems="flex-start">
-                  <Box display="flex" alignItems="center">
-                    <Folder sx={{ mt: 0.25, mr: 0.5, fontSize: 18, color: 'secondary.main' }} />
-                    <Typography variant="body2" fontWeight={500} sx={{ fontSize: 13 }}>{proj.projectName}</Typography>
+              <ProjectDetailsPopover projectId={proj.projectId}>
+                <Paper variant="outlined" sx={{ p: 1, borderRadius: 2, height: '100%' }}>
+                  <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+                    <Box display="flex" alignItems="center" sx={{ cursor: 'pointer' }}>
+                      <Folder sx={{ mt: 0.25, mr: 0.5, fontSize: 18, color: 'secondary.main' }} />
+                      <Typography variant="body2" fontWeight={500} sx={{ fontSize: 13 }}>
+                        {proj.projectName}
+                      </Typography>
+                    </Box>
+                    <Tooltip title="Remove Project">
+                      <IconButton size="small" onClick={() => handleRemoveProject(proj.projectId)}>
+                        <Delete fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
                   </Box>
-                  <Tooltip title="Remove Project">
-                    <IconButton size="small" onClick={() => handleRemoveProject(proj.projectId)}>
-                      <Delete fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              </Paper>
+                </Paper>
+              </ProjectDetailsPopover>
             </Grid>
           ))}
         </Grid>
