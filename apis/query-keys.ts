@@ -28,4 +28,8 @@ export const Q_REG_TYPES = "regulations_types"
 export const Q_DOCS = "docs"
 export const Q_DOC = "doc"
 
+export const Q_PLATFORMS = "platforms"
+export const Q_DEVICE_TYPES = "device_types"
+export const Q_PLATFORM_HIERARCHY = 'platformHierarchy'
+
 
