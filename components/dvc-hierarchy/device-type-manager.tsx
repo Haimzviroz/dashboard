@@ -63,7 +63,7 @@ const DeviceTypeManager: React.FC<DeviceTypeManagerProps> = ({ deviceTypes }) =>
       </Box>
       <Divider sx={{ mb: 2 }} />
       {error && <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>{error}</Alert>}
-      <Grid container spacing={2}>
+      <Grid container spacing={0}>
         {deviceTypes.map((deviceType) => (
           <Grid item xs={12} key={deviceType.id}>
             <DeviceTypeHierarchyCard
@@ -74,8 +74,10 @@ const DeviceTypeManager: React.FC<DeviceTypeManagerProps> = ({ deviceTypes }) =>
                 border: '2px solid #90caf9',
                 boxShadow: '0 2px 8px 0 rgba(33,150,243,0.08)',
                 borderRadius: 3,
-                p: 2,
-                mb: 2
+                pt: 2,
+                pb: 0,
+                px: 2,
+                // mb: 2
               }}
               headerSx={{
                 background: '#e3f2fd',

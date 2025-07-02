@@ -64,62 +64,82 @@ const PlatformHierarchyCard: React.FC<PlatformHierarchyCardProps> = ({ platform,
   if (isLoading) return <Typography variant="body2" color="text.secondary">Loading hierarchy...</Typography>;
 
   return (
-    <Paper elevation={3} sx={{ p: 2, borderRadius: 2, mb: 2 }}>
-      <Box display="flex" alignItems="center" justifyContent="space-between">
+    <Paper elevation={3} sx={{
+      p: 0,
+      borderRadius: 3,
+      mb: 3,
+      background: 'linear-gradient(135deg, #f5f7fa 0%, #e3e9f0 100%)',
+      boxShadow: '0 4px 24px 0 rgba(60,72,100,0.08)',
+    }}>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{
+          px: 2,
+          py: 2,
+          borderTopLeftRadius: 12,
+          borderTopRightRadius: 12,
+          background: 'rgba(255,255,255,0.85)',
+          borderBottom: '1px solid #e0e3e7',
+        }}
+      >
         <Box display="flex" alignItems="center">
-          <Business sx={{ mr: 1, color: 'primary.main' }} />
+          <Business sx={{ mr: 1, color: 'primary.main', fontSize: 32 }} />
           <Box>
-            <Typography variant="h6" fontWeight={600}>{platform.name}</Typography>
+            <Typography variant="h6" fontWeight={700} sx={{ letterSpacing: 0.5 }}>{platform.name}</Typography>
             <Typography variant="body2" color="text.secondary">{platform.description}</Typography>
           </Box>
         </Box>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={0} alignItems="center">
           <Tooltip title="Assign Device Type">
-            <IconButton size="small" onClick={handleAssign}>
+            <IconButton size="small" onClick={handleAssign} sx={{ bgcolor: 'primary.50', '&:hover': { bgcolor: 'primary.100' } }}>
               <Add fontSize="small" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Edit Platform">
-            <IconButton size="small" onClick={handleEdit}>
+            <IconButton size="small" onClick={handleEdit} sx={{ bgcolor: 'primary.50', '&:hover': { bgcolor: 'primary.100' } }}>
               <Edit fontSize="small" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Delete Platform">
-            <IconButton size="small" onClick={handleDelete}>
+            <IconButton size="small" onClick={handleDelete} sx={{ bgcolor: 'error.50', '&:hover': { bgcolor: 'error.100' } }}>
               <Delete fontSize="small" />
             </IconButton>
           </Tooltip>
         </Stack>
       </Box>
-      <Divider sx={{ my: 2 }} />
-      {platformNode?.deviceTypes && platformNode.deviceTypes.length > 0 ? (
-        <Grid container spacing={2}>
-          {platformNode.deviceTypes.map((dt: DeviceTypeHierarchyDto) => {
-            if (!dt) return null;
-            return (
-              <Grid item key={dt.deviceTypeId} xs={12} sm={6} md={4} minWidth={200}>
-                <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, height: '100%' }}>
-                  <Box display="flex" justifyContent="space-between" alignItems="flex-start">
-                    <Box display="flex" alignItems="flex-start">
-                      <Devices sx={{ mt: 0.5, mr: 1, color: 'secondary.main' }} />
-                      <Typography variant="body2" fontWeight={500}>{dt.deviceTypeName}</Typography>
+      <Divider />
+      <Box sx={{ p: 2 }}>
+        {platformNode?.deviceTypes && platformNode.deviceTypes.length > 0 ? (
+          <Grid container spacing={2}>
+            {platformNode.deviceTypes.map((dt: DeviceTypeHierarchyDto) => {
+              if (!dt) return null;
+              return (
+                <Grid item key={dt.deviceTypeId} xs={12} sm={6} md={4} minWidth={200}>
+                  <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, height: '100%' }}>
+                    <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+                      <Box display="flex" alignItems="flex-start">
+                        <Devices sx={{ mt: 0.5, mr: 1, color: 'secondary.main' }} />
+                        <Typography variant="body2" fontWeight={500}>{dt.deviceTypeName}</Typography>
+                      </Box>
+                      <Tooltip title="Remove Device Type">
+                        <IconButton size="small" onClick={() => handleRemoveDeviceType(dt.deviceTypeId)} disabled={removeMutation.isPending} sx={{ bgcolor: 'error.50', '&:hover': { bgcolor: 'error.100' } }}>
+                          <Delete fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                     </Box>
-                    <Tooltip title="Remove Device Type">
-                      <IconButton size="small" onClick={() => handleRemoveDeviceType(dt.deviceTypeId)} disabled={removeMutation.isPending}>
-                        <Delete fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                </Paper>
-              </Grid>
-            );
-          })}
-        </Grid>
-      ) : (
-        <Typography variant="body2" fontStyle="italic" color="text.secondary">
-          No device types assigned.
-        </Typography>
-      )}
+                  </Paper>
+                </Grid>
+              );
+            })}
+          </Grid>
+        ) : (
+          <Typography variant="body2" fontStyle="italic" color="text.secondary">
+            No device types assigned.
+          </Typography>
+        )}
+      </Box>
       <EntityDialog
         open={editDialogOpen}
         onClose={() => setEditDialogOpen(false)}

@@ -50,7 +50,7 @@ const PlatformManager: React.FC<PlatformManagerProps> = ({ platforms, deviceType
       </Box>
       <Divider sx={{ mb: 2 }} />
       {error && <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>{error}</Alert>}
-      <Grid container spacing={4}>
+      <Grid container spacing={1}>
         {platforms.map((platform) => (
           <Grid item xs={12} key={platform.id}>
             <PlatformHierarchyCard
