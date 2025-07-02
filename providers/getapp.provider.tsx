@@ -2,12 +2,12 @@ import { createContext, FC, useEffect, useState, useRef, useContext } from "reac
 import { DashNavBarOption, ProNavBarOption, SideBarOption } from "@/types/enum";
 import { Activate, GetAppProviderProps } from "@/types/interfaces";
 import { useRouter } from "next/router";
-import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS, R_GET_APP, R_GROUPS, R_APP_GROUP, R_MAP_GROUP } from "@/apis/routes";
+import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS, R_GET_APP, R_APP_GROUP, R_MAP_GROUP, R_CATALOG } from "@/apis/routes";
 import { Group } from "@/types/interfaces/devices";
 import { useGroups } from "@/hooks/group.query.hook";
 import { RouterHelpers } from "@/utils/helpers/router.helper";
 
-export const useGetApp = ()  => useContext(GetAppContext)
+export const useGetApp = () => useContext(GetAppContext)
 
 export const GetAppContext = createContext({} as GetAppProviderProps)
 
@@ -25,7 +25,7 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 	const [selectedGroup, setSelectedGroup] = useState<number[]>(getSelectedGroups())
 	const [activated, setActivated] = useState<Activate | null>(null);
 	const [proNavBarActive, setProNavBarActive] = useState<ProNavBarOption | null>(ProNavBarOption.OVERVIEW);
-	const [dashNavBarActive, setDashNavBarActive ] = useState<DashNavBarOption | null>(DashNavBarOption.PRODUCTS);
+	const [dashNavBarActive, setDashNavBarActive] = useState<DashNavBarOption | null>(DashNavBarOption.PRODUCTS);
 	const [sideBarCollapse, setSideBarCollapse] = useState<boolean>(true);
 
 	const isFirstLoad = useRef(true); // useRef to track first load without causing re-render
@@ -68,6 +68,8 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 				return R_MAPS
 			case SideBarOption.DEVICES:
 				return R_DEVICES
+			case SideBarOption.CATALOG:
+				return R_CATALOG
 			default:
 				break;
 		}
@@ -78,6 +80,7 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 		if (router.pathname.startsWith(R_APP_DEVICES) || router.pathname.startsWith(R_MAP_DEVICES)) return SideBarOption.DEVICES;
 		if (router.pathname.startsWith(R_PROJECTS)) return SideBarOption.APPS;
 		if (router.pathname.startsWith(R_APP_GROUP) || router.pathname.startsWith(R_MAP_GROUP)) return SideBarOption.GROUPS;
+		if (router.pathname.startsWith(R_CATALOG)) return SideBarOption.CATALOG;
 	}
 
 	const getProNavBarActivated = () => {
@@ -90,7 +93,7 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 			if (router.pathname.includes(ProNavBarOption.SETTINGS)) return ProNavBarOption.SETTINGS;
 		}
 	}
-	
+
 	const getDashNavBarActivated = () => {
 		if (router.pathname.startsWith(R_GET_APP)) {
 			if (router.pathname.endsWith(DashNavBarOption.PRODUCTS)) return DashNavBarOption.PRODUCTS;

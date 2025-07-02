@@ -38,7 +38,7 @@ const ProjectsDashboard: FC<ProjectsProps> = ({projectType}) => {
       {searchTerm && searchTerm.length > 1 && searchedP.pSearchResult && searchedP.pSearchResult.length > 0 ?
         <ProjectList title="Search results" projects={searchedP.pSearchResult} router={router} /> :
         <Fragment>
-          {projects && <ProjectList title="Pined Projects" projects={projects.filter(p => p.memberContext?.preferences.pinned)} router={router} />}
+          {projects && <ProjectList title="Pinned Projects" projects={projects.filter(p => p.memberContext?.preferences.pinned)} router={router} />}
           {projects && <ProjectList title="All Projects" projects={projects} router={router} />}
         </Fragment>}
     </Box>

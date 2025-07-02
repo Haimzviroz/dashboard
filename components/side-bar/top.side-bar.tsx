@@ -12,11 +12,13 @@ import ComputerActive from "../../assets/side-bar/computer-active.svg";
 import GroupManage from "../../assets/side-bar/group-manage.svg";
 import GroupManageActive from "../../assets/side-bar/group-manage-active.svg";
 
+import Catalog from "../../assets/side-bar/catalog.svg";
+import CatalogActive from "../../assets/side-bar/catalog-active.svg";
 
 import { AppScopeEnum, SideBarOption } from "@/types/enum";
 import { useGetApp } from "@/providers/getapp.provider";
 import Router from "next/router";
-import { R_APP_DEVICES, R_MAP_DEVICES, R_MAPS, R_PROJECTS, R_APP_GROUP, R_MAP_GROUP } from "@/apis/routes";
+import { R_APP_DEVICES, R_MAP_DEVICES, R_MAPS, R_PROJECTS, R_APP_GROUP, R_MAP_GROUP, R_CATALOG } from "@/apis/routes";
 
 interface SideBarItem {
   key: SideBarOption,
@@ -87,7 +89,14 @@ const Items: SideBarItem[] = [
     activeIcon: GroupManageActive,
     route: R_MAP_GROUP,
     scope: AppScopeEnum.getmap
-
+  },
+  {
+    key: SideBarOption.CATALOG,
+    name: "קטלוג",
+    icon: Catalog,
+    activeIcon: CatalogActive,
+    route: R_CATALOG,
+    scope: AppScopeEnum.getapp
   }
 ]
 
