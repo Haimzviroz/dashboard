@@ -9,11 +9,13 @@ import Map from "../../assets/side-bar/map2.svg";
 import MapActive from "../../assets/side-bar/map2-active.svg";
 import Computer from "../../assets/side-bar/computer.svg";
 import ComputerActive from "../../assets/side-bar/computer-active.svg";
+import Catalog from "../../assets/side-bar/catalog.svg";
+import CatalogActive from "../../assets/side-bar/catalog-active.svg";
 
 import { AppScopeEnum, SideBarOption } from "@/types/enum";
 import { useGetApp } from "@/providers/getapp.provider";
 import Router from "next/router";
-import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS } from "@/apis/routes";
+import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS, R_CATALOG } from "@/apis/routes";
 
 interface SideBarItem {
   key: SideBarOption,
@@ -68,6 +70,14 @@ const Items: SideBarItem[] = [
     activeIcon: ComputerActive,
     route: R_MAP_DEVICES,
     scope: AppScopeEnum.getmap
+  },
+  {
+    key: SideBarOption.CATALOG,
+    name: "קטלוג",
+    icon: Catalog,
+    activeIcon: CatalogActive,
+    route: R_CATALOG,
+    scope: AppScopeEnum.getapp
   }
 ]
 
