@@ -64,5 +64,5 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 Devices.getLayout = (page: ReactElement) => {
-  return <GA_layout page={page} />
+  return <GA_layout page={page} withGroups={true} />
 }

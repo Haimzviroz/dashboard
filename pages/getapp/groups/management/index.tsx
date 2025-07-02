@@ -36,7 +36,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
-        groupList
       }
     }
   } catch (error: any) {

@@ -3,10 +3,11 @@ import { Q_GROUP, Q_GROUPS } from "../apis/query-keys";
 import { getGroup, getGroups } from "@/apis/client-side/devices-actions.api";
 import { ChildGroupDto, GroupResponseDto } from "@/api/src";
 
-export const useGroups = () => {
+export const useGroups = (option?:any) => {
   const { data: groups } = useQuery<GroupResponseDto>({
     queryKey: [Q_GROUPS],
     queryFn: getGroups,
+    ...option
   })
   return { groups }
 }

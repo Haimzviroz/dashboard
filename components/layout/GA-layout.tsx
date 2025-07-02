@@ -14,11 +14,15 @@ import { useGroups } from "@/hooks/group.query.hook";
 
 interface GA_layoutProps {
 	page: ReactElement;
+	withGroups?: boolean;
 	children?: ReactElement;
 }
 
-const GA_layout: FC<GA_layoutProps> = ({ page, children }) => {
-	const { groups } = useGroups()
+const GA_layout: FC<GA_layoutProps> = ({ page, children, withGroups }) => {
+		
+	const groupsResult = useGroups({ enabled: withGroups });
+	const groups = withGroups === true ? groupsResult.groups : undefined;
+
 	if (page.props.error) return <ErrorPage {...page.props.error}></ErrorPage>;
 	if (page.props.tokenError) return <LoginPage routePath={R_GET_APP} {...page.props} />;
 
