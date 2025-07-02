@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, Typography, CircularProgress, Popover } from '@mui/material';
+import { Box, Typography, CircularProgress, Popper, Paper } from '@mui/material';
 import { useProject } from '@/hooks/project.query.hook';
 
 interface ProjectDetailsPopoverProps {
@@ -28,11 +28,14 @@ const ProjectDetailsPopover: React.FC<ProjectDetailsPopoverProps> = ({
   const handleEnter = () => {
     if (leaveTimer.current) clearTimeout(leaveTimer.current);
     enterTimer.current = setTimeout(() => {
-      setAnchorEl(wrapperRef.current);
-      setFetchEnabled(true);
-      setOpen(true);
+      if (wrapperRef.current) {
+        setAnchorEl(wrapperRef.current);
+        setFetchEnabled(true);
+        setOpen(true);
+      }
     }, delay);
   };
+
 
   const handleLeave = () => {
     if (enterTimer.current) clearTimeout(enterTimer.current);
@@ -59,17 +62,37 @@ const ProjectDetailsPopover: React.FC<ProjectDetailsPopoverProps> = ({
         {children}
       </Box>
 
-      <Popover
+      <Popper
         open={open}
         anchorEl={anchorEl}
-        onClose={handleLeave}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-        disableRestoreFocus
-        slotProps={{ paper: { sx: { pointerEvents: 'none', maxWidth: 340, p: 0, borderRadius: 2, boxShadow: 3 } } }}
+        placement="bottom"
+        disablePortal
+        sx={{ zIndex: 1 }}
+        modifiers={[
+          {
+            name: 'offset',
+            options: {
+              offset: [0, 0],
+            },
+          },
+        ]}
       >
-        <Box p={2} minWidth={260}>
-          <Typography variant="caption" color="primary" fontWeight={700} sx={{ letterSpacing: 1, mb: 1, display: 'block' }}>
+        <Paper
+          elevation={3}
+          sx={{
+            pointerEvents: 'none',
+            minWidth: 200,
+            maxWidth: 340,
+            borderRadius: 2,
+            p: 2,
+          }}
+        >
+          <Typography
+            variant="caption"
+            color="primary"
+            fontWeight={700}
+            sx={{ letterSpacing: 1, mb: 1, display: 'block' }}
+          >
             Project Details
           </Typography>
           {isLoading ? (
@@ -79,23 +102,34 @@ const ProjectDetailsPopover: React.FC<ProjectDetailsPopoverProps> = ({
             </Box>
           ) : project ? (
             <>
-              <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 0.5 }}>{project.name}</Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>{project.description}</Typography>
+              <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 0.5 }}>
+                {project.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                {project.description}
+              </Typography>
               {project.summary?.latestRelease && (
                 <Box mt={0.5}>
                   <Typography variant="caption" color="text.secondary">
                     Latest Version:{' '}
-                    {project.summary.latestRelease.name && <b>{project.summary.latestRelease.name}</b>}
-                    {project.summary.latestRelease.version && <> ({project.summary.latestRelease.version})</>}
+                    {project.summary.latestRelease.name && (
+                      <b>{project.summary.latestRelease.name}</b>
+                    )}
+                    {project.summary.latestRelease.version && (
+                      <> ({project.summary.latestRelease.version})</>
+                    )}
                   </Typography>
                 </Box>
               )}
             </>
           ) : (
-            <Typography variant="body2" color="text.secondary">No details available.</Typography>
+            <Typography variant="body2" color="text.secondary">
+              No details available.
+            </Typography>
           )}
-        </Box>
-      </Popover>
+        </Paper>
+      </Popper>
+
     </>
   );
 };
