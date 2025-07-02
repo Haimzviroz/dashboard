@@ -17,8 +17,8 @@ const AssignDeviceDialog: React.FC<AssignDeviceDialogProps> = ({ open, deviceTyp
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>Assign Device Types to Platform</DialogTitle>
       <DialogContent>
-        <FormControl fullWidth variant="outlined">
-          <InputLabel>Select Device Types</InputLabel>
+        <FormControl fullWidth variant="outlined" sx={{ mt: 2 }}>
+          <InputLabel sx={{ width: 'auto' }}>Select Device Types</InputLabel>
           <Select
             multiple
             value={selectedDeviceTypes}
