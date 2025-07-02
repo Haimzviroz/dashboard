@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Grid, Paper, IconButton, Tooltip, Typography, Box, Stack, Alert } from '@mui/material';
+import { Button, Grid, Paper, IconButton, Tooltip, Typography, Box, Stack, Alert, Divider } from '@mui/material';
 import { Add, Edit, Delete } from '@mui/icons-material';
 import EntityDialog from './entity-dialog';
 import { useCreateDeviceType, useUpdateDeviceType, useDeleteDeviceType } from '@/hooks/dvc-hierarchy.query.hook';
@@ -54,17 +54,20 @@ const DeviceTypeManager: React.FC<DeviceTypeManagerProps> = ({ deviceTypes }) =>
   return (
     <>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6">Device Types</Typography>
+        <Typography variant="h6" gutterBottom color="secondary">
+          Device Types
+        </Typography>
         <Button variant="outlined" size="small" startIcon={<Add />} onClick={() => openDialog('create')}>
           Add Type
         </Button>
       </Box>
+      <Divider sx={{ mb: 2 }} />
       {error && <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>{error}</Alert>}
       <Grid container spacing={2}>
         {deviceTypes.map((deviceType) => (
           <Grid item xs={12} key={deviceType.id}>
-            <DeviceTypeHierarchyCard 
-              deviceType={deviceType} 
+            <DeviceTypeHierarchyCard
+              deviceType={deviceType}
               projects={[]}
               cardSx={{
                 background: 'linear-gradient(90deg, #f5f7fa 0%, #c3cfe2 100%)',

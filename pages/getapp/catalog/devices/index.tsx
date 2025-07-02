@@ -72,10 +72,6 @@ const OrganizationalStructurePage: NextPageWithLayout = () => {
               height: '100%',
             }}
           >
-            <Typography variant="h6" gutterBottom color="primary">
-              Platform Management
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
             <PlatformManager platforms={platforms} deviceTypes={deviceTypes} />
           </Paper>
         ) : null}
@@ -89,10 +85,6 @@ const OrganizationalStructurePage: NextPageWithLayout = () => {
               height: '100%',
             }}
           >
-            <Typography variant="h6" gutterBottom color="secondary">
-              Device Types
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
             <DeviceTypeManager deviceTypes={deviceTypes} />
           </Paper>
         ) : null}

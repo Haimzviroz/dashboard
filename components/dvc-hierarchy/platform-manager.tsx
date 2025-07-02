@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Button, Grid, Box, Alert } from '@mui/material';
+import { Typography, Button, Grid, Box, Alert, Divider } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import EntityDialog from './entity-dialog';
 import { useCreatePlatform } from '@/hooks/dvc-hierarchy.query.hook';
@@ -40,12 +40,15 @@ const PlatformManager: React.FC<PlatformManagerProps> = ({ platforms, deviceType
 
   return (
     <>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h5">Platform & Device Type Manager</Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="baseline" mb={1}>
+        <Typography variant="h5" gutterBottom color="primary">
+          Platform Management
+        </Typography>
         <Button variant="contained" startIcon={<Add />} onClick={() => openDialog('create')}>
           Add Platform
         </Button>
       </Box>
+      <Divider sx={{ mb: 2 }} />
       {error && <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>{error}</Alert>}
       <Grid container spacing={4}>
         {platforms.map((platform) => (
