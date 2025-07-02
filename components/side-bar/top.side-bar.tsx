@@ -60,7 +60,7 @@ const Items: SideBarItem[] = [
   },
   {
     key: SideBarOption.DEVICES,
-    name: "ניהול אמצעי קצה",
+    name: "אמצעי קצה",
     icon: Computer,
     activeIcon: ComputerActive,
     route: R_APP_DEVICES,
@@ -68,7 +68,7 @@ const Items: SideBarItem[] = [
   },
   {
     key: SideBarOption.DEVICES,
-    name: "ניהול אמצעי קצה",
+    name: "אמצעי קצה",
     icon: Computer,
     activeIcon: ComputerActive,
     route: R_MAP_DEVICES,
@@ -76,7 +76,7 @@ const Items: SideBarItem[] = [
   },
   {
     key: SideBarOption.GROUPS,
-    name: "ניהול קבוצות",
+    name: "קבוצות",
     icon: GroupManage,
     activeIcon: GroupManageActive,
     route: R_APP_GROUP,
@@ -84,7 +84,7 @@ const Items: SideBarItem[] = [
   },
   {
     key: SideBarOption.GROUPS,
-    name: "ניהול קבוצות",
+    name: "קבוצות",
     icon: GroupManage,
     activeIcon: GroupManageActive,
     route: R_MAP_GROUP,
