@@ -5,7 +5,6 @@ import EntityDialog from './entity-dialog';
 import { useCreatePlatform } from '@/hooks/dvc-hierarchy.query.hook';
 import { DeviceTypeDto, PlatformDto } from '@/api/src';
 import PlatformHierarchyCard from './platform-hierarchy-card';
-import { on } from 'events';
 
 interface PlatformManagerProps {
   platforms: PlatformDto[];

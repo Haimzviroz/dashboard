@@ -43,7 +43,7 @@ export const useSearchProjects = () => {
   })
 }
 
-export const useProject = (name: string, options: any) => {
+export const useProject = (name: string, options?: any) => {
   const { data: project, refetch, isLoading } = useQuery<DetailedProjectDto>({
     queryKey: [Q_PROJECT, name],
     queryFn: () => getProject(name),
