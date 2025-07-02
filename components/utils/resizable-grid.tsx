@@ -41,6 +41,18 @@ const ResizableGrid: React.FC<ResizableGridProps> = ({ left, right, minLeft = 25
     };
   });
 
+  // If only left or right is present, show it at full width
+  if (left && !right) {
+    return (
+      <Box width="100%" height="100%">{left}</Box>
+    );
+  }
+  if (right && !left) {
+    return (
+      <Box width="100%" height="100%">{right}</Box>
+    );
+  }
+
   return (
     <Box ref={containerRef} display="flex" width="100%" height="100%" position="relative">
       <Box flexBasis={`${leftWidth}%`} flexGrow={0} flexShrink={0} minWidth={minLeft} maxWidth={`calc(100% - ${minRight}px)`}>

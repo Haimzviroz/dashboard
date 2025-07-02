@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { Box, Typography, CircularProgress, Alert, Grid, Paper, Divider } from '@mui/material';
+import { Box, Typography, CircularProgress, Paper, Divider } from '@mui/material';
 
 import { Q_PLATFORMS, Q_DEVICE_TYPES } from '@/apis/query-keys';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
@@ -19,6 +19,9 @@ const OrganizationalStructurePage: NextPageWithLayout = () => {
   const { deviceTypes } = useDeviceTypes();
   const loading = !platforms || !deviceTypes;
 
+  const [showLeft, setShowLeft] = React.useState(true);
+  const [showRight, setShowRight] = React.useState(true);
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
@@ -30,8 +33,36 @@ const OrganizationalStructurePage: NextPageWithLayout = () => {
 
   return (
     <Box sx={{ p: 4 }}>
+      <Box display="flex" gap={2} mb={2}>
+        <button
+          style={{ padding: '6px 16px', borderRadius: 4, border: 0, background: showLeft ? '#1976d2' : '#fff', color: showLeft ? '#fff' : '#1976d2', cursor: 'pointer' }}
+          onClick={() => {
+            if (showLeft) {
+              setShowLeft(false);
+              setShowRight(true);
+            } else {
+              setShowLeft(true);
+            }
+          }}
+        >
+          {showLeft ? 'Hide Platform Management' : 'Show Platform Management'}
+        </button>
+        <button
+          style={{ padding: '6px 16px', borderRadius: 4, border: 0, background: showRight ? '#9c27b0' : '#fff', color: showRight ? '#fff' : '#9c27b0', cursor: 'pointer' }}
+          onClick={() => {
+            if (showRight) {
+              setShowRight(false);
+              setShowLeft(true);
+            } else {
+              setShowRight(true);
+            }
+          }}
+        >
+          {showRight ? 'Hide Device Types' : 'Show Device Types'}
+        </button>
+      </Box>
       <ResizableGrid
-        left={
+        left={showLeft ? (
           <Paper
             elevation={3}
             sx={{
@@ -47,8 +78,8 @@ const OrganizationalStructurePage: NextPageWithLayout = () => {
             <Divider sx={{ mb: 2 }} />
             <PlatformManager platforms={platforms} deviceTypes={deviceTypes} />
           </Paper>
-        }
-        right={
+        ) : null}
+        right={showRight ? (
           <Paper
             elevation={3}
             sx={{
@@ -64,13 +95,13 @@ const OrganizationalStructurePage: NextPageWithLayout = () => {
             <Divider sx={{ mb: 2 }} />
             <DeviceTypeManager deviceTypes={deviceTypes} />
           </Paper>
-        }
+        ) : null}
         minLeft={320}
         minRight={320}
       />
     </Box>
   );
-};
+}
 
 export default OrganizationalStructurePage;
 
