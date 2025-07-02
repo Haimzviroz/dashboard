@@ -172,8 +172,8 @@ const DeviceTypeHierarchyCard: React.FC<DeviceTypeHierarchyCardProps> = ({ devic
         onAssign={handleAssignProject}
         loading={assignLoading}
         page={page}
-        setPage={setPage}
         totalPages={totalPages}
+        onPageChange={setPage}
       />
     </Paper>
   );
