@@ -110,7 +110,7 @@ const DeviceTypeHierarchyCard: React.FC<DeviceTypeHierarchyCardProps> = ({ devic
       {deviceTypeNode?.projects && deviceTypeNode.projects.length > 0 ? (
         <Grid container spacing={1}>
           {deviceTypeNode.projects.map((proj: ProjectRefDto) => (
-            <Grid item key={proj.projectId} xs={12} sm={6} md={4}>
+            <Grid item key={proj.projectId} xs={12} sm={6} md={4} minWidth={200}>
               <ProjectDetailsPopover projectId={proj.projectId}>
                 <Paper variant="outlined" sx={{ p: 1, borderRadius: 2, height: '100%' }}>
                   <Box display="flex" justifyContent="space-between" alignItems="flex-start">

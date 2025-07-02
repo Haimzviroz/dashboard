@@ -97,7 +97,7 @@ const PlatformHierarchyCard: React.FC<PlatformHierarchyCardProps> = ({ platform,
           {platformNode.deviceTypes.map((dt: DeviceTypeHierarchyDto) => {
             if (!dt) return null;
             return (
-              <Grid item key={dt.deviceTypeId} xs={12} sm={6} md={4}>
+              <Grid item key={dt.deviceTypeId} xs={12} sm={6} md={4} minWidth={200}>
                 <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, height: '100%' }}>
                   <Box display="flex" justifyContent="space-between" alignItems="flex-start">
                     <Box display="flex" alignItems="flex-start">
