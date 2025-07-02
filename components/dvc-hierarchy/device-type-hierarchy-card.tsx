@@ -7,6 +7,7 @@ import { getProjects } from '@/apis/client-side/projects-actions.api';
 import AssignProjectDialog from './assign-project-dialog';
 import { DeviceTypeDto, ProjectDto, ProjectRefDto } from '@/api/src';
 import ProjectDetailsPopover from './project-details-popover';
+import Link from 'next/link';
 
 interface DeviceTypeHierarchyCardProps {
   deviceType: DeviceTypeDto;
@@ -132,10 +133,29 @@ const DeviceTypeHierarchyCard: React.FC<DeviceTypeHierarchyCardProps> = ({ devic
                   <Paper variant="outlined" sx={{ p: 1, borderRadius: 2, height: '100%' }}>
                     <Box display="flex" justifyContent="space-between" alignItems="flex-start">
                       <Box display="flex" alignItems="center" sx={{ cursor: 'pointer' }}>
-                        <Folder sx={{ mt: 0.25, mr: 0.5, fontSize: 18, color: 'secondary.main' }} />
-                        <Typography variant="body2" fontWeight={500} sx={{ fontSize: 13 }}>
-                          {proj.projectName}
-                        </Typography>
+                        <Link href={`/getapp/projects/${proj.projectName}/overview`} passHref legacyBehavior>
+                          <Box
+                            display="flex"
+                            alignItems="center"
+                            sx={{
+                              cursor: 'pointer',
+                              textDecoration: 'none',
+                              color: 'inherit',
+                              transition: 'color 0.15s',
+                              '&:hover': {
+                                color: 'secondary.main',
+                                textDecoration: 'underline',
+                                textUnderlineOffset: '3px',
+                              },
+                            }}
+                            component="a"
+                          >
+                            <Folder sx={{ mt: 0.25, mr: 0.5, fontSize: 18, color: 'secondary.main' }} />
+                            <Typography variant="body2" fontWeight={500} sx={{ fontSize: 13 }}>
+                              {proj.projectName}
+                            </Typography>
+                          </Box>
+                        </Link>
                       </Box>
                       <Tooltip title="Remove Project">
                         <IconButton size="small" onClick={() => handleRemoveProject(proj.projectId)} disabled={removeProjectMutation.isPending} sx={{ bgcolor: 'error.50', '&:hover': { bgcolor: 'error.100' } }}>
