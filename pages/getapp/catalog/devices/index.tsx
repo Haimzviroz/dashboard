@@ -116,8 +116,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return {
       props: {
         dehydratedState: dehydrate(queryClient),
-        platforms,
-        deviceTypes
       }
     };
   } catch (error: any) {
