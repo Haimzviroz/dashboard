@@ -11,6 +11,7 @@ import LTR_MuiProvider from '@/providers/ltr-mui.provider';
 import { useDeviceTypes, usePlatforms } from '@/hooks/dvc-hierarchy.query.hook';
 import PlatformManager from '@/components/dvc-hierarchy/platform-manager';
 import DeviceTypeManager from '@/components/dvc-hierarchy/device-type-manager';
+import ResizableGrid from '@/components/utils/resizable-grid';
 
 
 const OrganizationalStructurePage: NextPageWithLayout = () => {
@@ -29,9 +30,8 @@ const OrganizationalStructurePage: NextPageWithLayout = () => {
 
   return (
     <Box sx={{ p: 4 }}>
-
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={8}>
+      <ResizableGrid
+        left={
           <Paper
             elevation={3}
             sx={{
@@ -47,9 +47,8 @@ const OrganizationalStructurePage: NextPageWithLayout = () => {
             <Divider sx={{ mb: 2 }} />
             <PlatformManager platforms={platforms} deviceTypes={deviceTypes} />
           </Paper>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
+        }
+        right={
           <Paper
             elevation={3}
             sx={{
@@ -65,8 +64,10 @@ const OrganizationalStructurePage: NextPageWithLayout = () => {
             <Divider sx={{ mb: 2 }} />
             <DeviceTypeManager deviceTypes={deviceTypes} />
           </Paper>
-        </Grid>
-      </Grid>
+        }
+        minLeft={320}
+        minRight={320}
+      />
     </Box>
   );
 };
