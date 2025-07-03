@@ -108,7 +108,7 @@ const GroupItem: FC<GroupItemProps> = ({ group, selectedGroup, setSelectedGroup 
 
           <DialogTitle>מחיקת קבוצה</DialogTitle>
           <DialogContent>
-            <Typography>האם אתה בטוח שברצונך למחוק את הקבוצה "{group.name}"?</Typography>
+            <Typography>{`האם אתה בטוח שברצונך למחוק את הקבוצה '${group.name}'?`}</Typography>
           </DialogContent>
           <DialogActions sx={{ px: 3, py: 2 }}>
             <Button onClick={handleDeleteClose}>ביטול</Button>
