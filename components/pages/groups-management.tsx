@@ -17,7 +17,6 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
   const { groups: groupsData } = useGroups()
   const { devices } = useQ_Devices()
   const [selectedGroup, setSelectedGroup] = useState<Group>()
-  const [isOpenGroupList, setIsOpenGroupList] = useState<boolean>()
   const [expanded, setExpanded] = useState<string>()
 
   const style: SxProps = {
@@ -41,7 +40,6 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
       background: '#9fb1d1'
     }
   }
-
 
   return (
     <Box sx={{ display: "flex" }}>

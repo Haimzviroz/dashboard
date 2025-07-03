@@ -17,7 +17,7 @@ interface GroupListProps {
 
 const GroupList: FC<GroupListProps> = ({ groups, selectedGroup, setSelectedGroup, expanded, onExpand }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [form, setForm] = useState<CreateDevicesGroupDto>({ name: "", description: "" });
+  const [form, setForm] = useState<CreateDevicesGroupDto>({ name: "" });
 
   // Add group mutation
   const createGroupMutation = useCreateGroup();
@@ -94,7 +94,7 @@ const GroupList: FC<GroupListProps> = ({ groups, selectedGroup, setSelectedGroup
               minRows={2}
             />
           </DialogContent>
-          <DialogActions sx={{px:3, py:2}}>
+          <DialogActions sx={{ px: 3, py: 2 }}>
             <Button onClick={handleDialogClose}>ביטול</Button>
             <Button onClick={handleDialogSave} variant="contained" disabled={!form.name.trim()}>שמור</Button>
           </DialogActions>
