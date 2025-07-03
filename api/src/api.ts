@@ -722,7 +722,7 @@ export interface CreateDevicesGroupDto {
      * @type {string}
      * @memberof CreateDevicesGroupDto
      */
-    'name'?: string;
+    'name': string;
     /**
      * 
      * @type {string}
@@ -1282,6 +1282,12 @@ export interface DeployStatusDto {
      * @memberof DeployStatusDto
      */
     'deployStatus': DeployStatusDtoDeployStatusEnum;
+    /**
+     * 
+     * @type {number}
+     * @memberof DeployStatusDto
+     */
+    'progress'?: number;
     /**
      * 
      * @type {string}
@@ -2634,12 +2640,6 @@ export interface DocDto {
 export interface EditDevicesGroupDto {
     /**
      * 
-     * @type {number}
-     * @memberof EditDevicesGroupDto
-     */
-    'id': number;
-    /**
-     * 
      * @type {string}
      * @memberof EditDevicesGroupDto
      */
@@ -2719,7 +2719,7 @@ export type EditProjectMemberDtoRoleEnum = typeof EditProjectMemberDtoRoleEnum[k
  */
 export interface ErrorDto {
     /**
-     * `APP.unknown`: General Error code not listed in the enum.<br/>`DELIVERY.unknown`: Error code not listed in the enum.<br/>`DELIVERY.notFound`: Delivery with given catalog id not found.<br/>`DELIVERY.download`: Download of delivery item failed.<br/>`DELIVERY.downloadNotAvailable`: Delivery item not yet available for download.<br/>`DELIVERY.notExist`: The package does not exist in storage.<br/>`DELIVERY.invalid`: Package of given catalog id is invalid, maybe expired or otherwise.<br/>`DELIVERY.notVerified`: Package of given catalog id is not verified, the package may be invalid.<br/>`DELIVERY.packageTooLarge`: Package of given catalog id is too large, no space in cache.<br/>`DELIVERY.unableClearCache`: Issue occurred when trying to clear cache.<br/>`MAP.unknown`: Error code not listed in the enum.<br/>`MAP.notFound`: Map with given id not found.<br/>`MAP.bBoxIsInvalid`: BBox is invalid.<br/>`MAP.bBoxNotInAnyPolygon`: The given BBox is not contained in any polygon.<br/>`MAP.getRecordsFailed`: Failed to get records.<br/>`MAP.exportMapFailed`: Error occurred when exporting map.<br/>`MAP.requestInProgress`: Delivery was already requested and is processing.<br/>`MAP.areaTooLarge`: Area too large to distribute, reduce request size and try again.<br/>`MAP.areaTooSmall`: Area too small to distribute, increase request size and try again.<br/>`DEVICE.notFound`: Device with given id not found.<br/>`GROUP_NOT_FOUND`: Group with the given id was not found.<br/>`GROUP_NOT_ALLOWED_TO_ADD`: Not allowed to add to the group, see message for cause.
+     * `APP.unknown`: General Error code not listed in the enum.<br/>`DELIVERY.unknown`: Error code not listed in the enum.<br/>`DELIVERY.notFound`: Delivery with given catalog id not found.<br/>`DELIVERY.download`: Download of delivery item failed.<br/>`DELIVERY.downloadNotAvailable`: Delivery item not yet available for download.<br/>`DELIVERY.notExist`: The package does not exist in storage.<br/>`DELIVERY.invalid`: Package of given catalog id is invalid, maybe expired or otherwise.<br/>`DELIVERY.notVerified`: Package of given catalog id is not verified, the package may be invalid.<br/>`DELIVERY.packageTooLarge`: Package of given catalog id is too large, no space in cache.<br/>`DELIVERY.unableClearCache`: Issue occurred when trying to clear cache.<br/>`MAP.unknown`: Error code not listed in the enum.<br/>`MAP.notFound`: Map with given id not found.<br/>`MAP.bBoxIsInvalid`: BBox is invalid.<br/>`MAP.bBoxNotInAnyPolygon`: The given BBox is not contained in any polygon.<br/>`MAP.getRecordsFailed`: Failed to get records.<br/>`MAP.exportMapFailed`: Error occurred when exporting map.<br/>`MAP.requestInProgress`: Delivery was already requested and is processing.<br/>`MAP.areaTooLarge`: Area too large to distribute, reduce request size and try again.<br/>`MAP.areaTooSmall`: Area too small to distribute, increase request size and try again.<br/>`PLATFORM.notFound`: Platform with given id or name not found.<br/>`DEVICE.notFound`: Device with given id not found.<br/>`GROUP_NOT_FOUND`: Group with the given id was not found.<br/>`GROUP_NOT_ALLOWED_TO_ADD`: Not allowed to add to the group, see message for cause.
      * @type {string}
      * @memberof ErrorDto
      */
@@ -2752,6 +2752,7 @@ export const ErrorDtoErrorCodeEnum = {
     MapRequestInProgress: 'MAP.requestInProgress',
     MapAreaTooLarge: 'MAP.areaTooLarge',
     MapAreaTooSmall: 'MAP.areaTooSmall',
+    PlatformNotFound: 'PLATFORM.notFound',
     DeviceNotFound: 'DEVICE.notFound',
     GroupNotFound: 'GROUP.notFound',
     GroupNotAllowedToAdd: 'GROUP.notAllowedToAdd'
@@ -12048,15 +12049,57 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
         },
         /**
          * 
+         * @summary Delete Devices Group by ID
+         * @param {string} groupId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        groupControllerDeleteGroup: async (groupId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'groupId' is not null or undefined
+            assertParamExists('groupControllerDeleteGroup', 'groupId', groupId)
+            const localVarPath = `/api/v1/org/groups/{groupId}`
+                .replace(`{${"groupId"}}`, encodeURIComponent(String(groupId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Edit Devices Group
+         * @param {string} groupId 
          * @param {EditDevicesGroupDto} editDevicesGroupDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        groupControllerEditGroup: async (editDevicesGroupDto: EditDevicesGroupDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        groupControllerEditGroup: async (groupId: string, editDevicesGroupDto: EditDevicesGroupDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'groupId' is not null or undefined
+            assertParamExists('groupControllerEditGroup', 'groupId', groupId)
             // verify required parameter 'editDevicesGroupDto' is not null or undefined
             assertParamExists('groupControllerEditGroup', 'editDevicesGroupDto', editDevicesGroupDto)
-            const localVarPath = `/api/v1/org/groups`;
+            const localVarPath = `/api/v1/org/groups/{groupId}`
+                .replace(`{${"groupId"}}`, encodeURIComponent(String(groupId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -12261,13 +12304,27 @@ export const OrganizationGroupsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Delete Devices Group by ID
+         * @param {string} groupId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async groupControllerDeleteGroup(groupId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChildGroupDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.groupControllerDeleteGroup(groupId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['OrganizationGroupsApi.groupControllerDeleteGroup']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Edit Devices Group
+         * @param {string} groupId 
          * @param {EditDevicesGroupDto} editDevicesGroupDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async groupControllerEditGroup(editDevicesGroupDto: EditDevicesGroupDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChildGroupDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.groupControllerEditGroup(editDevicesGroupDto, options);
+        async groupControllerEditGroup(groupId: string, editDevicesGroupDto: EditDevicesGroupDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChildGroupDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.groupControllerEditGroup(groupId, editDevicesGroupDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['OrganizationGroupsApi.groupControllerEditGroup']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -12345,13 +12402,24 @@ export const OrganizationGroupsApiFactory = function (configuration?: Configurat
         },
         /**
          * 
+         * @summary Delete Devices Group by ID
+         * @param {string} groupId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        groupControllerDeleteGroup(groupId: string, options?: RawAxiosRequestConfig): AxiosPromise<ChildGroupDto> {
+            return localVarFp.groupControllerDeleteGroup(groupId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Edit Devices Group
+         * @param {string} groupId 
          * @param {EditDevicesGroupDto} editDevicesGroupDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        groupControllerEditGroup(editDevicesGroupDto: EditDevicesGroupDto, options?: RawAxiosRequestConfig): AxiosPromise<ChildGroupDto> {
-            return localVarFp.groupControllerEditGroup(editDevicesGroupDto, options).then((request) => request(axios, basePath));
+        groupControllerEditGroup(groupId: string, editDevicesGroupDto: EditDevicesGroupDto, options?: RawAxiosRequestConfig): AxiosPromise<ChildGroupDto> {
+            return localVarFp.groupControllerEditGroup(groupId, editDevicesGroupDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12416,14 +12484,27 @@ export class OrganizationGroupsApi extends BaseAPI {
 
     /**
      * 
+     * @summary Delete Devices Group by ID
+     * @param {string} groupId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationGroupsApi
+     */
+    public groupControllerDeleteGroup(groupId: string, options?: RawAxiosRequestConfig) {
+        return OrganizationGroupsApiFp(this.configuration).groupControllerDeleteGroup(groupId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Edit Devices Group
+     * @param {string} groupId 
      * @param {EditDevicesGroupDto} editDevicesGroupDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationGroupsApi
      */
-    public groupControllerEditGroup(editDevicesGroupDto: EditDevicesGroupDto, options?: RawAxiosRequestConfig) {
-        return OrganizationGroupsApiFp(this.configuration).groupControllerEditGroup(editDevicesGroupDto, options).then((request) => request(this.axios, this.basePath));
+    public groupControllerEditGroup(groupId: string, editDevicesGroupDto: EditDevicesGroupDto, options?: RawAxiosRequestConfig) {
+        return OrganizationGroupsApiFp(this.configuration).groupControllerEditGroup(groupId, editDevicesGroupDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

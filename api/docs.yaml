@@ -2022,10 +2022,29 @@ paths:
         - Organization Groups
       security: &ref_16
         - bearer: []
+    get:
+      operationId: GroupController_getGroups
+      summary: Get all root groups with their child groups
+      parameters: []
+      responses:
+        '200':
+          description: Returns root group IDs and a mapping of all groups by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponseDto'
+      tags: *ref_15
+      security: *ref_16
+  /api/v1/org/groups/{groupId}:
     put:
       operationId: GroupController_editGroup
       summary: Edit Devices Group
-      parameters: []
+      parameters:
+        - name: groupId
+          required: true
+          in: path
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -2042,20 +2061,6 @@ paths:
       tags: *ref_15
       security: *ref_16
     get:
-      operationId: GroupController_getGroups
-      summary: Get all root groups with their child groups
-      parameters: []
-      responses:
-        '200':
-          description: Returns root group IDs and a mapping of all groups by ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GroupResponseDto'
-      tags: *ref_15
-      security: *ref_16
-  /api/v1/org/groups/{groupId}:
-    get:
       operationId: GroupController_getGroupById
       summary: >-
         Retrieve a group by its ID, including all its child groups and
@@ -2069,6 +2074,24 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChildGroupDto'
+      tags: *ref_15
+      security: *ref_16
+    delete:
+      operationId: GroupController_deleteGroup
+      summary: Delete Devices Group by ID
+      parameters:
+        - name: groupId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Group deleted successfully
           content:
             application/json:
               schema:
@@ -3449,6 +3472,7 @@ components:
             - MAP.requestInProgress
             - MAP.areaTooLarge
             - MAP.areaTooSmall
+            - PLATFORM.notFound
             - DEVICE.notFound
             - GROUP.notFound
             - GROUP.notAllowedToAdd
@@ -3475,7 +3499,8 @@ components:
             is processing.<br/>`MAP.areaTooLarge`: Area too large to distribute,
             reduce request size and try again.<br/>`MAP.areaTooSmall`: Area too
             small to distribute, increase request size and try
-            again.<br/>`DEVICE.notFound`: Device with given id not
+            again.<br/>`PLATFORM.notFound`: Platform with given id or name not
+            found.<br/>`DEVICE.notFound`: Device with given id not
             found.<br/>`GROUP_NOT_FOUND`: Group with the given id was not
             found.<br/>`GROUP_NOT_ALLOWED_TO_ADD`: Not allowed to add to the
             group, see message for cause.
@@ -4609,6 +4634,11 @@ components:
             - Cancelled
             - Error
             - Uninstall
+        progress:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100
         type:
           type: string
           enum:
@@ -4883,7 +4913,7 @@ components:
         snapshotDate:
           type: string
           description: Timestamp when the discovery snapshot was taken
-          example: 2025-06-29T16:09:22.253Z
+          example: 2025-07-03T11:42:56.261Z
         deviceType:
           type: string
           description: >-
@@ -4995,6 +5025,8 @@ components:
           type: string
         description:
           type: string
+      required:
+        - name
     ChildGroupDto:
       type: object
       properties:
@@ -5019,14 +5051,10 @@ components:
     EditDevicesGroupDto:
       type: object
       properties:
-        id:
-          type: number
         name:
           type: string
         description:
           type: string
-      required:
-        - id
     GroupResponseDto:
       type: object
       properties:
