@@ -5304,10 +5304,10 @@ export interface SetChildInGroupDto {
     'devices'?: Array<string>;
     /**
      * 
-     * @type {Array<string>}
+     * @type {Array<number>}
      * @memberof SetChildInGroupDto
      */
-    'groups'?: Array<string>;
+    'groups'?: Array<number>;
 }
 /**
  * 

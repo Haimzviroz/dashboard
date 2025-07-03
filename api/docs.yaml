@@ -4913,7 +4913,7 @@ components:
         snapshotDate:
           type: string
           description: Timestamp when the discovery snapshot was taken
-          example: 2025-07-03T11:42:56.261Z
+          example: 2025-07-03T16:01:32.353Z
         deviceType:
           type: string
           description: >-
@@ -5108,7 +5108,7 @@ components:
         groups:
           type: array
           items:
-            type: string
+            type: number
       required:
         - id
     DeviceDto:
