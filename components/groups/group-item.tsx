@@ -7,6 +7,8 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useDeleteGroup, useUpdateGroup } from "@/hooks/group.query.hook";
 import type { EditDevicesGroupDto } from "@/api/src/api";
 import GroupDialog from "./group-dialog";
+import { useDrag } from "react-dnd";
+import { DND_GROUP_TYPE } from "./dnd-constants";
 
 interface GroupItemProps {
   group: Group,
@@ -30,6 +32,12 @@ const GroupItem: FC<GroupItemProps> = ({ group, selectedGroup, setSelectedGroup 
   const [form, setForm] = useState<EditDevicesGroupDto>({ name: group.name, description: group.description });
   const deleteGroupMutation = useDeleteGroup();
   const updateGroupMutation = useUpdateGroup();
+
+  // Make this group draggable
+  const [, drag] = useDrag({
+    type: DND_GROUP_TYPE,
+    item: { id: group.id },
+  });
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -55,6 +63,7 @@ const GroupItem: FC<GroupItemProps> = ({ group, selectedGroup, setSelectedGroup 
 
   return (
     <Card
+      ref={drag}
       variant="outlined"
       sx={{
         borderRadius: 2,

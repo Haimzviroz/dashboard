@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Q_GROUP, Q_GROUPS } from "../apis/query-keys";
-import { getGroup, getGroups, createGroup, updateGroup, deleteGroup } from "@/apis/client-side/devices-actions.api";
+import { getGroup, getGroups, createGroup, updateGroup, deleteGroup, setChildInGroup } from "@/apis/client-side/devices-actions.api";
+import type { SetChildInGroupDto } from "@/api/src";
 import { ChildGroupDto, GroupResponseDto, CreateDevicesGroupDto, EditDevicesGroupDto } from "@/api/src/api";
 
 export const useGroups = (option?:any) => {
@@ -48,6 +49,17 @@ export const useDeleteGroup = () => {
   const queryClient = useQueryClient();
   return useMutation<ChildGroupDto, unknown, number>({
     mutationFn: (id: number) => deleteGroup(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [Q_GROUPS] });
+    },
+  });
+};
+
+// Set Child In Group Mutation
+export const useSetChildInGroup = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ChildGroupDto, unknown, SetChildInGroupDto>({
+    mutationFn: setChildInGroup,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [Q_GROUPS] });
     },

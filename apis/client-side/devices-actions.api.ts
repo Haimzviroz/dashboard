@@ -1,9 +1,9 @@
-import { Group, GroupRes } from '@/types/interfaces/devices';
 import { DEVICES_PUT, DEVICE_INFO, DEVICE_MAPS, GROUP, OFFERED_SOFTWARE } from '../paths';
 import { clientRequestWithAuth, conf } from './token-client.middleware';
 import { Software } from '@/types/interfaces/getapp';
 import Logger from '@/services/logger';
 import { DeviceApiFp, CatalogOfferingApiFp, PushOfferingDto, OrganizationGroupsApiFp } from '@/api/src';
+import type { SetChildInGroupDto } from '@/api/src/api';
 
 const logger = Logger(__filename)
 
@@ -88,4 +88,9 @@ export const pushOffer = async (data: PushOfferingDto) => {
 
 export const getOffering = async (catalogId: string): Promise<Software> => {
   return await clientRequestWithAuth(OFFERED_SOFTWARE(catalogId), "get",);
+}
+
+export const setChildInGroup = async (data: SetChildInGroupDto) => {
+  const fun = await OrganizationGroupsApiFp(await conf()).groupControllerSetDevicesInGroup(data);
+  return (await fun()).data;
 }

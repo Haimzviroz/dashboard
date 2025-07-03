@@ -7,8 +7,10 @@ import DvcItemMng from "./device-item-mng"
 import NoGroups from "../../assets/groups/no-groups.svg"
 import NoDevices from "../../assets/groups/no-devices.svg"
 import { useQ_Devices } from "@/hooks/device.query.hook"
-import { useGroup } from "@/hooks/group.query.hook"
+import { useGroup, useSetChildInGroup } from "@/hooks/group.query.hook"
 import { GroupResponseDto } from "@/api/src"
+import { useDrop } from "react-dnd"
+import { DND_GROUP_TYPE } from "./dnd-constants"
 
 interface UnitGroupMngProps {
   group: Group
@@ -29,6 +31,7 @@ const NoItemsMessage: FC<{ icon: JSX.Element; message: string }> = ({ icon, mess
 const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData }) => {
   const device = useQ_Devices()
   const qGroup = useGroup(group.id)
+  const setChildInGroupMutation = useSetChildInGroup()
 
   const parentGroup = group.parent ? groupsData?.groups[group.parent] : null
   const relatedGroups = group.groups?.map(gid => groupsData?.groups[gid]).filter(Boolean) || []
@@ -38,6 +41,26 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData }) => {
         .map(did => device.devices?.find(d => d.id === did))
         .filter(Boolean)
       : []
+
+  // DnD drop for related groups
+  const [, drop] = useDrop({
+    accept: DND_GROUP_TYPE,
+    canDrop(item, monitor) {
+      // TODO disable drop if the group is one of the current group parents
+      const currentGroups = group.groups ? group.groups.map(Number) : [];
+      return item.id !== group.id && !currentGroups.includes(item.id);
+    },
+    drop: (item: { id: number }) => {
+      if (!item.id || item.id === group.id) return;
+      const currentGroups = group.groups ? group.groups.map(String) : [];
+      if (!currentGroups.includes(String(item.id))) {
+        setChildInGroupMutation.mutate({
+          id: group.id,
+          groups: [item.id]
+        });
+      }
+    },
+  })
 
   return (
     <Box sx={{ flexGrow: 1, textAlign: "center", px: 2, py: 4 }}>
@@ -81,7 +104,7 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData }) => {
       <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
         קבוצות קשורות
       </Typography>
-      <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
+      <Stack ref={drop} direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
         {relatedGroups.length > 0 ? (
           relatedGroups.map(g => <GroupItemMng key={g!.id} group={g!} />)
         ) : (
