@@ -27,7 +27,7 @@ const GroupItem: FC<GroupItemProps> = ({ group, selectedGroup, setSelectedGroup 
       variant="outlined"
       sx={{
         borderRadius: 2,
-        my: 1,
+        my: .5,
         backgroundColor: selectedGroup?.id === group.id ? '#e0f7fa' : 'white', // Soft teal for active, white for inactive
         cursor: 'pointer',
         borderColor: selectedGroup?.id === group.id ? '#00acc1' : 'rgba(0, 0, 0, 0.12)', // Accent border color for active

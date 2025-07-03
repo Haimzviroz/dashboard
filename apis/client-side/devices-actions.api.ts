@@ -49,7 +49,6 @@ export const getDeviceWithSoftware = async (id: string) => {
   return (await fun()).data
 }
 
-
 // Groups
 export const getGroups = async () => {
   const fun = await OrganizationGroupsApiFp(await conf()).groupControllerGetGroups();
@@ -59,6 +58,26 @@ export const getGroups = async () => {
 export const getGroup = async (id: number) => {
   const fun = await OrganizationGroupsApiFp(await conf()).groupControllerGetGroupById(id.toString());
   return (await fun()).data
+}
+
+// Create Group
+import type { CreateDevicesGroupDto, EditDevicesGroupDto } from '@/api/src/api';
+
+export const createGroup = async (groupData: CreateDevicesGroupDto) => {
+  const fun = await OrganizationGroupsApiFp(await conf()).groupControllerCreateGroup(groupData);
+  return (await fun()).data;
+}
+
+// Update Group
+export const updateGroup = async (id: number, groupData: EditDevicesGroupDto) => {
+  const fun = await OrganizationGroupsApiFp(await conf()).groupControllerEditGroup(id.toString(), groupData);
+  return (await fun()).data;
+}
+
+// Delete Group
+export const deleteGroup = async (id: number) => {
+  const fun = await OrganizationGroupsApiFp(await conf()).groupControllerDeleteGroup(id.toString());
+  return (await fun()).data;
 }
 
 // Offerings

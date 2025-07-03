@@ -46,14 +46,13 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
   return (
     <Box sx={{ display: "flex" }}>
       <Box sx={style}>
-        <Accordion expanded={expanded === "g"} onChange={() => expanded != "g" ? setExpanded("g") : setExpanded(undefined)}>
-          <AccordionSummary>
-            <Typography variant="h5" sx={{ fontWeight: 600, py: 2, px: 1 }}>בחר קבוצה</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {groupsData && <GroupList groups={Object.values(groupsData.groups)} selectedGroup={selectedGroup} setSelectedGroup={setSelectedGroup} />}
-          </AccordionDetails>
-        </Accordion>
+        <GroupList
+          groups={groupsData ? Object.values(groupsData.groups) : []}
+          selectedGroup={selectedGroup}
+          setSelectedGroup={setSelectedGroup}
+          expanded={expanded === "g"}
+          onExpand={() => expanded != "g" ? setExpanded("g") : setExpanded(undefined)}
+        />
         <Accordion expanded={expanded === "d"} onChange={() => expanded != "d" ? setExpanded("d") : setExpanded(undefined)}>
           <AccordionSummary>
             <Typography variant="h5" sx={{ fontWeight: 600, py: 2, px: 1 }}>בחר אמצעי</Typography>
