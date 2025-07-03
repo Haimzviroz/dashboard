@@ -6,12 +6,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useDeleteGroup, useUpdateGroup } from "@/hooks/group.query.hook";
 import type { EditDevicesGroupDto } from "@/api/src/api";
+import GroupDialog from "./group-dialog";
 
 interface GroupItemProps {
   group: Group,
   selectedGroup: Group | undefined
   setSelectedGroup: Dispatch<SetStateAction<Group | undefined>>
-
 }
 const boxStyle: SxProps = {
   border: 1,
@@ -86,38 +86,13 @@ const GroupItem: FC<GroupItemProps> = ({ group, selectedGroup, setSelectedGroup 
           </Tooltip>
         </Box>
       </Box>
-      {/* Edit Group Dialog */}
-      <Dialog open={editDialogOpen} onClose={handleEditClose}>
-        <Box sx={{ direction: "ltr" }}>
-
-          <DialogTitle>ערוך קבוצה</DialogTitle>
-          <DialogContent>
-            <TextField
-              label="שם קבוצה"
-              value={form.name}
-              onChange={e => setForm({ ...form, name: e.target.value })}
-              fullWidth
-              margin="normal"
-              required
-              error={!form?.name?.trim()}
-              helperText={!form?.name?.trim() ? 'שדה חובה' : ''}
-            />
-            <TextField
-              label="תיאור (אופציונלי)"
-              value={form.description}
-              onChange={e => setForm({ ...form, description: e.target.value })}
-              fullWidth
-              margin="normal"
-              multiline
-              minRows={2}
-            />
-          </DialogContent>
-          <DialogActions sx={{ px: 3, py: 2 }}>
-            <Button onClick={handleEditClose}>ביטול</Button>
-            <Button onClick={handleEditSave} variant="contained" disabled={!form?.name?.trim()}>שמור</Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
+      <GroupDialog
+        mode={"edit"}
+        open={editDialogOpen}
+        form={form}
+        onClose={handleEditClose}
+        onSave={handleEditSave}
+        onChange={setForm} />
       {/* Delete Group Dialog */}
       <Dialog open={deleteDialogOpen} onClose={handleDeleteClose}>
         <Box sx={{ direction: "ltr" }}>

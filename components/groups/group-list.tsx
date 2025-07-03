@@ -5,7 +5,8 @@ import { Group } from "@/types/interfaces/devices"
 import GroupItem from "./group-item";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useCreateGroup } from "@/hooks/group.query.hook";
-import { CreateDevicesGroupDto } from "@/api/src";
+import GroupDialog from "./group-dialog";
+import type { CreateDevicesGroupDto, EditDevicesGroupDto } from "@/api/src/api";
 
 interface GroupListProps {
   groups?: Group[],
@@ -33,8 +34,8 @@ const GroupList: FC<GroupListProps> = ({ groups, selectedGroup, setSelectedGroup
   };
 
   const handleDialogSave = async () => {
-    if (!form.name?.trim()) return; // Optionally prevent empty names
-    createGroupMutation.mutate(form);
+    if (!form.name?.trim()) return;
+    createGroupMutation.mutate({ name: form.name, description: form.description });
     setForm({ name: '', description: '' });
     setDialogOpen(false);
   };
@@ -71,35 +72,15 @@ const GroupList: FC<GroupListProps> = ({ groups, selectedGroup, setSelectedGroup
             </Box>}
         </Box>
       </AccordionDetails>
-      {/* Add Group Dialog */}
-      <Dialog open={dialogOpen} onClose={handleDialogClose}>
-        <Box sx={{ direction: "ltr" }}>
-          <DialogTitle>הוסף קבוצה</DialogTitle>
-          <DialogContent>
-            <TextField
-              label="שם קבוצה"
-              value={form.name}
-              onChange={e => setForm({ ...form, name: e.target.value })}
-              fullWidth
-              margin="normal"
-              required
-            />
-            <TextField
-              label="תיאור (אופציונלי)"
-              value={form.description}
-              onChange={e => setForm({ ...form, description: e.target.value })}
-              fullWidth
-              margin="normal"
-              multiline
-              minRows={2}
-            />
-          </DialogContent>
-          <DialogActions sx={{ px: 3, py: 2 }}>
-            <Button onClick={handleDialogClose}>ביטול</Button>
-            <Button onClick={handleDialogSave} variant="contained" disabled={!form.name.trim()}>שמור</Button>
-          </DialogActions>
-        </Box>
-      </Dialog>
+      {/* Create/Edit Group Dialog */}
+      <GroupDialog
+        mode={"create"}
+        open={dialogOpen}
+        form={form}
+        onClose={handleDialogClose}
+        onSave={handleDialogSave}
+        onChange={(newForm) => setForm(newForm as CreateDevicesGroupDto)}
+      />
     </Accordion>
   )
 }
