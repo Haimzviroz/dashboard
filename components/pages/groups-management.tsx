@@ -63,6 +63,7 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
       {selectedGroup && <UnitGroupMng
         group={groupsData?.groups[selectedGroup.id]} // always fresh from source
         groupsData={groupsData}
+        setSelectedGroup={setSelectedGroup}
       />
       }
       {!selectedGroup && <Box sx={{ mt: 32, height: "calc(100vh - 100px)", flexGrow: 1 }}>

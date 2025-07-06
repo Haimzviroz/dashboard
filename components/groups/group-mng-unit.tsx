@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { Dispatch, FC, SetStateAction } from "react"
 import { Box, Typography, Stack, Paper, Divider, Icon, IconButton, Tooltip } from "@mui/material"
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
@@ -16,6 +16,7 @@ import { DND_GROUP_LIST_ITEM } from "./dnd-constants"
 interface UnitGroupMngProps {
   group: Group
   groupsData?: GroupResponseDto
+  setSelectedGroup: Dispatch<SetStateAction<Group | undefined>>
 }
 
 const NoItemsMessage: FC<{ icon: JSX.Element; message: string }> = ({ icon, message }) => (
@@ -29,12 +30,12 @@ const NoItemsMessage: FC<{ icon: JSX.Element; message: string }> = ({ icon, mess
   </Box>
 )
 
-const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData }) => {
+const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGroup }) => {
   const device = useQ_Devices()
   const qGroup = useGroup(group.id)
   const setChildInGroupMutation = useSetChildInGroup()
 
-  const parentGroup = group.parent ? groupsData?.groups[group.parent] : null
+  const parentGroup = group.parent ? groupsData?.groups[group.parent] : null;
   const relatedGroups = group.groups?.map(gid => groupsData?.groups[gid]).filter(Boolean) || []
   const relatedDevices =
     device.devices && qGroup.group?.devices
@@ -62,6 +63,11 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData }) => {
       }
     },
   })
+
+  const handleRemoveParent = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setChildInGroupMutation.mutate({ id: group.id, parent: null });
+  };
 
   return (
     <Box sx={{ flexGrow: 1, textAlign: "center", px: 2, py: 4 }}>
@@ -95,11 +101,13 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData }) => {
               textAlign: "center",
               width: "fit-content",
               mx: "auto",
-              boxShadow: 2
+              boxShadow: 2,
+              cursor: 'pointer'
             }}
+            onClick={() => setSelectedGroup(parentGroup)}
           >
             <Stack direction="row" alignItems="center" justifyContent={"space-between"} spacing={1}>
-              <Stack direction={"row"}>
+              <Stack direction={"row"} alignItems="baseline" >
                 <Typography variant="caption" color="text.secondary" fontWeight="bold" display="block" sx={{ mr: 1 }}>
                   תחת:
                 </Typography>
@@ -108,7 +116,7 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData }) => {
                 </Typography>
               </Stack>
               <Tooltip title={`הסר שיוך מ${parentGroup.name}`}>
-                <IconButton size="small" color="error" onClick={() => setChildInGroupMutation.mutate({ id: group.id, parent: null })}>
+                <IconButton size="small" color="error" onClick={handleRemoveParent}>
                   <RemoveCircleOutlineIcon fontSize="small" sx={{ fontSize: '0.875rem' }} />
                 </IconButton>
               </Tooltip>
@@ -125,7 +133,7 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData }) => {
       </Typography>
       <Stack ref={drop} direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
         {relatedGroups.length > 0 ? (
-          relatedGroups.map(g => <GroupItemMng key={g!.id} group={g!} />)
+          relatedGroups.map(g => <GroupItemMng key={g!.id} group={g!} setSelectedGroup={setSelectedGroup} />)
         ) : (
           <NoItemsMessage icon={<NoGroups />} message="לא קיימות קבוצות קשורות" />
         )}

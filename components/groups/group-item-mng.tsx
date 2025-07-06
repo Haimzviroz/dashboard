@@ -1,5 +1,5 @@
 import { Box, Card, CardContent, Icon, IconButton, Stack, Tooltip, Typography } from "@mui/material"
-import { FC } from "react"
+import { Dispatch, FC, SetStateAction } from "react"
 import { Group } from "@/types/interfaces/devices";
 import GroupIcon from "../../assets/groups/users-group.svg";
 import GroupParentIcon from "../../assets/groups/users.svg";
@@ -13,9 +13,10 @@ interface GroupItemMngProps {
   group: Group,
   groupsData?: GroupResponseDto
   type?: "parent" | "child"
+  setSelectedGroup: Dispatch<SetStateAction<Group | undefined>>
 }
 
-const GroupItemMng: FC<GroupItemMngProps> = ({ group, groupsData, type }) => {
+const GroupItemMng: FC<GroupItemMngProps> = ({ group, groupsData, type, setSelectedGroup }) => {
   const setChildInGroupMutation = useSetChildInGroup();
   // Make this group draggable
   const [, drag] = useDrag({
@@ -36,8 +37,10 @@ const GroupItemMng: FC<GroupItemMngProps> = ({ group, groupsData, type }) => {
       sx={{
         borderRadius: 2,
         my: 1,
-        minWidth: 200
+        minWidth: 200,
+        cursor:  'pointer' 
       }}
+      onClick={() => setSelectedGroup(group)}
     >
       <Box>
         <CardContent >
