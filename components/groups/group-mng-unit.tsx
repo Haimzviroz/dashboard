@@ -11,7 +11,7 @@ import { useQ_Devices } from "@/hooks/device.query.hook"
 import { useGroup, useSetChildInGroup } from "@/hooks/group.query.hook"
 import { GroupResponseDto } from "@/api/src"
 import { useDrop } from "react-dnd"
-import { DND_GROUP_TYPE } from "./dnd-constants"
+import { DND_GROUP_LIST_ITEM } from "./dnd-constants"
 
 interface UnitGroupMngProps {
   group: Group
@@ -45,13 +45,13 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData }) => {
 
   // DnD drop for related groups
   const [, drop] = useDrop({
-    accept: DND_GROUP_TYPE,
+    accept: DND_GROUP_LIST_ITEM,
     canDrop(item, monitor) {
       // TODO disable drop if the group is one of the current group parents
       const currentGroups = group.groups ? group.groups.map(Number) : [];
       return item.id !== group.id && !currentGroups.includes(item.id);
     },
-    drop: (item: { id: number }) => {
+    drop: (item: Group) => {
       if (!item.id || item.id === group.id) return;
       const currentGroups = group.groups ? group.groups.map(String) : [];
       if (!currentGroups.includes(String(item.id))) {

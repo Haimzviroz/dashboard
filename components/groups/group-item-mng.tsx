@@ -6,6 +6,8 @@ import GroupParentIcon from "../../assets/groups/users.svg";
 import { GroupResponseDto } from "@/api/src";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useSetChildInGroup } from "@/hooks/group.query.hook";
+import { useDrag } from "react-dnd";
+import { DND_GROUP_UNIT_ITEM } from "./dnd-constants";
 
 interface GroupItemMngProps {
   group: Group,
@@ -15,6 +17,11 @@ interface GroupItemMngProps {
 
 const GroupItemMng: FC<GroupItemMngProps> = ({ group, groupsData, type }) => {
   const setChildInGroupMutation = useSetChildInGroup();
+  // Make this group draggable
+  const [, drag] = useDrag({
+    type: DND_GROUP_UNIT_ITEM,
+    item: group,
+  });
 
   // Remove group from parent handler
   const handleRemove = (e: React.MouseEvent) => {
@@ -24,6 +31,7 @@ const GroupItemMng: FC<GroupItemMngProps> = ({ group, groupsData, type }) => {
 
   return (
     <Card
+      ref={drag}
       variant="outlined"
       sx={{
         borderRadius: 2,

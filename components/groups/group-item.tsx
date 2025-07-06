@@ -4,11 +4,11 @@ import { Group } from "@/types/interfaces/devices";
 import GroupIcon from "../../assets/side-bar/group.svg";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { useDeleteGroup, useUpdateGroup } from "@/hooks/group.query.hook";
+import { useDeleteGroup, useUpdateGroup, useSetChildInGroup } from "@/hooks/group.query.hook";
 import type { EditDevicesGroupDto } from "@/api/src/api";
 import GroupDialog from "./group-dialog";
-import { useDrag } from "react-dnd";
-import { DND_GROUP_TYPE } from "./dnd-constants";
+import { useDrag, useDrop } from "react-dnd";
+import { DND_GROUP_LIST_ITEM, DND_GROUP_UNIT_ITEM } from "./dnd-constants";
 
 interface GroupItemProps {
   group: Group,
@@ -32,11 +32,30 @@ const GroupItem: FC<GroupItemProps> = ({ group, selectedGroup, setSelectedGroup 
   const [form, setForm] = useState<EditDevicesGroupDto>({ name: group.name, description: group.description });
   const deleteGroupMutation = useDeleteGroup();
   const updateGroupMutation = useUpdateGroup();
+  const setChildInGroup = useSetChildInGroup();
 
   // Make this group draggable
-  const [, drag] = useDrag({
-    type: DND_GROUP_TYPE,
-    item: { id: group.id },
+  const [{ isDragging }, drag] = useDrag({
+    type: DND_GROUP_LIST_ITEM,
+    item: group,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  // Make this group a drop target for other groups
+  const [{ isOver, canDrop }, drop] = useDrop({
+    accept: DND_GROUP_UNIT_ITEM,
+    canDrop: (item: Group) => item.id !== group.id && item.parent !== group.id,
+    drop: async (item: Group) => {
+      if (item.id !== group.id && item.parent !== group.id) {
+        setChildInGroup.mutate({ id: item.id, parent: group.id });
+      }
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
   });
 
   const handleEdit = (e: React.MouseEvent) => {
@@ -63,14 +82,18 @@ const GroupItem: FC<GroupItemProps> = ({ group, selectedGroup, setSelectedGroup 
 
   return (
     <Card
-      ref={drag}
+      ref={(node) => {
+        drag(node);
+        drop(node);
+      }}
       variant="outlined"
       sx={{
         borderRadius: 2,
         my: .5,
-        backgroundColor: selectedGroup?.id === group.id ? '#e0f7fa' : 'white',
+        backgroundColor: isOver && canDrop ? '#b2ebf2' : selectedGroup?.id === group.id ? '#e0f7fa' : 'white',
         cursor: 'pointer',
         borderColor: selectedGroup?.id === group.id ? '#00acc1' : 'rgba(0, 0, 0, 0.12)',
+        boxShadow: isOver && canDrop ? 4 : undefined,
       }}
     >
       <Box onClick={() => setSelectedGroup(group)} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
