@@ -102,7 +102,14 @@ const GroupItem: FC<GroupItemProps> = ({ group, selectedGroup, setSelectedGroup 
             <Icon>
               <GroupIcon />
             </Icon>
-            <Typography>{group.name}</Typography>
+            <Stack direction={"column"} gap={0.5} alignItems="flex-start">
+              <Typography fontWeight={600}>{group.name}</Typography>
+              {group.description && (
+                <Typography variant="caption" color="text.secondary" sx={{ ml: 0 }}>
+                  {group.description}
+                </Typography>
+              )}
+            </Stack>
           </Stack>
         </CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', pr: 1 }}>
