@@ -1,6 +1,7 @@
 import { FC } from "react"
-import { Box, Typography, Stack, Paper, Divider, Icon } from "@mui/material"
+import { Box, Typography, Stack, Paper, Divider, Icon, IconButton, Tooltip } from "@mui/material"
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { Group } from "@/types/interfaces/devices"
 import GroupItemMng from "./group-item-mng"
 import DvcItemMng from "./device-item-mng"
@@ -69,31 +70,49 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData }) => {
       </Typography>
 
       {parentGroup && (
-        <Stack spacing={0.5} alignItems="center" mt={1}>
+        <Stack spacing={1.5} alignItems="center" mt={2}>
           <ArrowDownwardIcon
             sx={{
-              fontSize: 28,
-              color: "text.secondary",
-              transform: "rotate(180deg)", // rotate to point up
+              fontSize: 32,
+              color: "primary.main",
+              mb: -1,
+              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.08))',
+              background: 'white',
+              borderRadius: '50%',
+              border: '2px solid #e0e0e0',
+              p: 0.5
             }}
           />
           <Paper
+            elevation={3}
             variant="outlined"
             sx={{
               px: 2,
-              py: 1,
-              backgroundColor: "grey.100",
+              py: 1.5,
+              background: 'linear-gradient(90deg, #f5f7fa 0%, #c3cfe2 100%)',
+              border: '1.5px solid #b0bec5',
+              borderRadius: 3,
               textAlign: "center",
               width: "fit-content",
               mx: "auto",
+              boxShadow: 2
             }}
           >
-            <Typography variant="caption" color="text.secondary" fontWeight="bold" display="block">
-              תחת:
-            </Typography>
-            <Typography variant="body2" color="text.primary" fontWeight="medium">
-              {parentGroup.name}
-            </Typography>
+            <Stack direction="row" alignItems="center" justifyContent={"space-between"} spacing={1}>
+              <Stack direction={"row"}>
+                <Typography variant="caption" color="text.secondary" fontWeight="bold" display="block" sx={{ mr: 1 }}>
+                  תחת:
+                </Typography>
+                <Typography variant="body1" color="primary.dark" fontWeight={700} sx={{ letterSpacing: 0.5 }}>
+                  {parentGroup.name}
+                </Typography>
+              </Stack>
+              <Tooltip title={`הסר שיוך מ${parentGroup.name}`}>
+                <IconButton size="small" color="error" onClick={() => setChildInGroupMutation.mutate({ id: group.id, parent: null })}>
+                  <RemoveCircleOutlineIcon fontSize="small" sx={{ fontSize: '0.875rem' }} />
+                </IconButton>
+              </Tooltip>
+            </Stack>
           </Paper>
         </Stack>
       )}
