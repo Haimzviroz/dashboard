@@ -5,8 +5,7 @@ import LeftArrow from "../../assets/side-bar/double-arrow-left.svg";
 import RightArrow from "../../assets/side-bar/double-arrow-right.svg";
 import O_IconButton from "@/ui/o-icon-button";
 import TopBar from "./top.side-bar";
-import GroupBar from "./groups.side-bar";
-import SearchBar from "./search.side-bar";
+import GroupBarSection from "./group-bar-section";
 import { useGetApp } from "@/providers/getapp.provider";
 import { GroupRes } from "@/types/interfaces/devices";
 import { AppScopeEnum } from "@/types/enum";
@@ -14,10 +13,11 @@ import { AppScopeEnum } from "@/types/enum";
 
 export interface SideBarProps {
   groupList: GroupRes
+  withGroups?: boolean;
   scope: AppScopeEnum
 }
 
-const SideBar: FC<SideBarProps> = ({ groupList, scope }) => {
+const SideBar: FC<SideBarProps> = ({ groupList, scope, withGroups }) => {
 
   const { sideBarCollapse, setSideBarCollapse, } = useGetApp()
 
@@ -36,6 +36,7 @@ const SideBar: FC<SideBarProps> = ({ groupList, scope }) => {
     }
   });
 
+
   return (
     <Fragment>
       <Drawer
@@ -51,10 +52,12 @@ const SideBar: FC<SideBarProps> = ({ groupList, scope }) => {
               </O_IconButton>
             </ListItemIcon>
           </ListItem>
-          <TopBar scope= {scope} />
+          <TopBar scope={scope} />
         </List>
-        {/* {sideBarCollapse && <SearchBar />} */}
-        {sideBarCollapse && groupList && <GroupBar groupIdList={groupList.roots} />}
+        {withGroups && <GroupBarSection
+          groupList={groupList}
+          sideBarCollapse={sideBarCollapse}
+        />}
       </Drawer>
 
     </Fragment>

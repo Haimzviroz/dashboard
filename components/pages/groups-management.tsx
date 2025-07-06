@@ -60,7 +60,11 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
           </AccordionDetails>
         </Accordion>
       </Box>
-      {selectedGroup && <UnitGroupMng groupsData={groupsData} group={selectedGroup}></UnitGroupMng>}
+      {selectedGroup && <UnitGroupMng
+        group={groupsData?.groups[selectedGroup.id]} // always fresh from source
+        groupsData={groupsData}
+      />
+      }
       {!selectedGroup && <Box sx={{ mt: 32, height: "calc(100vh - 100px)", flexGrow: 1 }}>
         <Box sx={{ textAlign: "center" }}>
           <Icon sx={{ height: 120, width: 160 }}>

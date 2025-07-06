@@ -6,7 +6,7 @@ import ArrowDown from "../../assets/arrows/single-arrow-down.svg";
 import ArrowLeft from "../../assets/arrows/single-arrow-Left.svg";
 import O_IconButton from "@/ui/o-icon-button";
 import { Group } from "@/types/interfaces/devices";
-import { useGetApp } from "@/providers/getapp.provider";
+import { useGroupSelection } from "@/providers/group-selection.provider";
 
 interface GroupCardProps {
   group: Group,
@@ -24,7 +24,7 @@ const GroupCard: FC<GroupCardProps> = ({ group, isCollapse, setIsCollapse }) => 
 
   const [isSelected, setIsSelected] = useState(false)
 
-  const { setGroupInSelectedGroup, selectedGroup } = useGetApp()
+  const { setGroupInSelectedGroup, selectedGroup } = useGroupSelection()  
   
   useEffect(() => {
     if (selectedGroup.find(g => g === group.id)) {

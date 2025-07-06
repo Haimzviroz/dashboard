@@ -8,8 +8,8 @@ import { pushOffer } from "@/apis/client-side/devices-actions.api";
 import { ItemTypeEnum } from '@/types/interfaces/devices';
 import { AppScopeEnum } from "@/types/enum";
 import { useToast } from "@/providers/toast.provider";
-import { useGetApp } from "@/providers/getapp.provider";
 import { DeviceDto, PushOfferingDto } from "@/api/src";
+import { useGroupSelection } from "@/providers/group-selection.provider";
 
 interface DeviceControlBarProps {
   selectedDevices: string[]
@@ -20,7 +20,7 @@ interface DeviceControlBarProps {
 
 const DeviceControlBar: FC<DeviceControlBarProps> = ({ selectedDevices, devices, scope, distributeEntity }) => {
 
-  const { selectedGroup } = useGetApp()
+  const { selectedGroup } = useGroupSelection()
   const { showToast } = useToast();
 
   const distribute = async (to: "d" | "g") => {
