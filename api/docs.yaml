@@ -5101,6 +5101,9 @@ components:
       properties:
         id:
           type: number
+        parent:
+          type: number
+          nullable: true
         devices:
           type: array
           items:

@@ -5298,6 +5298,12 @@ export interface SetChildInGroupDto {
     'id': number;
     /**
      * 
+     * @type {number}
+     * @memberof SetChildInGroupDto
+     */
+    'parent'?: number | null;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof SetChildInGroupDto
      */
