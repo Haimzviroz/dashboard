@@ -1,0 +1,2 @@
+export const DND_GROUP_LIST_ITEM = "GROUP_LIST_ITEM";
+export const DND_GROUP_UNIT_ITEM = "GROUP_UNIT_ITEM";

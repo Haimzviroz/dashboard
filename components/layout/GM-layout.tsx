@@ -14,14 +14,13 @@ import { R_GET_MAP } from "@/apis/routes";
 
 interface GM_layoutProps {
 	page: ReactElement
+	withGroups?: boolean;
 }
 
-const GM_layout: FC<GM_layoutProps> = ({ page }) => {
-
+const GM_layout: FC<GM_layoutProps> = ({ page, withGroups }) => {
 
 	if (page.props.error) return <ErrorPage {...page.props.error}></ErrorPage>
 	if (page.props.tokenError) return <LoginPage routePath={R_GET_MAP} {...page.props} />
-
 
 	return (
 		<Fragment>
@@ -30,7 +29,10 @@ const GM_layout: FC<GM_layoutProps> = ({ page }) => {
 					<GetAppProvider>
 						<GetAppLogo scope={AppScopeEnum.getmap} />
 						<Box sx={{ display: "flex" }}>
-							<SideBar groupList={page.props.groupList} scope={AppScopeEnum.getmap} />
+							<SideBar
+								groupList={page.props.groupList}
+								withGroups={withGroups}
+								scope={AppScopeEnum.getmap} />
 							{page}
 						</Box>
 					</GetAppProvider>

@@ -1,8 +1,6 @@
-export interface Group {
-  name: string,
-  id: number,
-  parent: number | null,
-  groups: number[],
+import { ChildGroupDto } from "@/api/src";
+
+export interface Group extends ChildGroupDto {
   isCollapse?: boolean,
   isSelected?: boolean
 }

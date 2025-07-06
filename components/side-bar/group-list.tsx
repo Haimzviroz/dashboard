@@ -10,16 +10,16 @@ interface GroupListProps {
   marginLeft?: number
 }
 
-const GroupList: FC<GroupListProps> = ({ groupId, marginLeft = 0 }) => {  
+const GroupSBList: FC<GroupListProps> = ({ groupId, marginLeft = 0 }) => {
 
   const [currentGroup, setGroup] = useState<Group>();
   const [isCollapse, setIsCollapse] = useState(currentGroup?.isCollapse ?? true);
 
   const { groups } = useGroups()
 
-  useEffect(() => {    
-    if (groups) {
-      setGroup(groups.groups[groupId.toString()])
+  useEffect(() => {
+    if (groups && groups.groups) {
+      setGroup(groups?.groups[groupId])
     }
   }, [groups])
 
@@ -43,14 +43,14 @@ const GroupList: FC<GroupListProps> = ({ groupId, marginLeft = 0 }) => {
 
   return (
     <Fragment>
-      {currentGroup  &&
+      {currentGroup &&
         <Fragment>
           <List sx={{ paddingTop: .5, paddingBottom: .5, marginLeft }}>
             <GroupCard group={currentGroup} isCollapse={isCollapse} setIsCollapse={setIsCollapse} />
           </List>
           {currentGroup?.groups && isCollapse &&
             <Collapse in={isCollapse} onEnter={() => handleOnEnter()} onExit={() => handleOnExit()} >
-              {currentGroup.groups.map((subGroup: number) => <GroupList key={subGroup} groupId={subGroup} marginLeft={marginLeft + 2} />)}
+              {currentGroup.groups.map((subGroup: number) => <GroupSBList key={subGroup} groupId={subGroup} marginLeft={marginLeft + 2} />)}
             </Collapse>
           }
         </Fragment>
@@ -59,4 +59,4 @@ const GroupList: FC<GroupListProps> = ({ groupId, marginLeft = 0 }) => {
   )
 }
 
-export default GroupList;
+export default GroupSBList;

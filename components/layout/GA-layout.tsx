@@ -13,10 +13,12 @@ import { R_GET_APP } from "@/apis/routes";
 
 interface GA_layoutProps {
 	page: ReactElement;
+	withGroups?: boolean;
 	children?: ReactElement;
 }
 
-const GA_layout: FC<GA_layoutProps> = ({ page, children }) => {
+const GA_layout: FC<GA_layoutProps> = ({ page, children, withGroups }) => {
+
 	if (page.props.error) return <ErrorPage {...page.props.error}></ErrorPage>;
 	if (page.props.tokenError) return <LoginPage routePath={R_GET_APP} {...page.props} />;
 
@@ -29,6 +31,7 @@ const GA_layout: FC<GA_layoutProps> = ({ page, children }) => {
 						<Box sx={{ display: "flex" }}>
 							<SideBar
 								groupList={page.props.groupList}
+								withGroups={withGroups}
 								scope={AppScopeEnum.getapp}
 							/>
 							<BodyBox>{children ?? page}</BodyBox>

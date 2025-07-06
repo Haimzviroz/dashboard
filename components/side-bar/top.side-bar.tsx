@@ -9,13 +9,16 @@ import Map from "../../assets/side-bar/map2.svg";
 import MapActive from "../../assets/side-bar/map2-active.svg";
 import Computer from "../../assets/side-bar/computer.svg";
 import ComputerActive from "../../assets/side-bar/computer-active.svg";
+import GroupManage from "../../assets/side-bar/group-manage.svg";
+import GroupManageActive from "../../assets/side-bar/group-manage-active.svg";
+
 import Catalog from "../../assets/side-bar/catalog.svg";
 import CatalogActive from "../../assets/side-bar/catalog-active.svg";
 
 import { AppScopeEnum, SideBarOption } from "@/types/enum";
 import { useGetApp } from "@/providers/getapp.provider";
 import Router from "next/router";
-import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS, R_CATALOG } from "@/apis/routes";
+import { R_APP_DEVICES, R_MAP_DEVICES, R_MAPS, R_PROJECTS, R_APP_GROUP, R_MAP_GROUP, R_CATALOG } from "@/apis/routes";
 
 interface SideBarItem {
   key: SideBarOption,
@@ -57,7 +60,7 @@ const Items: SideBarItem[] = [
   },
   {
     key: SideBarOption.DEVICES,
-    name: "ניהול אמצעי קצה",
+    name: "אמצעי קצה",
     icon: Computer,
     activeIcon: ComputerActive,
     route: R_APP_DEVICES,
@@ -65,10 +68,26 @@ const Items: SideBarItem[] = [
   },
   {
     key: SideBarOption.DEVICES,
-    name: "ניהול אמצעי קצה",
+    name: "אמצעי קצה",
     icon: Computer,
     activeIcon: ComputerActive,
     route: R_MAP_DEVICES,
+    scope: AppScopeEnum.getmap
+  },
+  {
+    key: SideBarOption.GROUPS,
+    name: "קבוצות",
+    icon: GroupManage,
+    activeIcon: GroupManageActive,
+    route: R_APP_GROUP,
+    scope: AppScopeEnum.getapp
+  },
+  {
+    key: SideBarOption.GROUPS,
+    name: "קבוצות",
+    icon: GroupManage,
+    activeIcon: GroupManageActive,
+    route: R_MAP_GROUP,
     scope: AppScopeEnum.getmap
   },
   {
