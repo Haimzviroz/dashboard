@@ -10,7 +10,7 @@ import { ComponentV2Dto, DeviceDto, DeviceSoftwareDto } from "@/api/src";
 
 export const useQ_Devices = (groups?: string | string[]) => {
   const { data: devices, refetch } = useQuery<DeviceDto[]>({
-    queryKey: [Q_DEVICES, "groups", groups],
+    queryKey: [Q_DEVICES, groups ?? null],
     queryFn: () => getDevices(groups),
   })
   return { devices, refetch }
@@ -32,7 +32,7 @@ export const useMutateDevice = () => {
   })
 }
 
-export const useMutateDeviceName = (catalogId?: string) => {
+export const useMutateDeviceName = (catalogId?: string, groups?: string | string[]) => {
   const client = useQueryClient()
 
   return useMutation({
@@ -53,7 +53,7 @@ export const useMutateDeviceName = (catalogId?: string) => {
           return { ...map, devices }
         }))
       } else {
-        client.setQueryData([Q_DEVICES], ((devices: Device[]) => {
+        client.setQueryData([Q_DEVICES, groups ?? null], ((devices: Device[]) => {
           const updatedDevices = [...devices]
           const currentD = updatedDevices.findIndex(d => d.id === variables.deviceId)
 
@@ -92,7 +92,7 @@ export const useDeviceSoftware = (id: string, options?: any) => {
 
 
 // Device meta data
-export const useDeviceMetaData = (scope: AppScopeEnum, groups?: string | string[], software?: string | string[], map?: string | string[] ) => {
+export const useDeviceMetaData = (scope: AppScopeEnum, groups?: string | string[], software?: string | string[], map?: string | string[]) => {
   return scope == AppScopeEnum.getapp ? useSoftwareMetaData(groups, software) : useMapMetaData(groups, map)
 }
 

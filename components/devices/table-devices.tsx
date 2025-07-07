@@ -124,7 +124,7 @@ const DevicesTable: FC<DevicesTableProps> = ({ devices, mode, mapId, scope, dEnt
           [DeviceTableCols.LABEL]: <LabelCell id={device.id} mode={mode} setC_Device={setC_Device} cDevice={cDevice} />,
           [DeviceTableCols.SELECT]: <SelectCell isSelect={isSelect} onChange={(e) => handleSelectAllDevices(e, device.id)}></SelectCell>,
           [DeviceTableCols.ID]: <IdCell id={device.uid ? "צ " + device.uid : device.id} substring={device.uid ? false : true} />,
-          [DeviceTableCols.NAME]: <MutNameCell deviceId={device.id} name={device.name} mapId={mapId} />,
+          [DeviceTableCols.NAME]: <MutNameCell deviceId={device.id} name={device.name} mapId={mapId} router={router} />,
           [DeviceTableCols.OS]: <OsCell os={device.OS} />,
           [DeviceTableCols.MEAN]: <TextCell text={"-"} />,
           [DeviceTableCols.UNIT]: <TextCell text={device.groupName ?? "-"} />,

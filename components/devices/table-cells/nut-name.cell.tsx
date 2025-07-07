@@ -5,17 +5,19 @@ import SettingDots from "../../../assets/inputs/dots-vertical.svg"
 import Writing from "../../../assets/inputs/writing.svg"
 import { useMutateDeviceName } from "@/hooks/device.query.hook";
 import AnchorAndPopper from "@/components/utils/collapse/anchor-popper";
+import { NextRouter } from "next/router";
 
 interface NameCellProps {
   name?: string
   deviceId: string
-  mapId?: string
+  mapId?: string,
+  router?: NextRouter
 }
 
-const MutNameCell: FC<NameCellProps> = ({ name, deviceId, mapId }) => {
+const MutNameCell: FC<NameCellProps> = ({ name, deviceId, mapId, router }) => {
 
   const [updatedName, setUpdatedName] = useState<string | undefined>(name ?? "")
-  const mutation = useMutateDeviceName(mapId)
+  const mutation = useMutateDeviceName(mapId, router?.query.groups)
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUpdatedName(e.target.value)
