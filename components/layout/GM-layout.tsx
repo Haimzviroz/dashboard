@@ -11,6 +11,8 @@ import GetAppProvider from "@/providers/getapp.provider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AppScopeEnum } from "@/types/enum";
 import { R_GET_MAP } from "@/apis/routes";
+import SideBarProvider from "@/providers/sidebar.provider";
+import BodyBox from "../body/body-box";
 
 interface GM_layoutProps {
 	page: ReactElement
@@ -29,11 +31,13 @@ const GM_layout: FC<GM_layoutProps> = ({ page, withGroups }) => {
 					<GetAppProvider>
 						<GetAppLogo scope={AppScopeEnum.getmap} />
 						<Box sx={{ display: "flex" }}>
-							<SideBar
-								groupList={page.props.groupList}
-								withGroups={withGroups}
-								scope={AppScopeEnum.getmap} />
-							{page}
+							<SideBarProvider>
+								<SideBar
+									groupList={page.props.groupList}
+									withGroups={withGroups}
+									scope={AppScopeEnum.getmap} />
+								<BodyBox>{page}</BodyBox>
+							</SideBarProvider>
 						</Box>
 					</GetAppProvider>
 				</TeamMuiProvider>
