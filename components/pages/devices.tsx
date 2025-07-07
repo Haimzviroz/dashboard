@@ -32,7 +32,7 @@ const DevicesPage: NextPageWithLayout<DevicesProps> = ({ scope }) => {
 
   return (
     <GroupSelectionProvider>
-      <BodyBox >
+      {/* <BodyBox > */}
         <Box sx={(theme) => ({
           flexGrow: 1, mx: 15, mt: 5,
           // flexGrow: 1, mx: 15, mt: 5, height: "calc(100vh - 112px)", overflow: "hidden",
@@ -44,7 +44,7 @@ const DevicesPage: NextPageWithLayout<DevicesProps> = ({ scope }) => {
           <DeviceMetaData router={router} scope={scope} cEntity={distEntity.dEntity} activeItem={activeItem} setActiveItem={setActiveItem} setCurrentDevices={setCurrentDevices} />
           {devices.devices && <DevicesTable mode="page" devices={getFilteredDevices() ?? devices.devices} scope={scope} dEntity={distEntity.dEntity}></DevicesTable>}
         </Box>
-      </BodyBox>
+      {/* </BodyBox> */}
     </GroupSelectionProvider>
   )
 }

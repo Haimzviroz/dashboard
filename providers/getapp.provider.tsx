@@ -1,8 +1,8 @@
 import { createContext, FC, useEffect, useState, useContext } from "react"
-import { DashNavBarOption, ProNavBarOption, SideBarOption } from "@/types/enum";
-import { Activate, GetAppProviderProps } from "@/types/interfaces";
+import { DashNavBarOption, ProNavBarOption } from "@/types/enum";
+import { GetAppProviderProps } from "@/types/interfaces";
 import { useRouter } from "next/router";
-import { R_APP_DEVICES, R_MAP_DEVICES, R_MAPS, R_PROJECTS, R_GET_APP, R_APP_GROUP, R_MAP_GROUP, R_CATALOG } from "@/apis/routes";
+import { R_PROJECTS, R_GET_APP } from "@/apis/routes";
 
 export const useGetApp = () => useContext(GetAppContext)
 
@@ -10,29 +10,16 @@ export const GetAppContext = createContext({} as GetAppProviderProps)
 
 const GetAppProvider: FC<any> = ({ children }: any) => {
 	const router = useRouter()
-
 	
-	const [activated, setActivated] = useState<Activate | null>(null);
 	const [proNavBarActive, setProNavBarActive] = useState<ProNavBarOption | null>(ProNavBarOption.OVERVIEW);
 	const [dashNavBarActive, setDashNavBarActive] = useState<DashNavBarOption | null>(DashNavBarOption.PRODUCTS);
-	const [sideBarCollapse, setSideBarCollapse] = useState<boolean>(true);
 
 	useEffect(() => {
-		const active = getSideBarActivated()
-		active && active !== activated?.active && setActivated({ active, trigger: null })
 		const proNavActive = getProNavBarActivated()
 		proNavActive && proNavActive !== proNavBarActive && setProNavBarActive(proNavActive)
 		const dashNavActive = getDashNavBarActivated()
 		dashNavActive && dashNavActive !== dashNavBarActive && setDashNavBarActive(dashNavActive)
 	}, [router])
-
-	const getSideBarActivated = () => {
-		if (router.pathname.startsWith(R_MAPS)) return SideBarOption.MAP;
-		if (router.pathname.startsWith(R_APP_DEVICES) || router.pathname.startsWith(R_MAP_DEVICES)) return SideBarOption.DEVICES;
-		if (router.pathname.startsWith(R_PROJECTS)) return SideBarOption.APPS;
-		if (router.pathname.startsWith(R_APP_GROUP) || router.pathname.startsWith(R_MAP_GROUP)) return SideBarOption.GROUPS;
-		if (router.pathname.startsWith(R_CATALOG)) return SideBarOption.CATALOG;
-	}
 
 	const getProNavBarActivated = () => {
 		if (router.pathname.startsWith(R_PROJECTS)) {
@@ -55,10 +42,6 @@ const GetAppProvider: FC<any> = ({ children }: any) => {
 	return (
 		<GetAppContext.Provider value={{
 			router,
-			activated,
-			setActivated,
-			sideBarCollapse,
-			setSideBarCollapse,
 			proNavBarActive,
 			setProNavBarActive,
 			dashNavBarActive,

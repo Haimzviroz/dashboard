@@ -10,6 +10,7 @@ import TeamMuiProvider from "@/providers/team-mui.provider";
 import { AppScopeEnum } from "@/types/enum";
 import BodyBox from "../body/body-box";
 import { R_GET_APP } from "@/apis/routes";
+import SideBarProvider from "@/providers/sidebar.provider";
 
 interface GA_layoutProps {
 	page: ReactElement;
@@ -29,12 +30,14 @@ const GA_layout: FC<GA_layoutProps> = ({ page, children, withGroups }) => {
 					<GetAppProvider>
 						<GetAppLogo scope={AppScopeEnum.getapp} />
 						<Box sx={{ display: "flex" }}>
-							<SideBar
-								groupList={page.props.groupList}
-								withGroups={withGroups}
-								scope={AppScopeEnum.getapp}
-							/>
-							<BodyBox>{children ?? page}</BodyBox>
+							<SideBarProvider>
+								<SideBar
+									groupList={page.props.groupList}
+									withGroups={withGroups}
+									scope={AppScopeEnum.getapp}
+								/>
+								<BodyBox>{children ?? page}</BodyBox>
+							</SideBarProvider>
 						</Box>
 					</GetAppProvider>
 				</TeamMuiProvider>
@@ -44,3 +47,4 @@ const GA_layout: FC<GA_layoutProps> = ({ page, children, withGroups }) => {
 };
 
 export default GA_layout;
+	

@@ -6,8 +6,6 @@ import { NextPageWithLayout } from "@/types/types";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { GetServerSidePropsContext } from "next";
 import { ReactElement } from "react"
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 
 interface ManageGroups {
 
@@ -15,9 +13,7 @@ interface ManageGroups {
 
 const ManageGroups: NextPageWithLayout<ManageGroups> = () => {
   return (
-    <DndProvider backend={HTML5Backend}>
       <GroupMngPage />
-    </DndProvider>
   )
 }
 

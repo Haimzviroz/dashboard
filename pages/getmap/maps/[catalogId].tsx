@@ -24,12 +24,10 @@ const Maps: NextPageWithLayout<MapsProps> = () => {
   const mapList = useMaps(router.query.device as string)
 
   return (
-    <BodyBox>
-      <Box sx={{ display: "flex" }}>
-        {mapList.maps && <MapList maps={mapList.maps}></MapList>}
-        {mapList.maps && mapList.maps?.length > 0 && <DisplayMaps></DisplayMaps>}
-      </Box>
-    </BodyBox>
+    <Box sx={{ display: "flex" }}>
+      {mapList.maps && <MapList maps={mapList.maps}></MapList>}
+      {mapList.maps && mapList.maps?.length > 0 && <DisplayMaps></DisplayMaps>}
+    </Box>
   )
 }
 

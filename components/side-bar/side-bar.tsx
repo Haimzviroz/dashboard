@@ -6,9 +6,9 @@ import RightArrow from "../../assets/side-bar/double-arrow-right.svg";
 import O_IconButton from "@/ui/o-icon-button";
 import TopBar from "./top.side-bar";
 import GroupBarSection from "./group-bar-section";
-import { useGetApp } from "@/providers/getapp.provider";
 import { GroupRes } from "@/types/interfaces/devices";
 import { AppScopeEnum } from "@/types/enum";
+import { useSideBar } from "@/providers/sidebar.provider";
 
 
 export interface SideBarProps {
@@ -19,7 +19,7 @@ export interface SideBarProps {
 
 const SideBar: FC<SideBarProps> = ({ groupList, scope, withGroups }) => {
 
-  const { sideBarCollapse, setSideBarCollapse, } = useGetApp()
+  const { sideBarCollapse, setSideBarCollapse, } = useSideBar()
 
   const style: SxProps<Theme> = (theme) => ({
     border: 'none',

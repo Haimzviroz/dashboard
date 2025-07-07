@@ -8,6 +8,8 @@ import SelectGroup from "../../assets/groups/select-group.svg"
 import { Group } from "@/types/interfaces/devices";
 import DeviceList from "../groups/device-list";
 import { useQ_Devices } from "@/hooks/device.query.hook";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 interface DevicesProps {
   // scope: AppScopeEnum
@@ -42,39 +44,43 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
   }
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <Box sx={style}>
-        <GroupList
-          groups={groupsData ? Object.values(groupsData.groups) : []}
-          selectedGroup={selectedGroup}
-          setSelectedGroup={setSelectedGroup}
-          expanded={expanded === "g"}
-          onExpand={() => expanded != "g" ? setExpanded("g") : setExpanded(undefined)}
-        />
-        <Accordion expanded={expanded === "d"} onChange={() => expanded != "d" ? setExpanded("d") : setExpanded(undefined)}>
-          <AccordionSummary>
-            <Typography variant="h5" sx={{ fontWeight: 600, py: 2, px: 1 }}>בחר אמצעי</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {devices && <DeviceList devices={devices} />}
-          </AccordionDetails>
-        </Accordion>
-      </Box>
-      {selectedGroup && <UnitGroupMng
-        group={groupsData?.groups[selectedGroup.id]} // always fresh from source
-        groupsData={groupsData}
-        setSelectedGroup={setSelectedGroup}
-      />
-      }
-      {!selectedGroup && <Box sx={{ mt: 32, height: "calc(100vh - 100px)", flexGrow: 1 }}>
-        <Box sx={{ textAlign: "center" }}>
-          <Icon sx={{ height: 120, width: 160 }}>
-            <SelectGroup />
-          </Icon>
-          <Typography variant="body2" textAlign={"center"}>בחר קבוצה או אמצעי </Typography>
+    <DndProvider backend={HTML5Backend}>
+
+
+      <Box sx={{ display: "flex" }}>
+        <Box sx={style}>
+          <GroupList
+            groups={groupsData ? Object.values(groupsData.groups) : []}
+            selectedGroup={selectedGroup}
+            setSelectedGroup={setSelectedGroup}
+            expanded={expanded === "g"}
+            onExpand={() => expanded != "g" ? setExpanded("g") : setExpanded(undefined)}
+          />
+          <Accordion expanded={expanded === "d"} onChange={() => expanded != "d" ? setExpanded("d") : setExpanded(undefined)}>
+            <AccordionSummary>
+              <Typography variant="h5" sx={{ fontWeight: 600, py: 2, px: 1 }}>בחר אמצעי</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {devices && <DeviceList devices={devices} />}
+            </AccordionDetails>
+          </Accordion>
         </Box>
-      </Box>}
-    </Box>
+        {selectedGroup && <UnitGroupMng
+          group={groupsData?.groups[selectedGroup.id]} // always fresh from source
+          groupsData={groupsData}
+          setSelectedGroup={setSelectedGroup}
+        />
+        }
+        {!selectedGroup && <Box sx={{ mt: 32, height: "calc(100vh - 100px)", flexGrow: 1 }}>
+          <Box sx={{ textAlign: "center" }}>
+            <Icon sx={{ height: 120, width: 160 }}>
+              <SelectGroup />
+            </Icon>
+            <Typography variant="body2" textAlign={"center"}>בחר קבוצה או אמצעי </Typography>
+          </Box>
+        </Box>}
+      </Box>
+    </DndProvider>
   )
 }
 
