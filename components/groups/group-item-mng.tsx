@@ -8,12 +8,13 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useSetChildInGroup } from "@/hooks/group.query.hook";
 import { useDrag } from "react-dnd";
 import { DND_GROUP_UNIT_ITEM } from "./dnd-constants";
+import { SelectedItem } from "../pages/groups-management";
 
 interface GroupItemMngProps {
   group: Group,
   groupsData?: GroupResponseDto
   type?: "parent" | "child"
-  setSelectedGroup: Dispatch<SetStateAction<Group | undefined>>
+  setSelectedGroup: Dispatch<SetStateAction<SelectedItem | undefined>>
 }
 
 const GroupItemMng: FC<GroupItemMngProps> = ({ group, groupsData, type, setSelectedGroup }) => {
@@ -38,9 +39,9 @@ const GroupItemMng: FC<GroupItemMngProps> = ({ group, groupsData, type, setSelec
         borderRadius: 2,
         my: 1,
         minWidth: 200,
-        cursor:  'pointer' 
+        cursor: 'pointer'
       }}
-      onClick={() => setSelectedGroup(group)}
+      onClick={() => setSelectedGroup({ t: "g", item: group })}
     >
       <Box>
         <CardContent >

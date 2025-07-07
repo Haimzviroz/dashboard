@@ -10,15 +10,18 @@ import DeviceList from "../groups/device-list";
 import { useQ_Devices } from "@/hooks/device.query.hook";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { DeviceDto } from "@/api/src";
 
 interface DevicesProps {
   // scope: AppScopeEnum
 }
 
+export type SelectedItem = { t: "d" | "g", item: Group | DeviceDto } | undefined
+
 const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
   const { groups: groupsData } = useGroups()
   const { devices } = useQ_Devices()
-  const [selectedGroup, setSelectedGroup] = useState<Group>()
+  const [selectedItem, setSelectedItem] = useState<SelectedItem>()
   const [expanded, setExpanded] = useState<string>()
 
   const style: SxProps = {
@@ -51,8 +54,8 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
         <Box sx={style}>
           <GroupList
             groups={groupsData ? Object.values(groupsData.groups) : []}
-            selectedGroup={selectedGroup}
-            setSelectedGroup={setSelectedGroup}
+            selectedGroup={selectedItem}
+            setSelectedGroup={setSelectedItem}
             expanded={expanded === "g"}
             onExpand={() => expanded != "g" ? setExpanded("g") : setExpanded(undefined)}
           />
@@ -65,13 +68,13 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
             </AccordionDetails>
           </Accordion>
         </Box>
-        {selectedGroup && <UnitGroupMng
-          group={groupsData?.groups[selectedGroup.id]} // always fresh from source
+        {selectedItem && <UnitGroupMng
+          group={groupsData?.groups[selectedItem.item.id]} // always fresh from source
           groupsData={groupsData}
-          setSelectedGroup={setSelectedGroup}
+          setSelectedGroup={setSelectedItem}
         />
         }
-        {!selectedGroup && <Box sx={{ mt: 32, height: "calc(100vh - 100px)", flexGrow: 1 }}>
+        {!selectedItem && <Box sx={{ mt: 32, height: "calc(100vh - 100px)", flexGrow: 1 }}>
           <Box sx={{ textAlign: "center" }}>
             <Icon sx={{ height: 120, width: 160 }}>
               <SelectGroup />

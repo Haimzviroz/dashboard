@@ -7,11 +7,12 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useCreateGroup } from "@/hooks/group.query.hook";
 import GroupDialog from "./group-dialog";
 import type { CreateDevicesGroupDto, EditDevicesGroupDto } from "@/api/src/api";
+import { SelectedItem } from "../pages/groups-management";
 
 interface GroupListProps {
   groups?: Group[],
-  selectedGroup: Group | undefined
-  setSelectedGroup: Dispatch<SetStateAction<Group | undefined>>
+  selectedGroup: SelectedItem | undefined
+  setSelectedGroup: Dispatch<SetStateAction<SelectedItem | undefined>>
   expanded: boolean;
   onExpand: () => void;
 }

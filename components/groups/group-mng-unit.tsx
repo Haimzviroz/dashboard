@@ -12,11 +12,12 @@ import { useGroup, useSetChildInGroup } from "@/hooks/group.query.hook"
 import { GroupResponseDto } from "@/api/src"
 import { useDrop } from "react-dnd"
 import { DND_GROUP_LIST_ITEM } from "./dnd-constants"
+import { SelectedItem } from "../pages/groups-management";
 
 interface UnitGroupMngProps {
   group: Group
   groupsData?: GroupResponseDto
-  setSelectedGroup: Dispatch<SetStateAction<Group | undefined>>
+  setSelectedGroup: Dispatch<SetStateAction<SelectedItem | undefined>>
 }
 
 const NoItemsMessage: FC<{ icon: JSX.Element; message: string }> = ({ icon, message }) => (
@@ -114,7 +115,7 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGro
               boxShadow: 2,
               cursor: 'pointer'
             }}
-            onClick={() => setSelectedGroup(parentGroup)}
+            onClick={() => setSelectedGroup({ t: "g", item: parentGroup })}
           >
             <Stack direction="row" alignItems="center" justifyContent={"space-between"} spacing={1}>
               <Stack direction={"row"} alignItems="baseline" >

@@ -9,12 +9,14 @@ import type { EditDevicesGroupDto } from "@/api/src/api";
 import GroupDialog from "./group-dialog";
 import { useDrag, useDrop } from "react-dnd";
 import { DND_GROUP_LIST_ITEM, DND_GROUP_UNIT_ITEM } from "./dnd-constants";
+import { SelectedItem } from "../pages/groups-management";
 
 interface GroupItemProps {
   group: Group,
-  selectedGroup: Group | undefined
-  setSelectedGroup: Dispatch<SetStateAction<Group | undefined>>
+  selectedGroup: SelectedItem | undefined
+  setSelectedGroup: Dispatch<SetStateAction<SelectedItem | undefined>>
 }
+
 const boxStyle: SxProps = {
   border: 1,
   borderColor: "#DBE1EC",
@@ -90,13 +92,13 @@ const GroupItem: FC<GroupItemProps> = ({ group, selectedGroup, setSelectedGroup 
       sx={{
         borderRadius: 2,
         my: .5,
-        backgroundColor: isOver && canDrop ? '#b2ebf2' : selectedGroup?.id === group.id ? '#e0f7fa' : 'white',
+        backgroundColor: isOver && canDrop ? '#b2ebf2' : selectedGroup?.item?.id === group.id ? '#e0f7fa' : 'white',
         cursor: 'pointer',
-        borderColor: selectedGroup?.id === group.id ? '#00acc1' : 'rgba(0, 0, 0, 0.12)',
+        borderColor: selectedGroup?.item?.id === group.id ? '#00acc1' : 'rgba(0, 0, 0, 0.12)',
         boxShadow: isOver && canDrop ? 4 : undefined,
       }}
     >
-      <Box onClick={() => setSelectedGroup(group)} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Box onClick={() => setSelectedGroup({ t: "g", item: group })} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <CardContent sx={{ flex: 1 }}>
           <Stack direction={"row"} gap={1} alignItems="center">
             <Icon>
