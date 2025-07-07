@@ -16,7 +16,7 @@ import Catalog from "../../assets/side-bar/catalog.svg";
 import CatalogActive from "../../assets/side-bar/catalog-active.svg";
 
 import { AppScopeEnum, SideBarOption } from "@/types/enum";
-import { useGetApp } from "@/providers/getapp.provider";
+import { useSideBar } from "@/providers/sidebar.provider";
 import Router from "next/router";
 import { R_APP_DEVICES, R_MAP_DEVICES, R_MAPS, R_PROJECTS, R_APP_GROUP, R_MAP_GROUP, R_CATALOG } from "@/apis/routes";
 
@@ -106,7 +106,7 @@ interface TopBarProps {
 
 const TopBar: FC<TopBarProps> = ({ scope }) => {
 
-  const { activated, sideBarCollapse } = useGetApp()
+  const { activated, sideBarCollapse } = useSideBar()
 
   const getListItems = () => {
     return Items.filter(i => i.scope === undefined || i.scope === scope).map((item: SideBarItem) => {
