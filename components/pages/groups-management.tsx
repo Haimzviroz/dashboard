@@ -1,5 +1,5 @@
 import { NextPageWithLayout } from "@/types/types";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Icon, SxProps, Typography } from "@mui/material";
+import { Box, Icon, SxProps, Typography } from "@mui/material";
 import { useGroups } from "@/hooks/group.query.hook";
 import GroupList from "../groups/group-list";
 import { useState } from "react";
@@ -11,6 +11,7 @@ import { useQ_Devices } from "@/hooks/device.query.hook";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DeviceDto } from "@/api/src";
+import UnitDeviceMng from "../groups/unit-device-mng";
 
 interface DevicesProps {
   // scope: AppScopeEnum
@@ -48,8 +49,6 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-
-
       <Box sx={{ display: "flex" }}>
         <Box sx={style}>
           <GroupList
@@ -67,12 +66,19 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
             onExpand={() => expanded != "d" ? setExpanded("d") : setExpanded(undefined)}
           />
         </Box>
-        {selectedItem && <UnitGroupMng
-          group={groupsData?.groups[selectedItem.item.id]} // always fresh from source
-          groupsData={groupsData}
-          setSelectedGroup={setSelectedItem}
-        />
-        }
+        {selectedItem && selectedItem.t === "g" && (
+          <UnitGroupMng
+            group={groupsData?.groups[selectedItem.item.id]} // always fresh from source
+            groupsData={groupsData}
+            setSelectedGroup={setSelectedItem}
+          />
+        )}
+        {selectedItem && selectedItem.t === "d" && (
+          <UnitDeviceMng
+            deviceId={String(selectedItem.item.id)}
+            groupsData={groupsData}
+          />
+        )}
         {!selectedItem && <Box sx={{ mt: 32, height: "calc(100vh - 100px)", flexGrow: 1 }}>
           <Box sx={{ textAlign: "center" }}>
             <Icon sx={{ height: 120, width: 160 }}>
