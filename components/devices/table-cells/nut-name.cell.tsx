@@ -3,7 +3,7 @@ import { Box, Button, FormControl, FormHelperText, Icon, Input, Stack, Typograph
 import { ChangeEvent, FC, useState } from "react";
 import SettingDots from "../../../assets/inputs/dots-vertical.svg"
 import Writing from "../../../assets/inputs/writing.svg"
-import { useMutateDeviceName } from "@/hooks/device.query.hook";
+import { useMutateDevice } from "@/hooks/device.query.hook";
 import AnchorAndPopper from "@/components/utils/collapse/anchor-popper";
 import { NextRouter } from "next/router";
 
@@ -17,7 +17,7 @@ interface NameCellProps {
 const MutNameCell: FC<NameCellProps> = ({ name, deviceId, mapId, router }) => {
 
   const [updatedName, setUpdatedName] = useState<string | undefined>(name ?? "")
-  const mutation = useMutateDeviceName(mapId, router?.query.groups)
+  const mutation = useMutateDevice(mapId, router?.query.groups)
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUpdatedName(e.target.value)
@@ -25,7 +25,7 @@ const MutNameCell: FC<NameCellProps> = ({ name, deviceId, mapId, router }) => {
 
 
   const handleUpdateName = async (name: string) => {
-    mutation.mutate({ deviceId, name })
+    mutation.mutate({ deviceId, data: { name } })
   }
 
   const collapseDisplay = () => {

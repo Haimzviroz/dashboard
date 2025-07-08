@@ -5,6 +5,7 @@ export * from "./gm-map-draw.interface";
 import { LatLngTuple } from "leaflet";
 import { Device } from "../devices";
 import { MapImportStatusEnum } from "@/types/enum/getmap";
+import { DeviceDto } from "@/api/src";
 
 
 export interface Maps {
@@ -23,13 +24,13 @@ export interface Maps {
   isUpdate: boolean;
   status: MapImportStatusEnum;
   product: productMap
-  devices?: Device[];
+  devices?: DeviceDto[];
 }
 
 export type StrPointsType = "bbox" | "polygon" | "invalid"
 
 export interface Map extends Maps {
-  devices: Device[];
+  devices: DeviceDto[];
 }
 
 export interface MapState {
