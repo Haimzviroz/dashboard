@@ -3,6 +3,7 @@ export const Q_GROUPS = "groups"
 export const Q_GROUP = "group"
 
 export const Q_DEVICES = "devices"
+export const Q_DEVICE = "device"
 
 export const Q_SOFTWARE_META_DATA = "software_meta_data"
 export const Q_MAP_META_DATA = "map_meta_data"
@@ -32,5 +33,6 @@ export const Q_PLATFORMS = "platforms"
 export const Q_DEVICE_TYPES = "device_types"
 export const Q_PLATFORM_HIERARCHY = 'platformHierarchy'
 export const Q_DEVICE_TYPE_HIERARCHY = 'deviceTypeHierarchy'
+export const Q_ORG_IDS = "org_ids"
 
 

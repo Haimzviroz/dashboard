@@ -1,9 +1,9 @@
-import { DEVICES_PUT, DEVICE_INFO, DEVICE_MAPS, GROUP, OFFERED_SOFTWARE } from '../paths';
+import { DEVICE_INFO, DEVICE_MAPS, OFFERED_SOFTWARE } from '../paths';
 import { clientRequestWithAuth, conf } from './token-client.middleware';
 import { Software } from '@/types/interfaces/getapp';
 import Logger from '@/services/logger';
 import { DeviceApiFp, CatalogOfferingApiFp, PushOfferingDto, OrganizationGroupsApiFp } from '@/api/src';
-import type { SetChildInGroupDto } from '@/api/src/api';
+import type { DevicePutDto, SetChildInGroupDto } from '@/api/src/api';
 
 const logger = Logger(__filename)
 
@@ -14,6 +14,11 @@ export const getDevices = async (groups?: string | string[]) => {
   let devices = (await fun()).data
   devices = devices.filter(device => device != null)
   return devices
+}
+
+export const getDevice = async (id: string) => {
+  const fun = await DeviceApiFp(await conf()).deviceControllerGetDeviceDetails(id)
+  return (await fun()).data
 }
 
 export const getDeviceInfo = async (id: string) => {
@@ -34,8 +39,9 @@ export const getMapMetaData = async (groups?: string | string[], map?: string | 
   return (await fun()).data
 }
 
-export const putDeviceName = async (deviceId: string, name: string) => {
-  return await clientRequestWithAuth(DEVICES_PUT(deviceId), "put", { name })
+export const putDeviceName = async (deviceId: string, data: DevicePutDto) => {
+  const fun = await DeviceApiFp(await conf()).deviceControllerPutDeviceProps(deviceId, data)
+  return (await fun()).data
 }
 
 

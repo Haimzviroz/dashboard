@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Q_DEVICE_MAP, Q_DEVICE_SOFTWARE, Q_DEVICES, Q_SOFTWARE_META_DATA, Q_DIST_ENTITY, Q_MAP, Q_MAP_META_DATA } from "../apis/query-keys";
-import { getSoftwareMetaData, getDeviceWithMap, getDeviceWithSoftware, getDevices, putDeviceName, getMapMetaData } from "@/apis/client-side/devices-actions.api";
+import { Q_DEVICE_MAP, Q_DEVICE_SOFTWARE, Q_DEVICES, Q_DEVICE, Q_SOFTWARE_META_DATA, Q_DIST_ENTITY, Q_MAP, Q_MAP_META_DATA } from "../apis/query-keys";
+import { getSoftwareMetaData, getDeviceWithMap, getDeviceWithSoftware, getDevices, getDevice, putDeviceName, getMapMetaData } from "@/apis/client-side/devices-actions.api";
 import { Device, DeviceMaps, DeviceMetaData } from "@/types/interfaces/devices";
 import { Map } from "@/types/interfaces";
 import { getMapById } from "@/apis/client-side/getmap-actions.api";
 import { getSoftwareById } from "@/apis/client-side/software-actions.api";
 import { AppScopeEnum } from "@/types/enum";
-import { ComponentV2Dto, DeviceDto, DeviceSoftwareDto } from "@/api/src";
+import { ComponentV2Dto, DeviceDto, DevicePutDto, DeviceSoftwareDto } from "@/api/src";
 
 export const useQ_Devices = (groups?: string | string[]) => {
   const { data: devices, refetch } = useQuery<DeviceDto[]>({
@@ -16,49 +16,55 @@ export const useQ_Devices = (groups?: string | string[]) => {
   return { devices, refetch }
 }
 
-export const useMutateDevice = () => {
-  const client = useQueryClient()
-
-  return useMutation({
-    mutationFn: (stringParams: string) => getDevices(stringParams),
-
-    // Notice the second argument is the variables object that the `mutate` function receives
-    onSuccess: (data: any, variables: any) => {
-      if (data) {
-        client.setQueryData([Q_DEVICES], (() => data))
-      }
-    },
-    onError: (error => alert(error))
+export const useQ_Device = (id: string) => {
+  const { data: device, refetch } = useQuery<DeviceDto>({
+    queryKey: [Q_DEVICE, id],
+    queryFn: () => getDevice(id),
   })
+  return { device, refetch }
 }
 
-export const useMutateDeviceName = (catalogId?: string, groups?: string | string[]) => {
+// export const useMutateDevice = () => {
+//   const client = useQueryClient()
+
+//   return useMutation({
+//     mutationFn: (stringParams: string) => getDevices(stringParams),
+
+//     // Notice the second argument is the variables object that the `mutate` function receives
+//     onSuccess: (data: any, variables: any) => {
+//       if (data) {
+//         client.setQueryData([Q_DEVICES], (() => data))
+//       }
+//     },
+//     onError: (error => alert(error))
+//   })
+// }
+
+export const useMutateDevice = (catalogId?: string, groups?: string | string[]) => {
   const client = useQueryClient()
 
   return useMutation({
-    mutationFn: async (params: { deviceId: string, name: string }) => {
-      const { deviceId, name } = params;
-      await putDeviceName(deviceId, name);
-    },
+    mutationFn: ({ deviceId, data }) => putDeviceName(deviceId, data),
 
     // Notice the second argument is the variables object that the `mutate` function receives
-    onSuccess: (data: any, variables: any) => {
+    onSuccess: (data: DevicePutDto, variables: { deviceId: string, data: DevicePutDto }) => {
+      client.invalidateQueries({ queryKey: [Q_DEVICE, variables.deviceId] })
       if (catalogId) {
         client.setQueryData([Q_MAP, catalogId], ((map: Map) => {
           let devices = [...map.devices]
           const currentD = devices.findIndex(d => d.id === variables.deviceId)
           if (currentD !== -1) {
-            devices[currentD] = { ...devices[currentD], name: variables.name }
+            devices[currentD] = { ...devices[currentD], name: variables.data.name }
           }
           return { ...map, devices }
         }))
       } else {
-        client.setQueryData([Q_DEVICES, groups ?? null], ((devices: Device[]) => {
+        client.setQueryData([Q_DEVICES, groups ?? null], ((devices: DeviceDto[]) => {
           const updatedDevices = [...devices]
           const currentD = updatedDevices.findIndex(d => d.id === variables.deviceId)
 
           if (currentD !== -1) {
-            updatedDevices[currentD] = { ...updatedDevices[currentD], name: variables.name }
+            updatedDevices[currentD] = { ...updatedDevices[currentD], name: variables.data.name }
           }
           return updatedDevices
         }))
