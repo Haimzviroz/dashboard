@@ -1894,7 +1894,7 @@ export interface DevicePutDto {
      * @type {number}
      * @memberof DevicePutDto
      */
-    'orgUID'?: number;
+    'orgUID'?: number | null;
 }
 /**
  * 
@@ -12465,12 +12465,13 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
         /**
          * 
          * @summary Get Organization IDs details
-         * @param {number} [group] To filter organization IDs by group ID
-         * @param {boolean} [empties] To include only organization IDs that are not associated with a group
+         * @param {number} [group] Filter by group ID
+         * @param {boolean} [emptyGroup] If true: (with group) also include IDs without group; (without group) only IDs without group
+         * @param {boolean} [emptyDevice] If true, only IDs without device
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        groupControllerGetOrgIds: async (group?: number, empties?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        groupControllerGetOrgIds: async (group?: number, emptyGroup?: boolean, emptyDevice?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/v1/org/groups/orgIds`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -12491,8 +12492,12 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
                 localVarQueryParameter['group'] = group;
             }
 
-            if (empties !== undefined) {
-                localVarQueryParameter['empties'] = empties;
+            if (emptyGroup !== undefined) {
+                localVarQueryParameter['emptyGroup'] = emptyGroup;
+            }
+
+            if (emptyDevice !== undefined) {
+                localVarQueryParameter['emptyDevice'] = emptyDevice;
             }
 
 
@@ -12690,13 +12695,14 @@ export const OrganizationGroupsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Get Organization IDs details
-         * @param {number} [group] To filter organization IDs by group ID
-         * @param {boolean} [empties] To include only organization IDs that are not associated with a group
+         * @param {number} [group] Filter by group ID
+         * @param {boolean} [emptyGroup] If true: (with group) also include IDs without group; (without group) only IDs without group
+         * @param {boolean} [emptyDevice] If true, only IDs without device
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async groupControllerGetOrgIds(group?: number, empties?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrgIdRefDto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.groupControllerGetOrgIds(group, empties, options);
+        async groupControllerGetOrgIds(group?: number, emptyGroup?: boolean, emptyDevice?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<OrgIdRefDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.groupControllerGetOrgIds(group, emptyGroup, emptyDevice, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['OrganizationGroupsApi.groupControllerGetOrgIds']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -12828,13 +12834,14 @@ export const OrganizationGroupsApiFactory = function (configuration?: Configurat
         /**
          * 
          * @summary Get Organization IDs details
-         * @param {number} [group] To filter organization IDs by group ID
-         * @param {boolean} [empties] To include only organization IDs that are not associated with a group
+         * @param {number} [group] Filter by group ID
+         * @param {boolean} [emptyGroup] If true: (with group) also include IDs without group; (without group) only IDs without group
+         * @param {boolean} [emptyDevice] If true, only IDs without device
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        groupControllerGetOrgIds(group?: number, empties?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<OrgIdRefDto> {
-            return localVarFp.groupControllerGetOrgIds(group, empties, options).then((request) => request(axios, basePath));
+        groupControllerGetOrgIds(group?: number, emptyGroup?: boolean, emptyDevice?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<Array<OrgIdRefDto>> {
+            return localVarFp.groupControllerGetOrgIds(group, emptyGroup, emptyDevice, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12980,14 +12987,15 @@ export class OrganizationGroupsApi extends BaseAPI {
     /**
      * 
      * @summary Get Organization IDs details
-     * @param {number} [group] To filter organization IDs by group ID
-     * @param {boolean} [empties] To include only organization IDs that are not associated with a group
+     * @param {number} [group] Filter by group ID
+     * @param {boolean} [emptyGroup] If true: (with group) also include IDs without group; (without group) only IDs without group
+     * @param {boolean} [emptyDevice] If true, only IDs without device
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrganizationGroupsApi
      */
-    public groupControllerGetOrgIds(group?: number, empties?: boolean, options?: RawAxiosRequestConfig) {
-        return OrganizationGroupsApiFp(this.configuration).groupControllerGetOrgIds(group, empties, options).then((request) => request(this.axios, this.basePath));
+    public groupControllerGetOrgIds(group?: number, emptyGroup?: boolean, emptyDevice?: boolean, options?: RawAxiosRequestConfig) {
+        return OrganizationGroupsApiFp(this.configuration).groupControllerGetOrgIds(group, emptyGroup, emptyDevice, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

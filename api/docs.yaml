@@ -2101,24 +2101,34 @@ paths:
         - name: group
           required: false
           in: query
-          description: To filter organization IDs by group ID
+          description: Filter by group ID
           schema:
             type: number
-        - name: empties
+        - name: emptyGroup
           required: false
           in: query
           description: >-
-            To include only organization IDs that are not associated with a
-            group
+            If true: (with group) also include IDs without group; (without
+            group) only IDs without group
+          schema:
+            type: boolean
+        - name: emptyDevice
+          required: false
+          in: query
+          description: If true, only IDs without device
           schema:
             type: boolean
       responses:
         '200':
-          description: ''
+          description: >-
+            Returns a list of organization IDs, according to the specified
+            filters
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OrgIdRefDto'
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrgIdRefDto'
       tags: *ref_15
       security: *ref_16
   /api/v1/org/groups/orgIds/{orgId}:
@@ -5021,7 +5031,7 @@ components:
         snapshotDate:
           type: string
           description: Timestamp when the discovery snapshot was taken
-          example: 2025-07-07T15:52:46.468Z
+          example: 2025-07-08T14:07:33.544Z
         deviceType:
           type: string
           description: >-
@@ -5347,6 +5357,7 @@ components:
         orgUID:
           type: number
           description: Set the unique given id or null to remove the exists uid.
+          nullable: true
     MapStateDto:
       type: object
       properties:
