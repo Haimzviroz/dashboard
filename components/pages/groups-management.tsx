@@ -59,14 +59,13 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
             expanded={expanded === "g"}
             onExpand={() => expanded != "g" ? setExpanded("g") : setExpanded(undefined)}
           />
-          <Accordion expanded={expanded === "d"} onChange={() => expanded != "d" ? setExpanded("d") : setExpanded(undefined)}>
-            <AccordionSummary>
-              <Typography variant="h5" sx={{ fontWeight: 600, py: 2, px: 1 }}>בחר אמצעי</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {devices && <DeviceList devices={devices} />}
-            </AccordionDetails>
-          </Accordion>
+          <DeviceList
+            devices={devices}
+            selectedDevice={selectedItem}
+            setSelectedDevice={setSelectedItem}
+            expanded={expanded === "d"}
+            onExpand={() => expanded != "d" ? setExpanded("d") : setExpanded(undefined)}
+          />
         </Box>
         {selectedItem && <UnitGroupMng
           group={groupsData?.groups[selectedItem.item.id]} // always fresh from source

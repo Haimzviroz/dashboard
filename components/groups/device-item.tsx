@@ -1,15 +1,15 @@
 import { Box, Card, CardContent, Icon, Stack, SxProps, Typography } from "@mui/material"
 import { Dispatch, FC, SetStateAction } from "react"
-import { Group } from "@/types/interfaces/devices";
 import GroupIcon from "../../assets/side-bar/group.svg";
 import { DeviceDto } from "@/api/src";
+import { SelectedItem } from "../pages/groups-management";
 
-interface GroupItemProps {
+interface DeviceItemProps {
   device: DeviceDto,
-  // selectedGroup: Group | undefined
-  // setSelectedGroup: Dispatch<SetStateAction<Group | undefined>>
-
+  selectedDevice: SelectedItem | undefined
+  setSelectedDevice: Dispatch<SetStateAction<SelectedItem | undefined>>
 }
+
 const boxStyle: SxProps = {
   border: 1,
   borderColor: "#DBE1EC",
@@ -21,7 +21,7 @@ const boxStyle: SxProps = {
   cursor: "pointer"
 }
 
-const DeviceItem: FC<GroupItemProps> = ({ device }) => {
+const DeviceItem: FC<DeviceItemProps> = ({ device, selectedDevice, setSelectedDevice }) => {
 
   return (
     <Card
@@ -29,13 +29,13 @@ const DeviceItem: FC<GroupItemProps> = ({ device }) => {
       sx={{
         borderRadius: 2,
         my: 1,
-        // backgroundColor: selectedGroup?.id === device.id ? '#e0f7fa' : 'white', // Soft teal for active, white for inactive
+        backgroundColor: selectedDevice?.item.id === device.id ? '#e0f7fa' : 'white', // Soft teal for active, white for inactive
         cursor: 'pointer',
-        // borderColor: selectedGroup?.id === device.id ? '#00acc1' : 'rgba(0, 0, 0, 0.12)', // Accent border color for active
+        borderColor: selectedDevice?.item?.id === device.id ? '#00acc1' : 'rgba(0, 0, 0, 0.12)', // Accent border color for active
       }}
     >
-      <Box >
-        {/* <Box onClick={() => setSelectedGroup(device)}> */}
+      {/* <Box > */}
+      <Box onClick={() => setSelectedDevice({ t: "d", item: device })}>
         <CardContent >
           <Stack direction={"row"} gap={1} >
             <Icon>
