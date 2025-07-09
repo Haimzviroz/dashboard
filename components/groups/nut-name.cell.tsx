@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormHelperText, Input, Stack, Typography } from "@mui/material";
+import { Box, Button, Divider, FormControl, FormHelperText, Input, Stack, Typography } from "@mui/material";
 import { ChangeEvent, FC, useState, useEffect } from "react";
 import { useMutateDevice } from "@/hooks/device.query.hook";
 import AnchorAndPopper from "@/components/utils/collapse/anchor-popper";
@@ -33,24 +33,46 @@ const MutNameCell: FC<NameCellProps> = ({ name, deviceId, mapId, router, editabl
 
   const collapseDisplay = () => {
     return (
-      <Box >
-        {name ?
-          <Stack direction={"row"} gap={1} justifyContent={"flex-start"} alignItems={"center"}>
-            <Typography variant="body1">{name}</Typography>
+
+      <Box>
+        {name ? (
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            justifyContent="flex-start"
+          >
+            <Typography variant="body1" fontWeight={600}>
+              {name}
+            </Typography>
+
+            <Divider orientation="vertical" flexItem />
+
             {editable && (
-              <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-                <span style={{ color: '#1976d2', cursor: 'pointer', textDecoration: 'underline' }}>ערוך</span>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontStyle: 'italic', fontWeight: 500 }}
+              >
+                <span style={{ color: '#1976d2', cursor: 'pointer', textDecoration: 'underline' }}>
+                  ערוך
+                </span>
               </Typography>
             )}
           </Stack>
-          :
-          editable ? (
-            <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-              <span style={{ color: '#1976d2', cursor: 'pointer', textDecoration: 'underline' }}>הוסף</span>
-            </Typography>
-          ) : null
-        }
+        ) : editable ? (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontStyle: 'italic', fontWeight: 500 }}
+          >
+            <span style={{ color: '#1976d2', cursor: 'pointer', textDecoration: 'underline' }}>
+              הוסף
+            </span>
+          </Typography>
+        ) : null}
       </Box>
+
     )
   }
 
