@@ -71,11 +71,7 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelect
           </Paper>
         )}
         {deviceParent && (
-          <Paper variant="outlined" sx={{ px: 2, py: 1, borderRadius: 2, background: 'linear-gradient(90deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
-            <Typography variant="body2" color="primary.dark">
-              אב: {deviceParent}
-            </Typography>
-          </Paper>
+          <RelatedDeviceCard deviceId={deviceParent} setSelectedDevice={setSelectedDevice} />
         )}
       </Stack>
 
