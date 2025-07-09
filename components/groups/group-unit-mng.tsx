@@ -9,8 +9,8 @@ import NoDevices from "../../assets/groups/no-devices.svg"
 import { useQ_Devices } from "@/hooks/device.query.hook"
 import { useGroup, useSetChildInGroup } from "@/hooks/group.query.hook"
 import { GroupResponseDto } from "@/api/src"
-import { useDrop } from "react-dnd"
-import { DND_GROUP_LIST_ITEM } from "./dnd-constants"
+import { useDrop, useDrag } from "react-dnd"
+import { DND_GROUP_LIST_ITEM, DND_GROUP_UNIT_ITEM } from "./dnd-constants"
 import { SelectedItem } from "../pages/groups-management";
 import { getGroupDropValidation } from "./group-drop-validation";
 
@@ -71,9 +71,23 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGro
   }), [group, groupsData]);
 
 
+  // Add drag functionality for the current group
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: DND_GROUP_UNIT_ITEM,
+    item: group,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }), [group]);
+
+
   return (
     <Box sx={{ flexGrow: 1, textAlign: "center", px: 2, py: 4 }}>
-      <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+      <Typography
+        ref={drag}
+        variant="h4"
+        sx={{ fontWeight: 700, mb: 1, opacity: isDragging ? 0.5 : 1, cursor: 'grab' }}
+      >
         {group.name}
       </Typography>
 
