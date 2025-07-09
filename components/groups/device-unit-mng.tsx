@@ -4,10 +4,10 @@ import { GroupResponseDto } from "@/api/src";
 import { SelectedItem } from "../pages/groups-management";
 import NoDevices from "../../assets/groups/no-devices.svg";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import MutNameCell from "./nut-name.cell";
+import MutNameCell from "./device-mut-name";
 import { useQ_Device } from "@/hooks/device.query.hook";
-import OrgIdSelect from "./org-id-select";
-import RelatedDeviceCard from "./related-device-card";
+import OrgIdSelect from "./device-org-id-select";
+import RelatedDeviceCard from "./device-item-mng";
 
 interface UnitDeviceMngProps {
   deviceId: string;

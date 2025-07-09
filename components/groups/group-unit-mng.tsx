@@ -4,7 +4,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { Group } from "@/types/interfaces/devices"
 import GroupItemMng from "./group-item-mng"
-import RelatedDeviceCard from "./related-device-card"
+import RelatedDeviceCard from "./device-item-mng"
 import NoGroups from "../../assets/groups/no-groups.svg"
 import NoDevices from "../../assets/groups/no-devices.svg"
 import { useQ_Devices } from "@/hooks/device.query.hook"

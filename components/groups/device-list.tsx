@@ -1,10 +1,8 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from "@mui/material"
 import { Dispatch, FC, SetStateAction } from "react"
 import NoMaps from "../../assets/maps/no-maps.svg";
-import { Group } from "@/types/interfaces/devices"
-import GroupItem from "./group-item";
 import { DeviceDto } from "@/api/src";
-import DeviceItem from "./device-item";
+import DeviceItem from "./device-list-item";
 import { SelectedItem } from "../pages/groups-management";
 
 interface DeviceListProps {

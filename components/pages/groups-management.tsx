@@ -3,7 +3,7 @@ import { Box, Icon, SxProps, Typography } from "@mui/material";
 import { useGroups } from "@/hooks/group.query.hook";
 import GroupList from "../groups/group-list";
 import { useState } from "react";
-import UnitGroupMng from "../groups/group-mng-unit";
+import UnitGroupMng from "../groups/group-unit-mng";
 import SelectGroup from "../../assets/groups/select-group.svg"
 import { Group } from "@/types/interfaces/devices";
 import DeviceList from "../groups/device-list";
@@ -11,7 +11,7 @@ import { useQ_Devices } from "@/hooks/device.query.hook";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DeviceDto } from "@/api/src";
-import UnitDeviceMng from "../groups/unit-device-mng";
+import UnitDeviceMng from "../groups/device-unit-mng";
 
 interface DevicesProps {
   // scope: AppScopeEnum

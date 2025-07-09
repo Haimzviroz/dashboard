@@ -2,7 +2,7 @@ import { Box, Typography, Tooltip, IconButton, Accordion, AccordionSummary, Acco
 import { Dispatch, FC, SetStateAction, useState } from "react"
 import NoMaps from "../../assets/maps/no-maps.svg";
 import { Group } from "@/types/interfaces/devices"
-import GroupItem from "./group-item";
+import GroupItem from "./group-list-item";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useCreateGroup } from "@/hooks/group.query.hook";
 import GroupDialog from "./group-dialog";
