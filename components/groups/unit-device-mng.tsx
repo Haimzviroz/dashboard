@@ -5,7 +5,6 @@ import NoDevices from "../../assets/groups/no-devices.svg";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import MutNameCell from "./nut-name.cell";
 import { useQ_Device } from "@/hooks/device.query.hook";
-import LaptopMacIcon from '@mui/icons-material/LaptopMac';
 import OrgIdSelect from "./org-id-select";
 
 interface UnitDeviceMngProps {
@@ -79,60 +78,65 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData }) => {
 
       {/* Middle Section: Device Properties */}
       <Divider sx={{ my: 2 }} />
-      <Box mb={2}>
-        <Stack spacing={2} alignItems="flex-start" sx={{ mx: 'auto', maxWidth: 400, background: '#f8fafc', borderRadius: 2, p: 2, boxShadow: 1 }}>
-          <Stack direction={"row"} alignItems="center" spacing={1} sx={{ mb: 1 }}>
-            {/* Device name with edit option */}
-            <Typography variant="body2" sx={{ fontStyle: 'italic', fontWeight: 600, color: 'text.secondary' }}>
+      <Paper elevation={4} sx={{ mb: 2, mx: 'auto', maxWidth: 480, borderRadius: 3, background: '#fafbfc', boxShadow: 6, p: 0 }}>
+        <Stack spacing={2} alignItems="stretch" sx={{ p: 3 }}>
+          {/* Device Name */}
+          <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 1 }}>
+            <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#1565c0', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #e3f2fd 60%, #fff 100%)', boxShadow: 1, border: '1px solid #bbdefb', display: 'inline-block' }}>
               שם המכשיר:
             </Typography>
             <MutNameCell deviceId={device.id} name={device.name} editable={true} />
           </Stack>
-          {/* UID with edit/add option */}
-          <OrgIdSelect
-            device={device}
-            orgUID={device.uid}
-            editable={true}
-            groupsData={groupsData}
-          />
-          {/* Platform name with flag */}
+          {/* Org ID */}
+          <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 1 }}>
+            <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#0277bd', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #e1f5fe 60%, #fff 100%)', boxShadow: 1, border: '1px solid #b3e5fc', display: 'inline-block' }}>
+              מזהה ארגון:
+            </Typography>
+            <OrgIdSelect
+              device={device}
+              orgUID={device.uid}
+              editable={true}
+              groupsData={groupsData}
+            />
+          </Stack>
+          {/* Platform */}
           {device.platformName && (
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <Typography variant="body2" fontWeight={600} color="success.main" sx={{ border: '1px solid #43a047', borderRadius: 1, px: 1, py: 0.2, background: '#e8f5e9' }}>
-                פלטפורמה
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#2e7d32', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #e8f5e9 60%, #fff 100%)', boxShadow: 1, border: '1px solid #c8e6c9', display: 'inline-block' }}>
+                פלטפורמה:
               </Typography>
               <Typography variant="body2">{device.platformName}</Typography>
             </Stack>
           )}
-          {/* Device type name */}
+          {/* Device Type */}
           {device.deviceTypeName && (
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <Typography variant="body2" fontWeight={600} color="primary.main" sx={{ border: '1px solid #1976d2', borderRadius: 1, px: 1, py: 0.2, background: '#e3f2fd' }}>
-                סוג אמצעי
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#4527a0', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #ede7f6 60%, #fff 100%)', boxShadow: 1, border: '1px solid #d1c4e9', display: 'inline-block' }}>
+                סוג אמצעי:
               </Typography>
               <Typography variant="body2">{device.deviceTypeName}</Typography>
             </Stack>
           )}
-          {/* Only show lastConnectionDate nicely */}
+          {/* Last Connection */}
           {device.lastConnectionDate && (
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <Typography variant="body2" fontWeight={600} color="secondary.main">
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#ad1457', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #fce4ec 60%, #fff 100%)', boxShadow: 1, border: '1px solid #f8bbd0', display: 'inline-block' }}>
                 חיבור אחרון:
               </Typography>
               <Typography variant="body2">{new Date(device.lastConnectionDate).toLocaleString('he-IL')}</Typography>
             </Stack>
           )}
-          {/* OS line with style and icon */}
+          {/* OS */}
           {device.OS && (
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <Typography variant="body2" fontWeight={600} color="#ad2858" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <LaptopMacIcon fontSize="small" sx={{ verticalAlign: 'middle' }} />
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#b71c1c', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #ffebee 60%, #fff 100%)', boxShadow: 1, border: '1px solid #ffcdd2', display: 'inline-block' }}>
+                מערכת הפעלה
               </Typography>
               <Typography variant="body2">{device.OS}</Typography>
             </Stack>
           )}
         </Stack>
-      </Box>
+      </Paper>
 
 
       {/* Bottom Section: Related Devices */}
