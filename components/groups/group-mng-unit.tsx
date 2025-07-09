@@ -4,7 +4,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { Group } from "@/types/interfaces/devices"
 import GroupItemMng from "./group-item-mng"
-import DvcItemMng from "./device-item-mng"
+import RelatedDeviceCard from "./related-device-card"
 import NoGroups from "../../assets/groups/no-groups.svg"
 import NoDevices from "../../assets/groups/no-devices.svg"
 import { useQ_Devices } from "@/hooks/device.query.hook"
@@ -158,7 +158,9 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGro
       </Typography>
       <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
         {relatedDevices.length > 0 ? (
-          relatedDevices.map(dvc => <DvcItemMng key={dvc!.id} device={dvc!} />)
+          relatedDevices.map(dvc => (
+            <RelatedDeviceCard key={dvc!.id} deviceId={dvc!.id} setSelectedDevice={setSelectedGroup as any} />
+          ))
         ) : (
           <NoItemsMessage icon={<NoDevices />} message="לא קיימים אמצעים קשורים" />
         )}

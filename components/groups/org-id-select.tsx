@@ -66,10 +66,6 @@ const OrgIdSelect: FC<OrgIdSelectProps> = ({ orgUID, editable = true, device, gr
 
   return (
     <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap">
-      <Typography variant="body2" fontWeight={600}>
-        {`מספר צ'`}
-      </Typography>
-
       {editing ? (
         <>
           <Select

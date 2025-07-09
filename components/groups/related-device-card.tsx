@@ -30,7 +30,7 @@ const RelatedDeviceCard: FC<RelatedDeviceCardProps> = ({ deviceId, setSelectedDe
         <>
           {device.uid && (
             <Typography variant="caption" sx={{ color: '#0288d1', fontWeight: 600 }}>
-              מזהה ארגון: {device.uid}
+              {`מספר צ': ${device.uid}`}
             </Typography>
           )}
           {device.platformName && (

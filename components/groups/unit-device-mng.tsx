@@ -89,7 +89,7 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelect
           {/* Org ID */}
           <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 1 }}>
             <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#0277bd', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #e1f5fe 60%, #fff 100%)', boxShadow: 1, border: '1px solid #b3e5fc', display: 'inline-block' }}>
-              מזהה ארגון:
+              {`מספר צ':`}
             </Typography>
             <OrgIdSelect
               device={device}
