@@ -1,7 +1,6 @@
-import { Dispatch, FC, SetStateAction } from "react"
-import { Box, Typography, Stack, Paper, Divider, Icon, IconButton, Tooltip } from "@mui/material"
+import { Dispatch, FC, SetStateAction, useState } from "react"
+import { Box, Typography, Stack, Divider, Icon } from "@mui/material"
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { Group } from "@/types/interfaces/devices"
 import GroupItemMng from "./group-item-mng"
 import RelatedDeviceCard from "./device-item-mng"
@@ -13,6 +12,7 @@ import { GroupResponseDto } from "@/api/src"
 import { useDrop } from "react-dnd"
 import { DND_GROUP_LIST_ITEM } from "./dnd-constants"
 import { SelectedItem } from "../pages/groups-management";
+import { getGroupDropValidation } from "./group-drop-validation";
 
 interface UnitGroupMngProps {
   group: Group
@@ -32,6 +32,8 @@ const NoItemsMessage: FC<{ icon: JSX.Element; message: string }> = ({ icon, mess
 )
 
 const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGroup }) => {
+  const [dropReason, setDropReason] = useState<string | null>(null);
+
   const device = useQ_Devices()
   const qGroup = useGroup(group.id)
   const setChildInGroupMutation = useSetChildInGroup()
@@ -50,34 +52,24 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGro
       : []
 
 
-  const [, drop] = useDrop({
+  const [{ isOver, canDrop }, drop] = useDrop(() => ({
     accept: DND_GROUP_LIST_ITEM,
-    canDrop(item, monitor) {
-      return isGroupAllowedToDrop(item);
+    canDrop: (item: Group) => {
+      const result = getGroupDropValidation(item, group, groupsData);
+      setDropReason(result.allowed ? null : result.reason || null);
+      return result.allowed;
     },
     drop: (item: Group) => {
-      if (!isGroupAllowedToDrop(item)) return;
-      const currentGroups = group.groups ? group.groups.map(String) : [];
-      if (!currentGroups.includes(String(item.id))) {
-        setChildInGroupMutation.mutate({
-          id: group.id,
-          groups: [item.id]
-        });
-      }
+      const result = getGroupDropValidation(item, group, groupsData);
+      if (!result.allowed) return;
+      setChildInGroupMutation.mutate({ id: group.id, groups: [item.id] });
     },
-  })
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  }), [group, groupsData]);
 
-  const isGroupAllowedToDrop = (item: Group) => {
-    const notParent = (item: Group, group: Group): boolean => {
-      if (!group.parent) return true;
-      if (group.parent === item.id) return false;
-      return group.parent && groupsData?.groups[group.parent] ? notParent(item, groupsData?.groups[group.parent]) : true;
-    };
-    const notSelf = item.id !== group.id;
-    const notChild = item.parent !== group.id;
-
-    return notSelf && notChild && notParent(item, group);
-  };
 
   return (
     <Box sx={{ flexGrow: 1, textAlign: "center", px: 2, py: 4 }}>
@@ -115,17 +107,24 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGro
       <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
         קבוצות קשורות
       </Typography>
-      <Stack ref={drop} direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
-        {relatedGroups.length > 0 ? (
-          relatedGroups.map(g => <GroupItemMng
-            key={g.id}
-            group={g}
-            setSelectedGroup={setSelectedGroup}
-            onRemove={() => setChildInGroupMutation.mutate({ id: g.id, parent: null })}
-          />)
-        ) : (
-          <NoItemsMessage icon={<NoGroups />} message="לא קיימות קבוצות קשורות" />
+      <Stack ref={drop} direction="column" spacing={2} flexWrap="wrap" justifyContent="center">
+        {(isOver && !canDrop && dropReason) && (
+          <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+            {dropReason}
+          </Typography>
         )}
+        <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
+          {relatedGroups.length > 0 ? (
+            relatedGroups.map(g => <GroupItemMng
+              key={g.id}
+              group={g}
+              setSelectedGroup={setSelectedGroup}
+              onRemove={() => setChildInGroupMutation.mutate({ id: g.id, parent: null })}
+            />)
+          ) : (
+            <NoItemsMessage icon={<NoGroups />} message="לא קיימות קבוצות קשורות" />
+          )}
+        </Stack>
       </Stack>
 
       <Divider sx={{ my: 4 }} />

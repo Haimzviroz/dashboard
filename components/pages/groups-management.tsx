@@ -52,7 +52,7 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
       <Box sx={{ display: "flex" }}>
         <Box sx={style}>
           <GroupList
-            groups={groupsData ? Object.values(groupsData.groups) : []}
+            groupsData={groupsData}
             selectedGroup={selectedItem}
             setSelectedGroup={setSelectedItem}
             expanded={expanded === "g"}
