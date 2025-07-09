@@ -85,7 +85,8 @@ const OrgIdSelect: FC<OrgIdSelectProps> = ({ orgUID, editable = true, device, gr
             <MenuItem value={orgUID} sx={{ display: "none" }}>{orgUID}</MenuItem>
             <MenuItem value={-1}>ללא שיוך</MenuItem>
 
-            {orgs?.map((org, index) => (
+            {/* Only show orgs with no group parent if device has a parent, otherwise show all */}
+            {orgs?.filter(org => device.deviceParentId ? org.group === null : true).map((org, index) => (
               <MenuItem
                 key={org.orgId}
                 value={org.orgId}
