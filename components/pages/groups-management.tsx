@@ -77,6 +77,7 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
           <UnitDeviceMng
             deviceId={String(selectedItem.item.id)}
             groupsData={groupsData}
+            setSelectedDevice={setSelectedItem}
           />
         )}
         {!selectedItem && <Box sx={{ mt: 32, height: "calc(100vh - 100px)", flexGrow: 1 }}>

@@ -1,6 +1,7 @@
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { Box, Typography, Stack, Paper, Divider, Icon, IconButton, Tooltip } from "@mui/material";
 import { GroupResponseDto } from "@/api/src";
+import { SelectedItem } from "../pages/groups-management";
 import NoDevices from "../../assets/groups/no-devices.svg";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import MutNameCell from "./nut-name.cell";
@@ -11,9 +12,10 @@ import RelatedDeviceCard from "./related-device-card";
 interface UnitDeviceMngProps {
   deviceId: string;
   groupsData?: GroupResponseDto;
+  setSelectedDevice: Dispatch<SetStateAction<SelectedItem | undefined>>
 }
 
-const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData }) => {
+const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelectedDevice }) => {
   const { device } = useQ_Device(deviceId);
 
   if (!device) return null
@@ -148,7 +150,7 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData }) => {
       {relatedDevices.length > 0 ? (
         <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
           {relatedDevices.map((dvcId: string) => (
-            <RelatedDeviceCard key={dvcId} deviceId={dvcId} />
+            <RelatedDeviceCard key={dvcId} deviceId={dvcId} setSelectedDevice={setSelectedDevice} />
           ))}
         </Stack>
       ) : (

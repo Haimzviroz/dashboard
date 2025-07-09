@@ -1,18 +1,27 @@
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { Paper, Typography } from "@mui/material";
 import { useQ_Device } from "@/hooks/device.query.hook";
+import { SelectedItem } from "../pages/groups-management";
 
 interface RelatedDeviceCardProps {
   deviceId: string;
+  setSelectedDevice: Dispatch<SetStateAction<SelectedItem | undefined>>
 }
 
-const RelatedDeviceCard: FC<RelatedDeviceCardProps> = ({ deviceId }) => {
+const RelatedDeviceCard: FC<RelatedDeviceCardProps> = ({ deviceId, setSelectedDevice }) => {
   const { device } = useQ_Device(deviceId);
+
+  const handleSelect = () => {
+    if (device) {
+      setSelectedDevice({ t: "d", item: device });
+    }
+  };
 
   return (
     <Paper
       variant="outlined"
       sx={{ px: 1.5, py: 1, borderRadius: 2, minWidth: 170, maxWidth: 220, boxShadow: 1, background: '#f7fafd', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 0.5, cursor: 'pointer', transition: 'box-shadow 0.2s', '&:hover': { boxShadow: 4, background: '#e3f2fd' } }}
+      onClick={handleSelect}
     >
       <Typography variant="subtitle2" fontWeight={700} sx={{ color: '#1976d2', mb: 0.5 }}>
         {device?.name || device?.uid || deviceId}
