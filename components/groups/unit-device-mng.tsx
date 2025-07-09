@@ -6,6 +6,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import MutNameCell from "./nut-name.cell";
 import { useQ_Device } from "@/hooks/device.query.hook";
 import OrgIdSelect from "./org-id-select";
+import RelatedDeviceCard from "./related-device-card";
 
 interface UnitDeviceMngProps {
   deviceId: string;
@@ -130,7 +131,7 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData }) => {
           {device.OS && (
             <Stack direction="row" alignItems="center" spacing={2}>
               <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#b71c1c', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #ffebee 60%, #fff 100%)', boxShadow: 1, border: '1px solid #ffcdd2', display: 'inline-block' }}>
-                מערכת הפעלה
+                מערכת הפעלה:
               </Typography>
               <Typography variant="body2">{device.OS}</Typography>
             </Stack>
@@ -147,9 +148,7 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData }) => {
       {relatedDevices.length > 0 ? (
         <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
           {relatedDevices.map((dvcId: string) => (
-            <Paper key={dvcId} variant="outlined" sx={{ px: 2, py: 1, borderRadius: 2 }}>
-              <Typography variant="body2">{dvcId}</Typography>
-            </Paper>
+            <RelatedDeviceCard key={dvcId} deviceId={dvcId} />
           ))}
         </Stack>
       ) : (
