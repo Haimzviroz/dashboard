@@ -9,6 +9,7 @@ import { useMutateDevice, useQ_Device } from "@/hooks/device.query.hook";
 import OrgIdSelect from "./device-org-id-select";
 import RelatedDeviceCard from "./device-item-mng";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
+import GroupItemMng from "./group-item-mng";
 
 
 interface UnitDeviceMngProps {
@@ -18,8 +19,12 @@ interface UnitDeviceMngProps {
 }
 
 const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelectedDevice }) => {
-  const { device } = useQ_Device(deviceId);
+  const { device, refetch } = useQ_Device(deviceId);
   const mutDevice = useMutateDevice()
+
+  useEffect(() => {
+    refetch()
+  }, [deviceId])
 
   if (!device) return null
 
@@ -31,10 +36,8 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelect
   const relatedDevices = device.devices || [];
 
 
-  const handleRmDevice = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleRmDevice = () => {
     mutDevice.mutate({ deviceId, data: { groupId: null } })
-
   }
 
   return (
@@ -64,35 +67,13 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelect
           />}
 
         {groupParent && (
-          <Paper
-            variant="outlined"
-            sx={{
-              px: 2,
-              py: 1,
-              borderRadius: 2,
-              background: 'linear-gradient(90deg, #f5f7fa 0%, #c3cfe2 100%)',
-              border: '1.5px solid #b0bec5',
-              textAlign: 'center',
-              width: 'fit-content',
-              mx: 'auto',
-              boxShadow: 2,
-              cursor: 'pointer'
-            }}
-            onClick={() => groupParent && groupsData && groupsData.groups && groupsData.groups[groupParent.id] && window.dispatchEvent(new CustomEvent('selectGroup', { detail: groupParent }))}
-          >
-            <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
-              <Typography variant="body2" color="primary.dark">
-                קבוצה: {groupParent.name}
-              </Typography>
-              <Tooltip title={`הסר שיוך מ${groupParent.name}`}>
-                <IconButton size="small" color="error"
-                  onClick={handleRmDevice}
-                >
-                  <RemoveCircleOutlineIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </Stack>
-          </Paper>
+          <GroupItemMng
+            group={groupParent}
+            groupsData={groupsData}
+            setSelectedGroup={setSelectedDevice}
+            type="parent"
+            onRemove={() => handleRmDevice()}
+          />
         )}
         {deviceParent && (
           <RelatedDeviceCard deviceId={deviceParent} setSelectedDevice={setSelectedDevice} />
