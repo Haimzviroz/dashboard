@@ -68,7 +68,7 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
         </Box>
         {selectedItem && selectedItem.t === "g" && (
           <UnitGroupMng
-            group={groupsData?.groups[selectedItem.item.id]} // always fresh from source
+            group={{...groupsData?.groups[selectedItem.item.id]}} // always fresh from source
             groupsData={groupsData}
             setSelectedGroup={setSelectedItem}
           />

@@ -5,7 +5,7 @@ import { SelectedItem } from "../pages/groups-management";
 import NoDevices from "../../assets/groups/no-devices.svg";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import MutNameCell from "./device-mut-name";
-import { useQ_Device } from "@/hooks/device.query.hook";
+import { useMutateDevice, useQ_Device } from "@/hooks/device.query.hook";
 import OrgIdSelect from "./device-org-id-select";
 import RelatedDeviceCard from "./device-item-mng";
 
@@ -17,6 +17,7 @@ interface UnitDeviceMngProps {
 
 const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelectedDevice }) => {
   const { device } = useQ_Device(deviceId);
+  const mutDevice = useMutateDevice()
 
   if (!device) return null
 
@@ -26,6 +27,13 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelect
   const deviceParent = device.deviceParentId || null;
   // Related devices (children)
   const relatedDevices = device.devices || [];
+
+
+  const handleRmDevice = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    mutDevice.mutate({ deviceId, data: { groupId: null } })
+    
+  }
 
   return (
     <Box sx={{ flexGrow: 1, textAlign: "center", px: 2, py: 4 }}>
@@ -62,7 +70,7 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelect
               </Typography>
               <Tooltip title={`הסר שיוך מ${groupParent.name}`}>
                 <IconButton size="small" color="error"
-                // onClick={e => { e.stopPropagation(); setChildInGroupMutation.mutate({ id: device.id, groupId: undefined }) }}
+                  onClick={handleRmDevice}
                 >
                   <RemoveCircleOutlineIcon fontSize="small" />
                 </IconButton>

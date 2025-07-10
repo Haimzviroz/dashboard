@@ -30,7 +30,7 @@ const DeviceList: FC<DeviceListProps> = ({ devices, selectedDevice, setSelectedD
               ? devices?.map(dvc =>
                 <DeviceItem
                   key={dvc.id}
-                  device={dvc}
+                  device={{...dvc}}
                   selectedDevice={selectedDevice}
                   setSelectedDevice={setSelectedDevice}
                 />
