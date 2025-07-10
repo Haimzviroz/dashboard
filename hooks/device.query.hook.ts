@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Q_DEVICE_MAP, Q_DEVICE_SOFTWARE, Q_DEVICES, Q_DEVICE, Q_SOFTWARE_META_DATA, Q_DIST_ENTITY, Q_MAP, Q_MAP_META_DATA } from "../apis/query-keys";
-import { getSoftwareMetaData, getDeviceWithMap, getDeviceWithSoftware, getDevices, getDevice, putDeviceName, getMapMetaData } from "@/apis/client-side/devices-actions.api";
-import { Device, DeviceMaps, DeviceMetaData } from "@/types/interfaces/devices";
+import { Q_DEVICE_MAP, Q_DEVICE_SOFTWARE, Q_DEVICES, Q_DEVICE, Q_SOFTWARE_META_DATA, Q_DIST_ENTITY, Q_MAP, Q_MAP_META_DATA, Q_ORG_DEVICES } from "../apis/query-keys";
+import { getSoftwareMetaData, getDeviceWithMap, getDeviceWithSoftware, getDevices, getDevice, putDeviceName, getMapMetaData, getOrgDevices } from "@/apis/client-side/devices-actions.api";
+import { DeviceMaps, DeviceMetaData } from "@/types/interfaces/devices";
 import { Map } from "@/types/interfaces";
 import { getMapById } from "@/apis/client-side/getmap-actions.api";
 import { getSoftwareById } from "@/apis/client-side/software-actions.api";
 import { AppScopeEnum } from "@/types/enum";
-import { ComponentV2Dto, DeviceDto, DevicePutDto, DeviceSoftwareDto } from "@/api/src";
+import { ComponentV2Dto, DeviceDto, DeviceOrgDto, DevicePutDto, DeviceSoftwareDto } from "@/api/src";
 
 export const useQ_Devices = (groups?: string | string[]) => {
   const { data: devices, refetch } = useQuery<DeviceDto[]>({
@@ -22,6 +22,14 @@ export const useQ_Device = (id: string) => {
     queryFn: () => getDevice(id),
   })
   return { device, refetch }
+}
+
+export const useOrgDevices = () => {
+  const { data: devices, refetch } = useQuery<DeviceOrgDto[]>({
+    queryKey: [Q_ORG_DEVICES],
+    queryFn: getOrgDevices,
+  })
+  return { devices, refetch }
 }
 
 // export const useMutateDevice = () => {
@@ -48,7 +56,8 @@ export const useMutateDevice = (catalogId?: string, groups?: string | string[]) 
 
     // Notice the second argument is the variables object that the `mutate` function receives
     onSuccess: (data: DevicePutDto, variables: { deviceId: string, data: DevicePutDto }) => {
-      client.invalidateQueries({ queryKey: [Q_DEVICE, variables.deviceId] })
+      client.invalidateQueries({ queryKey: [Q_DEVICE, variables.deviceId] });
+      client.invalidateQueries({ queryKey: [Q_ORG_DEVICES] });
       if (catalogId) {
         client.setQueryData([Q_MAP, catalogId], ((map: Map) => {
           let devices = [...map.devices]
@@ -60,6 +69,7 @@ export const useMutateDevice = (catalogId?: string, groups?: string | string[]) 
         }))
       } else {
         client.setQueryData([Q_DEVICES, groups ?? null], ((devices: DeviceDto[]) => {
+          if (!devices) return
           const updatedDevices = [...devices]
           const currentD = updatedDevices.findIndex(d => d.id === variables.deviceId)
 

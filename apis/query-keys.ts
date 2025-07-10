@@ -5,6 +5,9 @@ export const Q_GROUP = "group"
 export const Q_DEVICES = "devices"
 export const Q_DEVICE = "device"
 
+export const Q_ORG_DEVICES = "org_devices"
+export const Q_ORG_DEVICE = "org_device"
+
 export const Q_SOFTWARE_META_DATA = "software_meta_data"
 export const Q_MAP_META_DATA = "map_meta_data"
 

@@ -4,7 +4,7 @@ import { SS_HttpClient } from "./ss_http-client";
 import { MAPS_META_DATA } from "../paths";
 import { DeviceMetaData } from "@/types/interfaces/devices";
 import Logger from "@/services/logger";
-import { DeviceApiFp, OrganizationGroupsApiFp,  } from "@/api/src";
+import { DeviceApiFp, OrganizationGroupsApiFp, } from "@/api/src";
 
 
 export class SS_DeviceClient extends SS_HttpClient {
@@ -28,7 +28,19 @@ export class SS_DeviceClient extends SS_HttpClient {
     }
   }
 
-  async getDevicesSoftwareMetaData(groups?: string | string[], software?: string |string[]) {
+  async getOrgDevices() {    
+    this.logger.info("Req all devices organization data")
+    try {
+      const fun = await OrganizationGroupsApiFp(await this.getOpenApiConf()).groupControllerGetOrgDevicesData();
+      let devices = (await fun()).data
+      devices = devices.filter(device => device != null)
+      return devices
+    } catch (error) {
+      return this.errorHandler(error as AxiosError)
+    }
+  }
+
+  async getDevicesSoftwareMetaData(groups?: string | string[], software?: string | string[]) {
     this.logger.info("Req devices software meta data")
     try {
       groups && (groups = Array.isArray(groups) ? groups : [groups])

@@ -55,6 +55,12 @@ export const getDeviceWithSoftware = async (id: string) => {
   return (await fun()).data
 }
 
+// Organization Devices
+export const getOrgDevices = async () => {
+  const fun = await OrganizationGroupsApiFp(await conf()).groupControllerGetOrgDevicesData();
+  return (await fun()).data;
+}
+
 // Groups
 export const getGroups = async () => {
   const fun = await OrganizationGroupsApiFp(await conf()).groupControllerGetGroups();
