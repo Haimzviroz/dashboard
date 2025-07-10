@@ -8,6 +8,8 @@ import MutNameCell from "./device-mut-name";
 import { useMutateDevice, useQ_Device } from "@/hooks/device.query.hook";
 import OrgIdSelect from "./device-org-id-select";
 import RelatedDeviceCard from "./device-item-mng";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
+
 
 interface UnitDeviceMngProps {
   deviceId: string;
@@ -32,7 +34,7 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelect
   const handleRmDevice = (e: React.MouseEvent) => {
     e.stopPropagation();
     mutDevice.mutate({ deviceId, data: { groupId: null } })
-    
+
   }
 
   return (
@@ -46,6 +48,20 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelect
               : device.name)
             : device.uid || <span>{'\u200F#'}{device.id?.slice(-4)}</span>}
         </Typography>
+
+        {(groupParent || deviceParent) &&
+          <ArrowDownwardIcon
+            sx={{
+              fontSize: 32,
+              color: "primary.main",
+              mb: -1,
+              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.08))',
+              background: 'white',
+              borderRadius: '50%',
+              border: '2px solid #e0e0e0',
+              p: 0.5
+            }}
+          />}
 
         {groupParent && (
           <Paper
