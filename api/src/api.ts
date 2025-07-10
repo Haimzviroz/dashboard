@@ -1895,6 +1895,12 @@ export interface DevicePutDto {
      * @memberof DevicePutDto
      */
     'orgUID'?: number | null;
+    /**
+     * Set group ID to associate the device with a specific group. set to null to remove the existing group association.
+     * @type {number}
+     * @memberof DevicePutDto
+     */
+    'groupId'?: number | null;
 }
 /**
  * 
@@ -12072,7 +12078,7 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
     return {
         /**
          * 
-         * @summary Create Devices Group
+         * @summary Create organization group of devices
          * @param {CreateDevicesGroupDto} createDevicesGroupDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12120,7 +12126,7 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
         groupControllerCreateOrgIds: async (orgIdDto: OrgIdDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'orgIdDto' is not null or undefined
             assertParamExists('groupControllerCreateOrgIds', 'orgIdDto', orgIdDto)
-            const localVarPath = `/api/v1/org/groups/orgIds`;
+            const localVarPath = `/api/v1/org/orgIds`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -12152,7 +12158,7 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
         },
         /**
          * 
-         * @summary Delete Devices Group by ID
+         * @summary Delete organization group of devices by ID
          * @param {string} groupId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12198,7 +12204,7 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
         groupControllerDeleteOrgIds: async (orgId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'orgId' is not null or undefined
             assertParamExists('groupControllerDeleteOrgIds', 'orgId', orgId)
-            const localVarPath = `/api/v1/org/groups/orgIds/{orgId}`
+            const localVarPath = `/api/v1/org/orgIds/{orgId}`
                 .replace(`{${"orgId"}}`, encodeURIComponent(String(orgId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -12228,7 +12234,7 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
         },
         /**
          * 
-         * @summary Edit Devices Group
+         * @summary Edit organization group of devices
          * @param {string} groupId 
          * @param {EditDevicesGroupDto} editDevicesGroupDto 
          * @param {*} [options] Override http request option.
@@ -12283,7 +12289,7 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
             assertParamExists('groupControllerEditOrgIds', 'orgId', orgId)
             // verify required parameter 'orgIdPutDto' is not null or undefined
             assertParamExists('groupControllerEditOrgIds', 'orgIdPutDto', orgIdPutDto)
-            const localVarPath = `/api/v1/org/groups/orgIds/{orgId}`
+            const localVarPath = `/api/v1/org/orgIds/{orgId}`
                 .replace(`{${"orgId"}}`, encodeURIComponent(String(orgId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -12388,7 +12394,7 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
         },
         /**
          * 
-         * @summary Get device org group data
+         * @summary Get organization device data by ID
          * @param {string} deviceId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12396,8 +12402,42 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
         groupControllerGetOrgDeviceData: async (deviceId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'deviceId' is not null or undefined
             assertParamExists('groupControllerGetOrgDeviceData', 'deviceId', deviceId)
-            const localVarPath = `/api/v1/org/groups/devices/{deviceId}`
+            const localVarPath = `/api/v1/org/devices/{deviceId}`
                 .replace(`{${"deviceId"}}`, encodeURIComponent(String(deviceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get org devices data
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        groupControllerGetOrgDevicesData: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/v1/org/devices`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -12434,7 +12474,7 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
         groupControllerGetOrgId: async (orgId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'orgId' is not null or undefined
             assertParamExists('groupControllerGetOrgId', 'orgId', orgId)
-            const localVarPath = `/api/v1/org/groups/orgIds/{orgId}`
+            const localVarPath = `/api/v1/org/orgIds/{orgId}`
                 .replace(`{${"orgId"}}`, encodeURIComponent(String(orgId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -12472,7 +12512,7 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
          * @throws {RequiredError}
          */
         groupControllerGetOrgIds: async (group?: number, emptyGroup?: boolean, emptyDevice?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/v1/org/groups/orgIds`;
+            const localVarPath = `/api/v1/org/orgIds`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -12513,7 +12553,7 @@ export const OrganizationGroupsApiAxiosParamCreator = function (configuration?: 
         },
         /**
          * 
-         * @summary Set Groups and Devices in Group
+         * @summary Set groups and devices in group
          * @param {SetChildInGroupDto} setChildInGroupDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12563,7 +12603,7 @@ export const OrganizationGroupsApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Create Devices Group
+         * @summary Create organization group of devices
          * @param {CreateDevicesGroupDto} createDevicesGroupDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12589,7 +12629,7 @@ export const OrganizationGroupsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Delete Devices Group by ID
+         * @summary Delete organization group of devices by ID
          * @param {string} groupId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12615,7 +12655,7 @@ export const OrganizationGroupsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Edit Devices Group
+         * @summary Edit organization group of devices
          * @param {string} groupId 
          * @param {EditDevicesGroupDto} editDevicesGroupDto 
          * @param {*} [options] Override http request option.
@@ -12668,7 +12708,7 @@ export const OrganizationGroupsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Get device org group data
+         * @summary Get organization device data by ID
          * @param {string} deviceId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12677,6 +12717,18 @@ export const OrganizationGroupsApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.groupControllerGetOrgDeviceData(deviceId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['OrganizationGroupsApi.groupControllerGetOrgDeviceData']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Get org devices data
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async groupControllerGetOrgDevicesData(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<DeviceOrgDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.groupControllerGetOrgDevicesData(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['OrganizationGroupsApi.groupControllerGetOrgDevicesData']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -12709,7 +12761,7 @@ export const OrganizationGroupsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Set Groups and Devices in Group
+         * @summary Set groups and devices in group
          * @param {SetChildInGroupDto} setChildInGroupDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12732,7 +12784,7 @@ export const OrganizationGroupsApiFactory = function (configuration?: Configurat
     return {
         /**
          * 
-         * @summary Create Devices Group
+         * @summary Create organization group of devices
          * @param {CreateDevicesGroupDto} createDevicesGroupDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12752,7 +12804,7 @@ export const OrganizationGroupsApiFactory = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Delete Devices Group by ID
+         * @summary Delete organization group of devices by ID
          * @param {string} groupId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12772,7 +12824,7 @@ export const OrganizationGroupsApiFactory = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Edit Devices Group
+         * @summary Edit organization group of devices
          * @param {string} groupId 
          * @param {EditDevicesGroupDto} editDevicesGroupDto 
          * @param {*} [options] Override http request option.
@@ -12813,13 +12865,22 @@ export const OrganizationGroupsApiFactory = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Get device org group data
+         * @summary Get organization device data by ID
          * @param {string} deviceId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         groupControllerGetOrgDeviceData(deviceId: string, options?: RawAxiosRequestConfig): AxiosPromise<DeviceOrgDto> {
             return localVarFp.groupControllerGetOrgDeviceData(deviceId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get org devices data
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        groupControllerGetOrgDevicesData(options?: RawAxiosRequestConfig): AxiosPromise<Array<DeviceOrgDto>> {
+            return localVarFp.groupControllerGetOrgDevicesData(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12845,7 +12906,7 @@ export const OrganizationGroupsApiFactory = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Set Groups and Devices in Group
+         * @summary Set groups and devices in group
          * @param {SetChildInGroupDto} setChildInGroupDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12865,7 +12926,7 @@ export const OrganizationGroupsApiFactory = function (configuration?: Configurat
 export class OrganizationGroupsApi extends BaseAPI {
     /**
      * 
-     * @summary Create Devices Group
+     * @summary Create organization group of devices
      * @param {CreateDevicesGroupDto} createDevicesGroupDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -12889,7 +12950,7 @@ export class OrganizationGroupsApi extends BaseAPI {
 
     /**
      * 
-     * @summary Delete Devices Group by ID
+     * @summary Delete organization group of devices by ID
      * @param {string} groupId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -12913,7 +12974,7 @@ export class OrganizationGroupsApi extends BaseAPI {
 
     /**
      * 
-     * @summary Edit Devices Group
+     * @summary Edit organization group of devices
      * @param {string} groupId 
      * @param {EditDevicesGroupDto} editDevicesGroupDto 
      * @param {*} [options] Override http request option.
@@ -12962,7 +13023,7 @@ export class OrganizationGroupsApi extends BaseAPI {
 
     /**
      * 
-     * @summary Get device org group data
+     * @summary Get organization device data by ID
      * @param {string} deviceId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -12970,6 +13031,17 @@ export class OrganizationGroupsApi extends BaseAPI {
      */
     public groupControllerGetOrgDeviceData(deviceId: string, options?: RawAxiosRequestConfig) {
         return OrganizationGroupsApiFp(this.configuration).groupControllerGetOrgDeviceData(deviceId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get org devices data
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrganizationGroupsApi
+     */
+    public groupControllerGetOrgDevicesData(options?: RawAxiosRequestConfig) {
+        return OrganizationGroupsApiFp(this.configuration).groupControllerGetOrgDevicesData(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -13000,7 +13072,7 @@ export class OrganizationGroupsApi extends BaseAPI {
 
     /**
      * 
-     * @summary Set Groups and Devices in Group
+     * @summary Set groups and devices in group
      * @param {SetChildInGroupDto} setChildInGroupDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
