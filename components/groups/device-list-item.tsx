@@ -4,6 +4,8 @@ import GroupIcon from "../../assets/side-bar/group.svg";
 import { DeviceDto } from "@/api/src";
 import { SelectedItem } from "../pages/groups-management";
 import { useQ_Device } from "@/hooks/device.query.hook";
+import { useDrag } from "react-dnd";
+import { DND_DEVICE_LIST_ITEM, DND_GROUP_LIST_ITEM } from "./dnd-constants";
 
 interface DeviceItemProps {
   device: DeviceDto,
@@ -44,11 +46,30 @@ const DeviceParentLabel: FC<{ parentId: string }> = ({ parentId }) => {
 };
 
 const DeviceItem: FC<DeviceItemProps> = ({ device, selectedDevice, setSelectedDevice }) => {
-  // Prefer name, then uid, then id (last 4 chars if no name/uid)
-  let displayName = device.name || device.uid || (device.id?.length > 4 ? device.id.slice(-4) : device.id);
+  const [dragErrorMessage, setDragErrorMessage] = useState<string | null>(null);
 
+  const [, drag] = useDrag(() => ({
+    type: DND_DEVICE_LIST_ITEM,
+    item: device,
+    canDrag: () => {
+      if (device.deviceParentId) {
+        setDragErrorMessage("מכשיר משויך למכשיר אחר, אין לחבר לקבוצה");
+        setTimeout(() => setDragErrorMessage(null), 1000);
+        return false;
+      } else if (!device.uid) {
+        setDragErrorMessage("כדי לגרור יש לחבר את המכשיר למספר צ'");
+        setTimeout(() => setDragErrorMessage(null), 1000);
+        return false;
+      }
+      return true;
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }), [device]);
 
-  // Determine parent label (Hebrew, left side)
+  const displayName = device.name || device.uid || (device.id?.length > 4 ? `#${device.id.slice(-4)}` : `#${device.id}`);
+
   let parentLabel = null;
   if (device.groupId && device.groupName) {
     parentLabel = (
@@ -62,6 +83,7 @@ const DeviceItem: FC<DeviceItemProps> = ({ device, selectedDevice, setSelectedDe
 
   return (
     <Card
+      ref={drag}
       variant="outlined"
       sx={{
         borderRadius: 2,
@@ -72,7 +94,7 @@ const DeviceItem: FC<DeviceItemProps> = ({ device, selectedDevice, setSelectedDe
       }}
     >
       <Box onClick={() => setSelectedDevice({ t: "d", item: device })}>
-        <CardContent>
+        <CardContent sx={{ width: '90%' }}>
           <Stack direction="row" gap={1} alignItems="center" justifyContent="space-between">
             <Stack direction="row" gap={1} alignItems="center">
               <Icon>
@@ -82,10 +104,15 @@ const DeviceItem: FC<DeviceItemProps> = ({ device, selectedDevice, setSelectedDe
             </Stack>
             {parentLabel}
           </Stack>
+          {dragErrorMessage && (
+            <Typography variant="caption" color="error" textAlign={"center"} position={"absolute"}>
+              {dragErrorMessage}
+            </Typography>
+          )}
         </CardContent>
       </Box>
     </Card>
-  )
-}
+  );
+};
 
 export default DeviceItem;

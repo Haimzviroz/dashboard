@@ -6,11 +6,11 @@ import GroupItemMng from "./group-item-mng"
 import RelatedDeviceCard from "./device-item-mng"
 import NoGroups from "../../assets/groups/no-groups.svg"
 import NoDevices from "../../assets/groups/no-devices.svg"
-import { useQ_Devices } from "@/hooks/device.query.hook"
+import { useMutateDevice, useQ_Devices } from "@/hooks/device.query.hook"
 import { useGroup, useSetChildInGroup } from "@/hooks/group.query.hook"
-import { GroupResponseDto } from "@/api/src"
+import { DeviceDto, GroupResponseDto } from "@/api/src"
 import { useDrop, useDrag } from "react-dnd"
-import { DND_GROUP_LIST_ITEM, DND_GROUP_UNIT_ITEM } from "./dnd-constants"
+import { DND_DEVICE_LIST_ITEM, DND_GROUP_LIST_ITEM, DND_GROUP_UNIT_ITEM } from "./dnd-constants"
 import { SelectedItem } from "../pages/groups-management";
 import { getGroupDropValidation } from "./group-drop-validation";
 
@@ -32,10 +32,12 @@ const NoItemsMessage: FC<{ icon: JSX.Element; message: string }> = ({ icon, mess
 )
 
 const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGroup }) => {
+
   const [dropReason, setDropReason] = useState<string | null>(null);
 
-  const device = useQ_Devices()
+  const devices = useQ_Devices()
   const qGroup = useGroup(group.id)
+  const mutDevice = useMutateDevice()
   const setChildInGroupMutation = useSetChildInGroup()
 
   const parentGroup = group.parent ? groupsData?.groups[group.parent] : null;
@@ -45,14 +47,13 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGro
       .filter((g): g is Group => Boolean(g))
     : [];
   const relatedDevices =
-    device.devices && qGroup.group?.devices
+    devices.devices && qGroup.group?.devices
       ? qGroup.group.devices
-        .map(did => device.devices?.find(d => d.id === did))
-        .filter(Boolean)
+        .map(did => devices.devices?.find(d => d.id === did))
+        .filter((d): d is DeviceDto => Boolean(d))
       : []
 
-
-  const [{ isOver, canDrop }, drop] = useDrop(() => ({
+  const [{ isOver, canDrop }, dropGroup] = useDrop(() => ({
     accept: DND_GROUP_LIST_ITEM,
     canDrop: (item: Group) => {
       const result = getGroupDropValidation(item, group, groupsData);
@@ -70,6 +71,22 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGro
     }),
   }), [group, groupsData]);
 
+  const [, dropDevice] = useDrop(() => ({
+    accept: DND_DEVICE_LIST_ITEM,
+    canDrop: (item: DeviceDto) => !item.deviceParentId && !!item.uid,
+    drop: (item: DeviceDto) => {
+      if (!item.deviceParentId && item.uid) {
+        setChildInGroupMutation.mutate({ id: group.id, devices: [item.id] }, {
+          onSuccess: () => {
+            qGroup.refetch();
+            devices.refetch();
+          }
+        });
+      }
+    }
+  }), [group.id, setChildInGroupMutation]);
+
+
 
   // Add drag functionality for the current group
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -79,6 +96,13 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGro
       isDragging: monitor.isDragging(),
     }),
   }), [group]);
+
+  const handleRmDevice = (deviceId: string) => {
+    mutDevice.mutate({ deviceId, data: { groupId: null } }, {
+      onSuccess: () => qGroup.refetch()
+    });
+
+  };
 
 
   return (
@@ -117,45 +141,54 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGro
 
       <Divider sx={{ my: 3 }} />
 
-      {/* Related Groups */}
-      <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-        קבוצות קשורות
-      </Typography>
-      <Stack ref={drop} direction="column" spacing={2} flexWrap="wrap" justifyContent="center">
-        {(isOver && !canDrop && dropReason) && (
-          <Typography variant="body2" color="error" sx={{ mb: 2 }}>
-            {dropReason}
-          </Typography>
-        )}
-        <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
-          {relatedGroups.length > 0 ? (
-            relatedGroups.map(g => <GroupItemMng
-              key={g.id}
-              group={g}
-              setSelectedGroup={setSelectedGroup}
-              onRemove={() => setChildInGroupMutation.mutate({ id: g.id, parent: null })}
-            />)
-          ) : (
-            <NoItemsMessage icon={<NoGroups />} message="לא קיימות קבוצות קשורות" />
+      <Box ref={dropGroup}>
+        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+          קבוצות קשורות
+        </Typography>
+        <Stack direction="column" spacing={2} flexWrap="wrap" justifyContent="center">
+          {(isOver && !canDrop && dropReason) && (
+            <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+              {dropReason}
+            </Typography>
           )}
+          <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
+            {relatedGroups.length > 0 ? (
+              relatedGroups.map(g => <GroupItemMng
+                key={g.id}
+                group={g}
+                setSelectedGroup={setSelectedGroup}
+                onRemove={() => setChildInGroupMutation.mutate({ id: g.id, parent: null })}
+              />)
+            ) : (
+              <NoItemsMessage icon={<NoGroups />} message="לא קיימות קבוצות קשורות" />
+            )}
+          </Stack>
         </Stack>
-      </Stack>
+      </Box>
 
       <Divider sx={{ my: 4 }} />
 
-      {/* Related Devices */}
-      <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-        אמצעים קשורים
-      </Typography>
-      <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
-        {relatedDevices.length > 0 ? (
-          relatedDevices.map(dvc => (
-            <RelatedDeviceCard key={dvc!.id} deviceId={dvc!.id} setSelectedDevice={setSelectedGroup as any} />
-          ))
-        ) : (
-          <NoItemsMessage icon={<NoDevices />} message="לא קיימים אמצעים קשורים" />
-        )}
-      </Stack>
+      <Box ref={dropDevice}>
+        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+          אמצעים קשורים
+        </Typography>
+        <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
+          {relatedDevices.length > 0 ? (
+            relatedDevices.map(dvc => (
+              <RelatedDeviceCard
+                key={dvc.id}
+                deviceId={dvc.id}
+                setSelectedDevice={setSelectedGroup as any}
+                removable
+                onRemove={() => handleRmDevice(dvc.id)}
+              />
+            ))
+          ) : (
+            <NoItemsMessage icon={<NoDevices />} message="לא קיימים אמצעים קשורים" />
+          )}
+        </Stack>
+      </Box>
+
     </Box>
   )
 }
