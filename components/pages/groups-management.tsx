@@ -7,7 +7,7 @@ import UnitGroupMng from "../groups/group-unit-mng";
 import SelectGroup from "../../assets/groups/select-group.svg"
 import { Group } from "@/types/interfaces/devices";
 import DeviceList from "../groups/device-list";
-import { useQ_Devices } from "@/hooks/device.query.hook";
+import { useOrgDevices } from "@/hooks/device.query.hook";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DeviceDto } from "@/api/src";
@@ -21,7 +21,7 @@ export type SelectedItem = { t: "d" | "g", item: Group | DeviceDto } | undefined
 
 const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
   const { groups: groupsData } = useGroups()
-  const { devices } = useQ_Devices()
+  const { devices } = useOrgDevices()
   const [selectedItem, setSelectedItem] = useState<SelectedItem>()
   const [expanded, setExpanded] = useState<string>()
 

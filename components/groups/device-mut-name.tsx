@@ -7,15 +7,13 @@ import { NextRouter } from "next/router";
 interface NameCellProps {
   name?: string
   deviceId: string
-  mapId?: string,
-  router?: NextRouter
   editable?: boolean;
 }
 
-const MutNameCell: FC<NameCellProps> = ({ name, deviceId, mapId, router, editable = true }) => {
+const MutNameCell: FC<NameCellProps> = ({ name, deviceId, editable = true }) => {
   const [updatedName, setUpdatedName] = useState<string | undefined>(name ?? "")
 
-  const mutation = useMutateDevice(mapId, router?.query.groups)
+  const mutation = useMutateDevice()
 
   useEffect(() => {
     setUpdatedName(name ?? "");
