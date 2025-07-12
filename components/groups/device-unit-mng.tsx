@@ -1,0 +1,179 @@
+import { Dispatch, FC, SetStateAction, useEffect } from "react";
+import { Box, Typography, Stack, Paper, Divider, Icon } from "@mui/material";
+import { GroupResponseDto } from "@/api/src";
+import { SelectedItem } from "../pages/groups-management";
+import NoDevices from "../../assets/groups/no-devices.svg";
+import MutNameCell from "./device-mut-name";
+import { useMutateDevice, useQ_Device } from "@/hooks/device.query.hook";
+import OrgIdSelect from "./device-org-id-select";
+import DeviceItemMng from "./device-item-mng";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
+import GroupItemMng from "./group-item-mng";
+import { useDrag } from "react-dnd";
+import { DND_DEVICE_UNIT_ITEM } from "./dnd-constants";
+
+
+interface UnitDeviceMngProps {
+  deviceId: string;
+  groupsData?: GroupResponseDto;
+  setSelectedDevice: Dispatch<SetStateAction<SelectedItem | undefined>>
+}
+
+const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelectedDevice }) => {
+  const { device, refetch } = useQ_Device(deviceId);
+  const mutDevice = useMutateDevice()
+
+  useEffect(() => {
+    refetch()
+  }, [deviceId])
+
+  const [_, dragDevice] = useDrag(() => ({
+    type: DND_DEVICE_UNIT_ITEM,
+    item: device,
+    canDrag: () => !!device && !device.deviceParentId && !!device.uid,
+  }), [device]);
+
+  if (!device) return null
+
+  // Find group parent if exists
+  const groupParent = device.groupId ? groupsData?.groups[device.groupId] : null;
+  // Find device parent if exists
+  const deviceParent = device.deviceParentId || null;
+  // Related devices (children)
+  const relatedDevices = device.devices || [];
+
+  const handleRmDevice = () => {
+    mutDevice.mutate({ deviceId, data: { groupId: null } })
+  }
+
+  return (
+    <Box sx={{ flexGrow: 1, textAlign: "center", px: 2, py: 4 }}>
+      {/* Top Section */}
+      <Stack spacing={2} alignItems="center" mb={2}>
+        <Box ref={dragDevice}>
+          <Typography variant="h5" fontWeight={700} sx={{ mb: 0.5 }}>
+            {device.name
+              ? (/[\u0590-\u05FF]/.test(device.name) && /[a-zA-Z]/.test(device.name) && device.name.includes(' ')
+                ? device.name.split(' ').map((part, i) => <span key={i}>{part}<br /></span>)
+                : device.name)
+              : device.uid || <span>{'\u200F#'}{device.id?.slice(-4)}</span>}
+          </Typography>
+        </Box>
+
+        {(groupParent || deviceParent) &&
+          <ArrowDownwardIcon
+            sx={{
+              fontSize: 32,
+              color: "primary.main",
+              mb: -1,
+              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.08))',
+              background: 'white',
+              borderRadius: '50%',
+              border: '2px solid #e0e0e0',
+              p: 0.5
+            }}
+          />}
+
+        {groupParent && (
+          <GroupItemMng
+            group={groupParent}
+            groupsData={groupsData}
+            setSelectedGroup={setSelectedDevice}
+            type="parent"
+            onRemove={() => handleRmDevice()}
+          />
+        )}
+        {deviceParent && (
+          <DeviceItemMng deviceId={deviceParent} setSelectedDevice={setSelectedDevice} />
+        )}
+      </Stack>
+
+      {/* Middle Section: Device Properties */}
+      <Divider sx={{ my: 2 }} />
+      <Paper elevation={4} sx={{ mb: 2, mx: 'auto', maxWidth: 480, borderRadius: 3, background: '#fafbfc', boxShadow: 6, p: 0 }}>
+        <Stack spacing={2} alignItems="stretch" sx={{ p: 3 }}>
+          {/* Device Name */}
+          <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 1 }}>
+            <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#1565c0', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #e3f2fd 60%, #fff 100%)', boxShadow: 1, border: '1px solid #bbdefb', display: 'inline-block' }}>
+              שם המכשיר:
+            </Typography>
+            <MutNameCell deviceId={device.id} name={device.name} editable={true} />
+          </Stack>
+          {/* Org ID */}
+          <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 1 }}>
+            <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#0277bd', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #e1f5fe 60%, #fff 100%)', boxShadow: 1, border: '1px solid #b3e5fc', display: 'inline-block' }}>
+              {`מספר צ':`}
+            </Typography>
+            <OrgIdSelect
+              device={device}
+              orgUID={device.uid}
+              editable={true}
+              groupsData={groupsData}
+            />
+          </Stack>
+          {/* Platform */}
+          {device.platformName && (
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#2e7d32', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #e8f5e9 60%, #fff 100%)', boxShadow: 1, border: '1px solid #c8e6c9', display: 'inline-block' }}>
+                פלטפורמה:
+              </Typography>
+              <Typography variant="body2">{device.platformName}</Typography>
+            </Stack>
+          )}
+          {/* Device Type */}
+          {device.deviceTypeName && (
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#4527a0', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #ede7f6 60%, #fff 100%)', boxShadow: 1, border: '1px solid #d1c4e9', display: 'inline-block' }}>
+                סוג אמצעי:
+              </Typography>
+              <Typography variant="body2">{device.deviceTypeName}</Typography>
+            </Stack>
+          )}
+          {/* Last Connection */}
+          {device.lastConnectionDate && (
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#ad1457', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #fce4ec 60%, #fff 100%)', boxShadow: 1, border: '1px solid #f8bbd0', display: 'inline-block' }}>
+                חיבור אחרון:
+              </Typography>
+              <Typography variant="body2">{new Date(device.lastConnectionDate).toLocaleString('he-IL')}</Typography>
+            </Stack>
+          )}
+          {/* OS */}
+          {device.OS && (
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Typography variant="body2" fontWeight={700} sx={{ minWidth: 120, color: '#b71c1c', letterSpacing: 0.5, px: 1.5, py: 0.5, borderRadius: 2, background: 'linear-gradient(90deg, #ffebee 60%, #fff 100%)', boxShadow: 1, border: '1px solid #ffcdd2', display: 'inline-block' }}>
+                מערכת הפעלה:
+              </Typography>
+              <Typography variant="body2">{device.OS}</Typography>
+            </Stack>
+          )}
+        </Stack>
+      </Paper>
+
+
+      {/* Bottom Section: Related Devices */}
+      <Divider sx={{ my: 2 }} />
+      <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+        אמצעים קשורים
+      </Typography>
+      {relatedDevices.length > 0 ? (
+        <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
+          {relatedDevices.map((dvcId: string) => (
+            <DeviceItemMng key={dvcId} deviceId={dvcId} setSelectedDevice={setSelectedDevice} />
+          ))}
+        </Stack>
+      ) : (
+        <Box p={3}>
+          <Stack alignItems="center" spacing={1}>
+            <Icon sx={{ width: 120, height: 90, alignSelf: "center" }}><NoDevices /></Icon>
+            <Typography variant="caption" sx={{ fontWeight: 600 }}>
+              לא קיימים אמצעים קשורים
+            </Typography>
+          </Stack>
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+export default UnitDeviceMng;

@@ -1,4 +1,4 @@
-import { Q_GROUPS } from "@/apis/query-keys";
+import { Q_GROUPS, Q_ORG_DEVICES } from "@/apis/query-keys";
 import { SS_DeviceClient } from "@/apis/server-side/ss_device-client";
 import GA_layout from "@/components/layout/GA-layout";
 import GroupMngPage from "@/components/pages/groups-management";
@@ -13,11 +13,13 @@ interface ManageGroups {
 
 const ManageGroups: NextPageWithLayout<ManageGroups> = () => {
   return (
-      <GroupMngPage />
+    <GroupMngPage />
   )
 }
 
 export default ManageGroups
+
+
 export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const httpClient = new SS_DeviceClient(context)
@@ -31,6 +33,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       await queryClient.fetchQuery({
         queryKey: [Q_GROUPS],
         queryFn: () => groupList
+      }),
+      await queryClient.fetchQuery({
+        queryKey: [Q_ORG_DEVICES],
+        queryFn: () => httpClient.getOrgDevices()
       }),
     ])
     return {

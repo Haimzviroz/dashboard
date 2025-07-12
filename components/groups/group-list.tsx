@@ -1,24 +1,33 @@
 import { Box, Typography, Tooltip, IconButton, Accordion, AccordionSummary, AccordionDetails, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from "@mui/material"
-import { Dispatch, FC, SetStateAction, useState } from "react"
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
 import NoMaps from "../../assets/maps/no-maps.svg";
 import { Group } from "@/types/interfaces/devices"
-import GroupItem from "./group-item";
+import GroupItem from "./group-list-item";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useCreateGroup } from "@/hooks/group.query.hook";
 import GroupDialog from "./group-dialog";
-import type { CreateDevicesGroupDto, EditDevicesGroupDto } from "@/api/src/api";
+import type { CreateDevicesGroupDto, EditDevicesGroupDto, GroupResponseDto } from "@/api/src/api";
+import { refetchGroupsType, SelectedItem } from "../pages/groups-management";
 
 interface GroupListProps {
-  groups?: Group[],
-  selectedGroup: Group | undefined
-  setSelectedGroup: Dispatch<SetStateAction<Group | undefined>>
+  groupsData?: GroupResponseDto,
+  refetchGroups: refetchGroupsType,
+  selectedGroup: SelectedItem | undefined
+  setSelectedGroup: Dispatch<SetStateAction<SelectedItem | undefined>>
   expanded: boolean;
   onExpand: () => void;
 }
 
-const GroupList: FC<GroupListProps> = ({ groups, selectedGroup, setSelectedGroup, expanded, onExpand }) => {
+const GroupList: FC<GroupListProps> = ({ groupsData, refetchGroups, selectedGroup, setSelectedGroup, expanded, onExpand }) => {
+  const [groups, setGroups] = useState<Group[]>(groupsData ? Object.values(groupsData.groups) : []);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState<CreateDevicesGroupDto>({ name: "" });
+
+  useEffect(() => {
+    if (groupsData) {
+      setGroups(Object.values(groupsData.groups));
+    }
+  }, [groupsData]);
 
   // Add group mutation
   const createGroupMutation = useCreateGroup();
@@ -56,10 +65,12 @@ const GroupList: FC<GroupListProps> = ({ groups, selectedGroup, setSelectedGroup
         <Box sx={{ px: 2 }}>
           {(groups && groups.length > 0)
             ? groups.map(group =>
-              <Box key={group.id} sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box key={String(group.id) + String(group.parent ?? '')} sx={{ display: 'flex', alignItems: 'center' }}>
                 <Box sx={{ flexGrow: 1 }}>
                   <GroupItem
-                    group={group}
+                    group={{ ...groupsData?.groups[group.id] ?? group }}
+                    groupsData={groupsData}
+                    refetchGroups={refetchGroups}
                     selectedGroup={selectedGroup}
                     setSelectedGroup={setSelectedGroup}
                   />

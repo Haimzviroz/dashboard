@@ -1,8 +1,5 @@
-import O_IconButton from "@/ui/o-icon-button";
-import { Box, Button, FormControl, FormHelperText, Icon, Input, Stack, Typography } from "@mui/material";
-import { ChangeEvent, FC, useState } from "react";
-import SettingDots from "../../../assets/inputs/dots-vertical.svg"
-import Writing from "../../../assets/inputs/writing.svg"
+import { Box, Button, Divider, FormControl, FormHelperText, Input, Stack, Typography } from "@mui/material";
+import { ChangeEvent, FC, useState, useEffect } from "react";
 import { useMutateDevice } from "@/hooks/device.query.hook";
 import AnchorAndPopper from "@/components/utils/collapse/anchor-popper";
 import { NextRouter } from "next/router";
@@ -10,14 +7,18 @@ import { NextRouter } from "next/router";
 interface NameCellProps {
   name?: string
   deviceId: string
-  mapId?: string,
-  router?: NextRouter
+  editable?: boolean;
 }
 
-const MutNameCell: FC<NameCellProps> = ({ name, deviceId, mapId, router }) => {
-
+const MutNameCell: FC<NameCellProps> = ({ name, deviceId, editable = true }) => {
   const [updatedName, setUpdatedName] = useState<string | undefined>(name ?? "")
-  const mutation = useMutateDevice(mapId, router?.query.groups)
+
+  const mutation = useMutateDevice()
+
+  useEffect(() => {
+    setUpdatedName(name ?? "");
+  }, [name]);
+
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUpdatedName(e.target.value)
@@ -30,24 +31,46 @@ const MutNameCell: FC<NameCellProps> = ({ name, deviceId, mapId, router }) => {
 
   const collapseDisplay = () => {
     return (
-      <Box >
-        {name ?
-          <Stack direction={"row"} gap={1} justifyContent={"flex-start"}>
-            <O_IconButton>
-              <Icon>
-                <SettingDots />
-              </Icon>
-            </O_IconButton>
-            <Typography variant="body1">{name}</Typography>
+
+      <Box>
+        {name ? (
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            justifyContent="flex-start"
+          >
+            <Typography variant="body1" fontWeight={600}>
+              {name}
+            </Typography>
+
+            <Divider orientation="vertical" flexItem />
+
+            {editable && (
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontStyle: 'italic', fontWeight: 500 }}
+              >
+                <span style={{ color: '#1976d2', cursor: 'pointer', textDecoration: 'underline' }}>
+                  ערוך
+                </span>
+              </Typography>
+            )}
           </Stack>
-          :
-          <Button variant="outlined" >
-            <Stack direction={"row"} gap={1} alignItems={"center"}>
-              <Writing />
-              <Typography variant="button">{"הזן שם"}</Typography>
-            </Stack>
-          </Button>}
+        ) : editable ? (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontStyle: 'italic', fontWeight: 500 }}
+          >
+            <span style={{ color: '#1976d2', cursor: 'pointer', textDecoration: 'underline' }}>
+              הוסף
+            </span>
+          </Typography>
+        ) : null}
       </Box>
+
     )
   }
 
@@ -82,6 +105,10 @@ const MutNameCell: FC<NameCellProps> = ({ name, deviceId, mapId, router }) => {
     handleUpdateName(updatedName ?? "")
   }
 
+  if (!editable) {
+    // Just show the name, no edit/add UI, no anchor
+    return <Typography variant="body1">{name}</Typography>;
+  }
   return <AnchorAndPopper collapseDisplay={collapseDisplay()} unCollapseDisplay={unCollapseDisplay()} onSubmit={onSubmit} />
 }
 

@@ -36,7 +36,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     await Promise.allSettled([
       await queryClient.prefetchQuery({
-        queryKey: [Q_DEVICES, "groups", context.query.groups ?? null],
+        queryKey: [Q_DEVICES, context.query.groups ?? null],
         queryFn: () => httpClient.getAllDevices(context.query.groups)
       }),
       await queryClient.prefetchQuery({

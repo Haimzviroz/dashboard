@@ -1,33 +1,31 @@
-import { Box, Card, CardContent, Icon, IconButton, Stack, Tooltip, Typography } from "@mui/material"
-import { Dispatch, FC, SetStateAction } from "react"
+import { Card, CardContent, Icon, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import { Dispatch, FC, SetStateAction } from "react";
 import { Group } from "@/types/interfaces/devices";
-import GroupIcon from "../../assets/groups/users-group.svg";
 import GroupParentIcon from "../../assets/groups/users.svg";
 import { GroupResponseDto } from "@/api/src";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import { useSetChildInGroup } from "@/hooks/group.query.hook";
 import { useDrag } from "react-dnd";
 import { DND_GROUP_UNIT_ITEM } from "./dnd-constants";
+import { SelectedItem } from "../pages/groups-management";
 
 interface GroupItemMngProps {
-  group: Group,
-  groupsData?: GroupResponseDto
-  type?: "parent" | "child"
-  setSelectedGroup: Dispatch<SetStateAction<Group | undefined>>
+  group: Group;
+  groupsData?: GroupResponseDto;
+  type?: "parent" | "child";
+  setSelectedGroup: Dispatch<SetStateAction<SelectedItem | undefined>>;
+  onRemove?: () => void;
 }
 
-const GroupItemMng: FC<GroupItemMngProps> = ({ group, groupsData, type, setSelectedGroup }) => {
-  const setChildInGroupMutation = useSetChildInGroup();
-  // Make this group draggable
+const GroupItemMng: FC<GroupItemMngProps> = ({ group, type, setSelectedGroup, onRemove }) => {
+
   const [, drag] = useDrag({
     type: DND_GROUP_UNIT_ITEM,
     item: group,
   });
 
-  // Remove group from parent handler
   const handleRemove = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setChildInGroupMutation.mutate({ id: group.id, parent: null });
+    onRemove?.();
   };
 
   return (
@@ -35,36 +33,56 @@ const GroupItemMng: FC<GroupItemMngProps> = ({ group, groupsData, type, setSelec
       ref={drag}
       variant="outlined"
       sx={{
-        borderRadius: 2,
+        borderRadius: 3,
         my: 1,
         minWidth: 200,
-        cursor:  'pointer' 
+        px: 1.5,
+        py: 1,
+        background: 'background.paper',
+        boxShadow: 1,
+        textAlign: 'left',
+        cursor: 'pointer',
+        mx: 0,
       }}
-      onClick={() => setSelectedGroup(group)}
+      onClick={() => setSelectedGroup({ t: "g", item: group })}
     >
-      <Box>
-        <CardContent >
-          <Stack direction={"row"} gap={1} alignItems="center" justifyContent={"space-between"}>
-
-            <Stack direction={"row"} gap={1} alignItems="center">
-              <Icon>
-                {type && type === "parent" ?
-                  <GroupParentIcon />
-                  : <GroupIcon />
-                }
-              </Icon>
-              <Typography>{group.name}</Typography>
+      <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Icon>
+              {<GroupParentIcon />}
+            </Icon>
+            <Stack>
+              {type === "parent" && (
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  fontWeight="bold"
+                  lineHeight={1}
+                >
+                  תחת:
+                </Typography>
+              )}
+              <Typography
+                variant="body1"
+                color="primary.dark"
+                fontWeight={700}
+                sx={{ letterSpacing: 0.5 }}
+              >
+                {group.name}
+              </Typography>
             </Stack>
-            <Tooltip title="הסר קבוצה מקשורים">
-              <IconButton size="small" color="error" onClick={handleRemove}>
-                <RemoveCircleOutlineIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
           </Stack>
-        </CardContent>
-      </Box>
-    </Card >
-  )
-}
+
+          <Tooltip title={type === "parent" ? `הסר שיוך מ${group.name}` : "הסר קבוצה מקשורים"}>
+            <IconButton size="small" color="error" onClick={handleRemove}>
+              <RemoveCircleOutlineIcon fontSize="small" sx={{ fontSize: '0.875rem' }} />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+      </CardContent>
+    </Card>
+  );
+};
 
 export default GroupItemMng;

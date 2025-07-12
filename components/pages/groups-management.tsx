@@ -1,24 +1,30 @@
 import { NextPageWithLayout } from "@/types/types";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Icon, SxProps, Typography } from "@mui/material";
+import { Box, Icon, SxProps, Typography } from "@mui/material";
 import { useGroups } from "@/hooks/group.query.hook";
 import GroupList from "../groups/group-list";
 import { useState } from "react";
-import UnitGroupMng from "../groups/group-mng-unit";
+import UnitGroupMng from "../groups/group-unit-mng";
 import SelectGroup from "../../assets/groups/select-group.svg"
 import { Group } from "@/types/interfaces/devices";
 import DeviceList from "../groups/device-list";
-import { useQ_Devices } from "@/hooks/device.query.hook";
+import { useOrgDevices } from "@/hooks/device.query.hook";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { DeviceDto, GroupResponseDto } from "@/api/src";
+import UnitDeviceMng from "../groups/device-unit-mng";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 
 interface DevicesProps {
   // scope: AppScopeEnum
 }
 
+export type SelectedItem = { t: "d" | "g", item: Group | DeviceDto } | undefined
+export type refetchGroupsType = (options?: RefetchOptions) => Promise<QueryObserverResult<GroupResponseDto, Error>>
+
 const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
-  const { groups: groupsData } = useGroups()
-  const { devices } = useQ_Devices()
-  const [selectedGroup, setSelectedGroup] = useState<Group>()
+  const { groups: groupsData, refetch: refetchGroups } = useGroups()
+  const { devices } = useOrgDevices()
+  const [selectedItem, setSelectedItem] = useState<SelectedItem>()
   const [expanded, setExpanded] = useState<string>()
 
   const style: SxProps = {
@@ -45,33 +51,39 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-
-
       <Box sx={{ display: "flex" }}>
         <Box sx={style}>
           <GroupList
-            groups={groupsData ? Object.values(groupsData.groups) : []}
-            selectedGroup={selectedGroup}
-            setSelectedGroup={setSelectedGroup}
+            groupsData={groupsData}
+            refetchGroups={refetchGroups}
+            selectedGroup={selectedItem}
+            setSelectedGroup={setSelectedItem}
             expanded={expanded === "g"}
             onExpand={() => expanded != "g" ? setExpanded("g") : setExpanded(undefined)}
           />
-          <Accordion expanded={expanded === "d"} onChange={() => expanded != "d" ? setExpanded("d") : setExpanded(undefined)}>
-            <AccordionSummary>
-              <Typography variant="h5" sx={{ fontWeight: 600, py: 2, px: 1 }}>בחר אמצעי</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {devices && <DeviceList devices={devices} />}
-            </AccordionDetails>
-          </Accordion>
+          <DeviceList
+            devices={devices}
+            selectedDevice={selectedItem}
+            setSelectedDevice={setSelectedItem}
+            expanded={expanded === "d"}
+            onExpand={() => expanded != "d" ? setExpanded("d") : setExpanded(undefined)}
+          />
         </Box>
-        {selectedGroup && <UnitGroupMng
-          group={groupsData?.groups[selectedGroup.id]} // always fresh from source
-          groupsData={groupsData}
-          setSelectedGroup={setSelectedGroup}
-        />
-        }
-        {!selectedGroup && <Box sx={{ mt: 32, height: "calc(100vh - 100px)", flexGrow: 1 }}>
+        {selectedItem && selectedItem.t === "g" && (
+          <UnitGroupMng
+            group={{ ...groupsData?.groups[selectedItem.item.id] }} // always fresh from source
+            groupsData={groupsData}
+            setSelectedGroup={setSelectedItem}
+          />
+        )}
+        {selectedItem && selectedItem.t === "d" && (
+          <UnitDeviceMng
+            deviceId={String(selectedItem.item.id)}
+            groupsData={groupsData}
+            setSelectedDevice={setSelectedItem}
+          />
+        )}
+        {!selectedItem && <Box sx={{ mt: 32, height: "calc(100vh - 100px)", flexGrow: 1 }}>
           <Box sx={{ textAlign: "center" }}>
             <Icon sx={{ height: 120, width: 160 }}>
               <SelectGroup />

@@ -2003,7 +2003,7 @@ paths:
   /api/v1/org/groups:
     post:
       operationId: GroupController_createGroup
-      summary: Create Devices Group
+      summary: Create organization group of devices
       parameters: []
       requestBody:
         required: true
@@ -2035,10 +2035,50 @@ paths:
                 $ref: '#/components/schemas/GroupResponseDto'
       tags: *ref_15
       security: *ref_16
+  /api/v1/org/groups/childs:
+    post:
+      operationId: GroupController_setDevicesInGroup
+      summary: Set groups and devices in group
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetChildInGroupDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChildGroupDto'
+      tags: *ref_15
+      security: *ref_16
   /api/v1/org/groups/{groupId}:
+    get:
+      operationId: GroupController_getGroupById
+      summary: >-
+        Retrieve a group by its ID, including all its child groups and
+        associated devices
+      parameters:
+        - name: groupId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChildGroupDto'
+      tags: *ref_15
+      security: *ref_16
     put:
       operationId: GroupController_editGroup
-      summary: Edit Devices Group
+      summary: Edit organization group of devices
       parameters:
         - name: groupId
           required: true
@@ -2060,29 +2100,9 @@ paths:
                 $ref: '#/components/schemas/ChildGroupDto'
       tags: *ref_15
       security: *ref_16
-    get:
-      operationId: GroupController_getGroupById
-      summary: >-
-        Retrieve a group by its ID, including all its child groups and
-        associated devices
-      parameters:
-        - name: groupId
-          required: true
-          in: path
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChildGroupDto'
-      tags: *ref_15
-      security: *ref_16
     delete:
       operationId: GroupController_deleteGroup
-      summary: Delete Devices Group by ID
+      summary: Delete organization group of devices by ID
       parameters:
         - name: groupId
           required: true
@@ -2098,10 +2118,26 @@ paths:
                 $ref: '#/components/schemas/ChildGroupDto'
       tags: *ref_15
       security: *ref_16
-  /api/v1/org/groups/devices/{deviceId}:
+  /api/v1/org/devices:
+    get:
+      operationId: GroupController_getOrgDevicesData
+      summary: Get org devices data
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceOrgDto'
+      tags: *ref_15
+      security: *ref_16
+  /api/v1/org/devices/{deviceId}:
     get:
       operationId: GroupController_getOrgDeviceData
-      summary: Get device org group data
+      summary: Get organization device data by ID
       parameters:
         - name: deviceId
           required: true
@@ -2117,24 +2153,122 @@ paths:
                 $ref: '#/components/schemas/DeviceOrgDto'
       tags: *ref_15
       security: *ref_16
-  /api/v1/org/groups/devices:
+  /api/v1/org/orgIds:
     post:
-      operationId: GroupController_setDevicesInGroup
-      summary: Set Devices in a Group
+      operationId: GroupController_createOrgIds
+      summary: Create Organization ID
       parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SetChildInGroupDto'
+              $ref: '#/components/schemas/OrgIdDto'
       responses:
         '201':
           description: ''
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChildGroupDto'
+                $ref: '#/components/schemas/OrgIdRefDto'
+      tags: *ref_15
+      security: *ref_16
+    get:
+      operationId: GroupController_getOrgIds
+      summary: Get Organization IDs details
+      parameters:
+        - name: group
+          required: false
+          in: query
+          description: Filter by group ID
+          schema:
+            type: number
+        - name: emptyGroup
+          required: false
+          in: query
+          description: >-
+            If true: (with group) also include IDs without group; (without
+            group) only IDs without group
+          schema:
+            type: boolean
+        - name: emptyDevice
+          required: false
+          in: query
+          description: If true, only IDs without device
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: >-
+            Returns a list of organization IDs, according to the specified
+            filters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrgIdRefDto'
+      tags: *ref_15
+      security: *ref_16
+  /api/v1/org/orgIds/{orgId}:
+    get:
+      operationId: GroupController_getOrgId
+      summary: Get Organization IDs details
+      parameters:
+        - name: orgId
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgIdRefDto'
+      tags: *ref_15
+      security: *ref_16
+    put:
+      operationId: GroupController_editOrgIds
+      summary: Edit Organization ID
+      parameters:
+        - name: orgId
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgIdPutDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgIdRefDto'
+      tags: *ref_15
+      security: *ref_16
+    delete:
+      operationId: GroupController_deleteOrgIds
+      summary: Delete Organization ID
+      parameters:
+        - name: orgId
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgIdRefDto'
       tags: *ref_15
       security: *ref_16
   /api/v1/device/devices:
@@ -2247,8 +2381,8 @@ paths:
       tags: *ref_17
       security: *ref_18
     put:
-      operationId: DeviceController_putDeviceName
-      summary: Set Device Name
+      operationId: DeviceController_putDeviceProps
+      summary: Set Device Properties
       description: This service message allow to update props of device
       parameters:
         - name: deviceId
@@ -4913,7 +5047,7 @@ components:
         snapshotDate:
           type: string
           description: Timestamp when the discovery snapshot was taken
-          example: 2025-07-03T16:01:32.353Z
+          example: 2025-07-10T09:22:25.664Z
         deviceType:
           type: string
           description: >-
@@ -5048,13 +5182,6 @@ components:
           type: number
       required:
         - id
-    EditDevicesGroupDto:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
     GroupResponseDto:
       type: object
       properties:
@@ -5071,6 +5198,34 @@ components:
       required:
         - roots
         - groups
+    SetChildInGroupDto:
+      type: object
+      properties:
+        id:
+          type: number
+        parent:
+          type: number
+          nullable: true
+          description: >-
+            Parent group ID, if set to null then the existing parent will be
+            removed
+        devices:
+          type: array
+          items:
+            type: string
+        groups:
+          type: array
+          items:
+            type: number
+      required:
+        - id
+    EditDevicesGroupDto:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
     DeviceOrgDto:
       type: object
       properties:
@@ -5096,24 +5251,47 @@ components:
           type: string
       required:
         - id
-    SetChildInGroupDto:
+    OrgIdDto:
       type: object
       properties:
-        id:
+        orgId:
           type: number
-        parent:
+      required:
+        - orgId
+    OrgIdRefDto:
+      type: object
+      properties:
+        orgId:
+          type: number
+        device:
+          type: string
+          nullable: true
+          description: >-
+            Device id related to the org id. Set to null to remove the current
+            device.
+        group:
           type: number
           nullable: true
-        devices:
-          type: array
-          items:
-            type: string
-        groups:
-          type: array
-          items:
-            type: number
+          description: >-
+            Group parent id for the org id. Set to null to remove the current
+            group parent.
       required:
-        - id
+        - orgId
+    OrgIdPutDto:
+      type: object
+      properties:
+        device:
+          type: string
+          nullable: true
+          description: >-
+            Device id related to the org id. Set to null to remove the current
+            device.
+        group:
+          type: number
+          nullable: true
+          description: >-
+            Group parent id for the org id. Set to null to remove the current
+            group parent.
     DeviceDto:
       type: object
       properties:
@@ -5195,6 +5373,13 @@ components:
         orgUID:
           type: number
           description: Set the unique given id or null to remove the exists uid.
+          nullable: true
+        groupId:
+          type: number
+          description: >-
+            Set group ID to associate the device with a specific group. set to
+            null to remove the existing group association.
+          nullable: true
     MapStateDto:
       type: object
       properties:
