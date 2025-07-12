@@ -5,21 +5,23 @@ import GroupIcon from "../../assets/side-bar/group.svg";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useDeleteGroup, useUpdateGroup, useSetChildInGroup } from "@/hooks/group.query.hook";
-import type { EditDevicesGroupDto, GroupResponseDto } from "@/api/src/api";
+import type { DeviceDto, EditDevicesGroupDto, GroupResponseDto } from "@/api/src/api";
 import GroupDialog from "./group-dialog";
 import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
-import { DND_GROUP_LIST_ITEM, DND_GROUP_UNIT_ITEM } from "./dnd-constants";
-import { SelectedItem } from "../pages/groups-management";
+import { DND_DEVICE_UNIT_ITEM, DND_GROUP_LIST_ITEM, DND_GROUP_UNIT_ITEM } from "./dnd-constants";
+import { refetchGroupsType, SelectedItem } from "../pages/groups-management";
 import { getGroupDropValidation, DropCheckResult } from "./group-drop-validation";
+import { useMutateDevice } from "@/hooks/device.query.hook";
 
 interface GroupItemProps {
   group: Group,
-  groupsData?: GroupResponseDto
+  groupsData?: GroupResponseDto,
+  refetchGroups: refetchGroupsType,
   selectedGroup: SelectedItem | undefined
   setSelectedGroup: Dispatch<SetStateAction<SelectedItem | undefined>>
 }
 
-const GroupItem: FC<GroupItemProps> = ({ group, groupsData, selectedGroup, setSelectedGroup }) => {
+const GroupItem: FC<GroupItemProps> = ({ group, groupsData, refetchGroups, selectedGroup, setSelectedGroup }) => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [form, setForm] = useState<EditDevicesGroupDto>({ name: group.name, description: group.description });
@@ -27,6 +29,7 @@ const GroupItem: FC<GroupItemProps> = ({ group, groupsData, selectedGroup, setSe
   const deleteGroupMutation = useDeleteGroup();
   const updateGroupMutation = useUpdateGroup();
   const setChildInGroup = useSetChildInGroup();
+  const mutDevice = useMutateDevice();
 
   // Drag and drop
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -38,16 +41,41 @@ const GroupItem: FC<GroupItemProps> = ({ group, groupsData, selectedGroup, setSe
   }), [group]);
 
   const [{ isOver, canDrop }, drop] = useDrop(() => ({
-    accept: DND_GROUP_UNIT_ITEM,
-    canDrop: (item: Group, monitor: DropTargetMonitor<Group, unknown>) => {
-      const result = getGroupDropValidation(item, group, groupsData, "אי אפשר לגרור קבוצה לעצמה", "הקבוצה כבר משויכת לקבוצה זו", "לא ניתן לשייך קבוצה לאחת מהקבוצות שתחתיה");
-      setDropReason(result.allowed ? null : result.reason || null);
-      return result.allowed;
+    accept: [DND_GROUP_UNIT_ITEM, DND_DEVICE_UNIT_ITEM],
+    canDrop: (item: Group | DeviceDto, monitor: DropTargetMonitor<Group, unknown>) => {
+      const type = monitor.getItemType();
+      if (type === DND_GROUP_UNIT_ITEM) {
+        const groupItem = item as Group;
+        const result = getGroupDropValidation(groupItem, group, groupsData);
+        setDropReason(result.allowed ? null : result.reason || null);
+        return result.allowed;
+      }
+
+      if (type === DND_DEVICE_UNIT_ITEM) {
+        const deviceItem = item as DeviceDto;
+        if (deviceItem.groupId === group.id) {
+          setDropReason("מכשיר משויך כבר לקבוצה זו");
+          return false;
+        }
+        return true;
+      }
+      return false;
     },
-    drop: (item: Group, monitor: DropTargetMonitor<Group, unknown>) => {
-      const result = getGroupDropValidation(item, group, groupsData);
-      if (!result.allowed) return;
-      setChildInGroup.mutate({ id: item.id, parent: group.id });
+    drop: async (item: Group | DeviceDto, monitor: DropTargetMonitor<Group, unknown>) => {
+      const type = monitor.getItemType();
+      if (type === DND_GROUP_UNIT_ITEM) {
+        const itemGroup = item as Group;
+        const result = getGroupDropValidation(itemGroup, group, groupsData);
+        if (!result.allowed) return;
+        setChildInGroup.mutate({ id: itemGroup.id, parent: group.id });
+      }
+      if (type === DND_DEVICE_UNIT_ITEM) {
+        const device = item as DeviceDto;
+        if (!device.uid) return;
+        mutDevice.mutate({ deviceId: device.id, data: { groupId: group.id } }, {
+          onSuccess: () => refetchGroups(),
+        });
+      }
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),

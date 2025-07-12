@@ -3,6 +3,8 @@ import { IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
 import { useQ_Device } from "@/hooks/device.query.hook";
 import { SelectedItem } from "../pages/groups-management";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import { useDrag } from "react-dnd";
+import { DND_DEVICE_UNIT_ITEM } from "./dnd-constants";
 
 
 interface RelatedDeviceCardProps {
@@ -12,10 +14,14 @@ interface RelatedDeviceCardProps {
   onRemove?: () => void;
 }
 
-const RelatedDeviceCard: FC<RelatedDeviceCardProps> = ({ deviceId, setSelectedDevice, removable, onRemove }) => {
+const DeviceItemMng: FC<RelatedDeviceCardProps> = ({ deviceId, setSelectedDevice, removable, onRemove }) => {
   const { device } = useQ_Device(deviceId);
 
-
+  const [_, dragDevice] = useDrag(() => ({
+    type: DND_DEVICE_UNIT_ITEM,
+    item: device,
+    canDrag: () => !!device && !device.deviceParentId && !!device.uid,
+  }), [device]);
 
   const handleSelect = () => {
     if (device) {
@@ -32,6 +38,7 @@ const RelatedDeviceCard: FC<RelatedDeviceCardProps> = ({ deviceId, setSelectedDe
 
   return (
     <Paper
+      ref={dragDevice}
       variant="outlined"
       sx={{ px: 1.5, py: 1, borderRadius: 2, minWidth: 170, maxWidth: 220, boxShadow: 1, background: '#f7fafd', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 0.5, cursor: 'pointer', transition: 'box-shadow 0.2s', '&:hover': { boxShadow: 4, background: '#e3f2fd' } }}
       onClick={handleSelect}
@@ -81,4 +88,4 @@ const RelatedDeviceCard: FC<RelatedDeviceCardProps> = ({ deviceId, setSelectedDe
   );
 };
 
-export default RelatedDeviceCard;
+export default DeviceItemMng;

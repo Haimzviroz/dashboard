@@ -10,17 +10,19 @@ import DeviceList from "../groups/device-list";
 import { useOrgDevices } from "@/hooks/device.query.hook";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { DeviceDto } from "@/api/src";
+import { DeviceDto, GroupResponseDto } from "@/api/src";
 import UnitDeviceMng from "../groups/device-unit-mng";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 
 interface DevicesProps {
   // scope: AppScopeEnum
 }
 
 export type SelectedItem = { t: "d" | "g", item: Group | DeviceDto } | undefined
+export type refetchGroupsType = (options?: RefetchOptions) => Promise<QueryObserverResult<GroupResponseDto, Error>>
 
 const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
-  const { groups: groupsData } = useGroups()
+  const { groups: groupsData, refetch: refetchGroups } = useGroups()
   const { devices } = useOrgDevices()
   const [selectedItem, setSelectedItem] = useState<SelectedItem>()
   const [expanded, setExpanded] = useState<string>()
@@ -53,6 +55,7 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
         <Box sx={style}>
           <GroupList
             groupsData={groupsData}
+            refetchGroups={refetchGroups}
             selectedGroup={selectedItem}
             setSelectedGroup={setSelectedItem}
             expanded={expanded === "g"}
@@ -68,7 +71,7 @@ const GroupMngPage: NextPageWithLayout<DevicesProps> = () => {
         </Box>
         {selectedItem && selectedItem.t === "g" && (
           <UnitGroupMng
-            group={{...groupsData?.groups[selectedItem.item.id]}} // always fresh from source
+            group={{ ...groupsData?.groups[selectedItem.item.id] }} // always fresh from source
             groupsData={groupsData}
             setSelectedGroup={setSelectedItem}
           />

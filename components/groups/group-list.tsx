@@ -7,17 +7,18 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useCreateGroup } from "@/hooks/group.query.hook";
 import GroupDialog from "./group-dialog";
 import type { CreateDevicesGroupDto, EditDevicesGroupDto, GroupResponseDto } from "@/api/src/api";
-import { SelectedItem } from "../pages/groups-management";
+import { refetchGroupsType, SelectedItem } from "../pages/groups-management";
 
 interface GroupListProps {
-  groupsData?: GroupResponseDto
+  groupsData?: GroupResponseDto,
+  refetchGroups: refetchGroupsType,
   selectedGroup: SelectedItem | undefined
   setSelectedGroup: Dispatch<SetStateAction<SelectedItem | undefined>>
   expanded: boolean;
   onExpand: () => void;
 }
 
-const GroupList: FC<GroupListProps> = ({ groupsData, selectedGroup, setSelectedGroup, expanded, onExpand }) => {
+const GroupList: FC<GroupListProps> = ({ groupsData, refetchGroups, selectedGroup, setSelectedGroup, expanded, onExpand }) => {
   const [groups, setGroups] = useState<Group[]>(groupsData ? Object.values(groupsData.groups) : []);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState<CreateDevicesGroupDto>({ name: "" });
@@ -67,8 +68,9 @@ const GroupList: FC<GroupListProps> = ({ groupsData, selectedGroup, setSelectedG
               <Box key={String(group.id) + String(group.parent ?? '')} sx={{ display: 'flex', alignItems: 'center' }}>
                 <Box sx={{ flexGrow: 1 }}>
                   <GroupItem
-                    group={groupsData?.groups[group.id] ?? group}
+                    group={{ ...groupsData?.groups[group.id] ?? group }}
                     groupsData={groupsData}
+                    refetchGroups={refetchGroups}
                     selectedGroup={selectedGroup}
                     setSelectedGroup={setSelectedGroup}
                   />

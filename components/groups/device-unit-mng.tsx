@@ -1,15 +1,16 @@
-import { Dispatch, FC, SetStateAction } from "react";
-import { Box, Typography, Stack, Paper, Divider, Icon, IconButton, Tooltip } from "@mui/material";
+import { Dispatch, FC, SetStateAction, useEffect } from "react";
+import { Box, Typography, Stack, Paper, Divider, Icon } from "@mui/material";
 import { GroupResponseDto } from "@/api/src";
 import { SelectedItem } from "../pages/groups-management";
 import NoDevices from "../../assets/groups/no-devices.svg";
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import MutNameCell from "./device-mut-name";
 import { useMutateDevice, useQ_Device } from "@/hooks/device.query.hook";
 import OrgIdSelect from "./device-org-id-select";
-import RelatedDeviceCard from "./device-item-mng";
+import DeviceItemMng from "./device-item-mng";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
 import GroupItemMng from "./group-item-mng";
+import { useDrag } from "react-dnd";
+import { DND_DEVICE_UNIT_ITEM } from "./dnd-constants";
 
 
 interface UnitDeviceMngProps {
@@ -26,6 +27,12 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelect
     refetch()
   }, [deviceId])
 
+  const [_, dragDevice] = useDrag(() => ({
+    type: DND_DEVICE_UNIT_ITEM,
+    item: device,
+    canDrag: () => !!device && !device.deviceParentId && !!device.uid,
+  }), [device]);
+
   if (!device) return null
 
   // Find group parent if exists
@@ -35,7 +42,6 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelect
   // Related devices (children)
   const relatedDevices = device.devices || [];
 
-
   const handleRmDevice = () => {
     mutDevice.mutate({ deviceId, data: { groupId: null } })
   }
@@ -44,13 +50,15 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelect
     <Box sx={{ flexGrow: 1, textAlign: "center", px: 2, py: 4 }}>
       {/* Top Section */}
       <Stack spacing={2} alignItems="center" mb={2}>
-        <Typography variant="h5" fontWeight={700} sx={{ mb: 0.5 }}>
-          {device.name
-            ? (/[\u0590-\u05FF]/.test(device.name) && /[a-zA-Z]/.test(device.name) && device.name.includes(' ')
-              ? device.name.split(' ').map((part, i) => <span key={i}>{part}<br /></span>)
-              : device.name)
-            : device.uid || <span>{'\u200F#'}{device.id?.slice(-4)}</span>}
-        </Typography>
+        <Box ref={dragDevice}>
+          <Typography variant="h5" fontWeight={700} sx={{ mb: 0.5 }}>
+            {device.name
+              ? (/[\u0590-\u05FF]/.test(device.name) && /[a-zA-Z]/.test(device.name) && device.name.includes(' ')
+                ? device.name.split(' ').map((part, i) => <span key={i}>{part}<br /></span>)
+                : device.name)
+              : device.uid || <span>{'\u200F#'}{device.id?.slice(-4)}</span>}
+          </Typography>
+        </Box>
 
         {(groupParent || deviceParent) &&
           <ArrowDownwardIcon
@@ -76,7 +84,7 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelect
           />
         )}
         {deviceParent && (
-          <RelatedDeviceCard deviceId={deviceParent} setSelectedDevice={setSelectedDevice} />
+          <DeviceItemMng deviceId={deviceParent} setSelectedDevice={setSelectedDevice} />
         )}
       </Stack>
 
@@ -151,7 +159,7 @@ const UnitDeviceMng: FC<UnitDeviceMngProps> = ({ deviceId, groupsData, setSelect
       {relatedDevices.length > 0 ? (
         <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
           {relatedDevices.map((dvcId: string) => (
-            <RelatedDeviceCard key={dvcId} deviceId={dvcId} setSelectedDevice={setSelectedDevice} />
+            <DeviceItemMng key={dvcId} deviceId={dvcId} setSelectedDevice={setSelectedDevice} />
           ))}
         </Stack>
       ) : (

@@ -5,19 +5,19 @@ import type { SetChildInGroupDto } from "@/api/src";
 import { ChildGroupDto, GroupResponseDto, CreateDevicesGroupDto, EditDevicesGroupDto } from "@/api/src/api";
 
 export const useGroups = (option?:any) => {
-  const { data: groups } = useQuery<GroupResponseDto>({
+  const { data: groups, refetch } = useQuery<GroupResponseDto>({
     queryKey: [Q_GROUPS],
     queryFn: getGroups,
     ...option
   })
-  return { groups }
+  return { groups, refetch }
 }
 
 export const useGroup = (id: number, option?: any) => {
   const { data: group, refetch } = useQuery<ChildGroupDto>({
     queryKey: [Q_GROUP, id],
     queryFn: () => getGroup(id),
-    ...option
+    ...option,
   })
   return { group, refetch }
 }

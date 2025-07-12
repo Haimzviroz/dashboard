@@ -1,9 +1,9 @@
-import { Dispatch, FC, SetStateAction, useState } from "react"
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react"
 import { Box, Typography, Stack, Divider, Icon } from "@mui/material"
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
 import { Group } from "@/types/interfaces/devices"
 import GroupItemMng from "./group-item-mng"
-import RelatedDeviceCard from "./device-item-mng"
+import DeviceItemMng from "./device-item-mng"
 import NoGroups from "../../assets/groups/no-groups.svg"
 import NoDevices from "../../assets/groups/no-devices.svg"
 import { useMutateDevice, useQ_Devices } from "@/hooks/device.query.hook"
@@ -52,6 +52,10 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGro
         .map(did => devices.devices?.find(d => d.id === did))
         .filter((d): d is DeviceDto => Boolean(d))
       : []
+
+  useEffect(() => {
+    qGroup.refetch();
+  }, [group])
 
   const [{ isOver, canDrop }, dropGroup] = useDrop(() => ({
     accept: DND_GROUP_LIST_ITEM,
@@ -175,7 +179,7 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGro
         <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
           {relatedDevices.length > 0 ? (
             relatedDevices.map(dvc => (
-              <RelatedDeviceCard
+              <DeviceItemMng
                 key={dvc.id}
                 deviceId={dvc.id}
                 setSelectedDevice={setSelectedGroup as any}
