@@ -77,13 +77,12 @@ const UnitGroupMng: FC<UnitGroupMngProps> = ({ group, groupsData, setSelectedGro
 
   const [, dropDevice] = useDrop(() => ({
     accept: DND_DEVICE_LIST_ITEM,
-    canDrop: (item: DeviceDto) => !item.deviceParentId && !!item.uid,
+    canDrop: (item: DeviceDto) => !item.deviceParentId && !!item.uid && item.groupId !== group.id,
     drop: (item: DeviceDto) => {
       if (!item.deviceParentId && item.uid) {
-        setChildInGroupMutation.mutate({ id: group.id, devices: [item.id] }, {
+        mutDevice.mutate({ deviceId: item.id, data: { groupId: group.id } }, {
           onSuccess: () => {
             qGroup.refetch();
-            devices.refetch();
           }
         });
       }
