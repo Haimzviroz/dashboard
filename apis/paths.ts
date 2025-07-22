@@ -40,4 +40,6 @@ export const MAP_PUT = (catalogId: string) => `map/${catalogId}`
 export const MAPS_OFFERING = "map/offering"
 export const IMPORT_CREATE = "map/import/create"
 
+export const DEVICE_CONFIG = "device/config";
+
 

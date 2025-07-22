@@ -12,3 +12,4 @@ export const R_FORMATIONS_NEW = R_FORMATIONS + "/new";
 // get map
 export const R_MAP_DEVICES = R_GET_MAP + R_DEVICES;
 export const R_MAPS = R_GET_MAP + "/maps";
+export const R_SETTINGS = R_GET_MAP + "/settings";

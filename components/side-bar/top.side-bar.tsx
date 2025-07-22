@@ -9,11 +9,12 @@ import Map from "../../assets/side-bar/map2.svg";
 import MapActive from "../../assets/side-bar/map2-active.svg";
 import Computer from "../../assets/side-bar/computer.svg";
 import ComputerActive from "../../assets/side-bar/computer-active.svg";
+import Settings from "../../assets/side-bar/settings.svg";
 
 import { AppScopeEnum, SideBarOption } from "@/types/enum";
 import { useGetApp } from "@/providers/getapp.provider";
 import Router from "next/router";
-import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS } from "@/apis/routes";
+import { R_APP_DEVICES, R_MAP_DEVICES, R_DEVICES, R_MAPS, R_PROJECTS, R_SETTINGS } from "@/apis/routes";
 
 interface SideBarItem {
   key: SideBarOption,
@@ -35,6 +36,14 @@ const Items: SideBarItem[] = [
     activeIcon: DashboardActive,
     disabled: true,
     route: ""
+  },
+  {
+    key: SideBarOption.SETTINGS,
+    name: "הגדרות",
+    icon: Settings,
+    activeIcon: AppsActive,
+    route: R_SETTINGS,
+    scope: AppScopeEnum.getmap
   },
   {
     key: SideBarOption.APPS,
