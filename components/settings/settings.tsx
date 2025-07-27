@@ -162,7 +162,7 @@ const Settings: React.FC = () => {
         id={key}
         type="datetime-local"
         value={(config as any)[key].replace('Z', '')}
-        disabled={!isEditable}
+        disabled={true}
         onChange={e => handleFieldChange(key, e.target.value as any)}
       />
     </div>
