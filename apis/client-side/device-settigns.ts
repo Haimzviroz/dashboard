@@ -11,7 +11,6 @@ export const getDeviceConfig = async (
   group: string
 ): Promise<DeviceConfig> => {
   const url = `${DEVICE_CONFIG}/${encodeURIComponent(id)}?group=${encodeURIComponent(group)}`;
-  // clientRequestWithAuth מוסיף אוטומטית headers של auth וה-base URL
   return await clientRequestWithAuth(url, 'get');
 };
 export const saveDeviceConfig = async (
@@ -23,4 +22,3 @@ export const saveDeviceConfig = async (
   }
   return clientRequestWithAuth(DEVICE_CONFIG, 'put', cleanCff);
 };
-

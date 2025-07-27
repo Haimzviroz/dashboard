@@ -10,6 +10,7 @@ import MapActive from "../../assets/side-bar/map2-active.svg";
 import Computer from "../../assets/side-bar/computer.svg";
 import ComputerActive from "../../assets/side-bar/computer-active.svg";
 import Settings from "../../assets/side-bar/settings.svg";
+import SettingsActive from "../../assets/side-bar/settings-active.svg";
 
 import { AppScopeEnum, SideBarOption } from "@/types/enum";
 import { useGetApp } from "@/providers/getapp.provider";
@@ -41,7 +42,7 @@ const Items: SideBarItem[] = [
     key: SideBarOption.SETTINGS,
     name: "הגדרות",
     icon: Settings,
-    activeIcon: AppsActive,
+    activeIcon: SettingsActive,
     route: R_SETTINGS,
     scope: AppScopeEnum.getmap
   },

@@ -119,7 +119,7 @@ const Settings: React.FC = () => {
 
   const baseText = ['matomoUrl', 'matomoDimensionId', 'matomoSiteId'] as const
 
-  const windowsText = ['technicianPassword'] as const
+  // const windowsText = ['technicianPassword'] as const
 
   const androidPaths = [
     'sdStoragePath',

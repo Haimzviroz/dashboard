@@ -40,12 +40,14 @@
 .form-group textarea {
   flex: 1 1 0;
   min-width: 0;
-  padding: .6rem;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 6px;
   background: #fff;
   transition: border .2s, box-shadow .2s, background-color .2s;
+}
+.form-group textarea,.form-group input{
+  padding: .6rem;
 }
 
 .form-group input:focus,
